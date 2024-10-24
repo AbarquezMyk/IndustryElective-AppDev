@@ -6,7 +6,7 @@ import PaymentMethods from './components/PaymentMethod';
 const App = () => {
   return (
     <Router>
-      {/* <Home />  */}
+      <Home /> 
       {/* <PaymentMethods /> */}
     </Router>
   );

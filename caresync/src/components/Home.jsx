@@ -34,7 +34,7 @@ function Home() {
       <body>
         <main style={{ padding: '20px', maxWidth: '100vw', overflowX: 'hidden', height: '100vh' }} id="top">
           {/* Navbar */}
-          <nav style={{ padding: '10px 0', backgroundColor: '#fff', borderBottom: '1px solid #ddd' }}>
+          <nav style={{ padding: '10px 0', backgroundColor: '#fff' }}>
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <a href="/">
                 <img src={logo} width="600" alt="logo" style={{ marginLeft: '100px' }}/>
@@ -64,7 +64,7 @@ function Home() {
           {/* Hero Section */}
           <section style={{ padding: '50px 0', backgroundColor: '#fff', height: 'calc(100vh - 80px)' }} id="home">
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', height: '100%' }}>
-              <div style={{ flex: '1', padding: '20px', marginTop: '-1000px' }}>
+              <div style={{ flex: '1', padding: '20px', marginTop: '-1000px', marginLeft: '100px' }}>
                 <h1 style={{ fontSize: '150px', marginBottom: '20px' }}>
                   Find Your Doctor and <br /> make an appointment.
                 </h1>
@@ -82,7 +82,7 @@ function Home() {
                 <img
                   src={hero}
                   alt="hero-header"
-                  style={{ width: '2300px', height: 'auto', objectFit: 'contain', marginTop: '-1000px' }}
+                  style={{ width: '2400px', height: 'auto', objectFit: 'contain', marginTop: '-1000px' }}
                 />
               </div>
             </div>
