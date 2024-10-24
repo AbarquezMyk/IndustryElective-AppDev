@@ -1,5 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import logo from './img/logo.png';
+import dashboard from './img/dashboard.png';
+import appointment from './img/appointment-icon.png';
+import payment from './img/payment-method.png';
+import setting from './img/setting.png';
+import visa from './img/visa-icon.png';
+import paypal from './img/paypal-color-icon.png';
+import gcash from './img/gcash-icon.png';
+import applepay from './img/apple-pay-icon.png';
 
 const PaymentMethods = () => {
   return (
@@ -16,23 +25,23 @@ const PaymentMethods = () => {
         height: '100vh'
       }}>
         <div style={{ textAlign: 'center' }}>
-          <img src="/path/to/logo.png" alt="CareSync Logo" style={{ width: '200px', height: 'auto', marginTop: '-50px' }} />
+          <img src={logo} alt="CareSync Logo" style={{ width: '200px', height: 'auto', marginTop: '-50px' }} />
         </div>
         <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
           <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
-            <img src="/path/to/dashboard.png" alt="Dashboard Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
+            <img src={dashboard} alt="Dashboard Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
             <Link to="/" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Dashboard</Link>
           </li>
           <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
-            <img src="/path/to/appointment-icon.png" alt="Appointments Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
+            <img src={appointment} alt="Appointments Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
             <Link to="/appointment" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Appointments</Link>
           </li>
           <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
-            <img src="/path/to/payment-method.png" alt="Payments Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
+            <img src={payment} alt="Payments Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
             <Link to="/payments" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Payments</Link>
           </li>
           <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
-            <img src="/path/to/setting.png" alt="Settings Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
+            <img src={setting} alt="Settings Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
             <Link to="/settings" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Settings</Link>
           </li>
         </ul>
@@ -60,7 +69,7 @@ const PaymentMethods = () => {
               padding: '10px 20px', cursor: 'pointer'
             }}>
               <span style={{ fontFamily: "'Manjari'", color: '#023350' }}>Credit Card</span>
-              <img src="/path/to/visa-icon.png" alt="Credit Card" style={{ width: '40px' }} />
+              <img src={visa} alt="Credit Card" style={{ width: '40px' }} />
             </div>
           </Link>
 
@@ -72,7 +81,7 @@ const PaymentMethods = () => {
               padding: '10px 20px', cursor: 'pointer'
             }}>
               <span style={{ fontFamily: "'Manjari'", color: '#023350' }}>PayPal</span>
-              <img src="/path/to/paypal-icon.png" alt="PayPal" style={{ width: '40px' }} />
+              <img src={paypal} alt="PayPal" style={{ width: '40px' }} />
             </div>
           </Link>
 
@@ -84,7 +93,7 @@ const PaymentMethods = () => {
               padding: '10px 20px', cursor: 'pointer'
             }}>
               <span style={{ fontFamily: "'Manjari'", color: '#023350' }}>GCash</span>
-              <img src="/path/to/gcash-icon.png" alt="GCash" style={{ width: '40px' }} />
+              <img src={gcash} alt="GCash" style={{ width: '40px' }} />
             </div>
           </Link>
 
@@ -96,7 +105,7 @@ const PaymentMethods = () => {
               padding: '10px 20px', cursor: 'pointer'
             }}>
               <span style={{ fontFamily: "'Manjari'", color: '#023350' }}>Apple Pay</span>
-              <img src="/path/to/apple-pay-icon.png" alt="Apple Pay" style={{ width: '40px' }} />
+              <img src={applepay} alt="Apple Pay" style={{ width: '40px' }} />
             </div>
           </Link>
         </div>
