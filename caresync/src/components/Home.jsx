@@ -75,7 +75,7 @@ function Home() {
                   href="/register"
                   style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', borderRadius: '25px', textDecoration: 'none', fontSize: '100px' }}
                 >
-                  Register
+                  Register Here
                 </a>
               </div>
               <div style={{ flex: '1', textAlign: 'center', padding: '20px' }}>
