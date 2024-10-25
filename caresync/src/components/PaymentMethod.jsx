@@ -11,6 +11,14 @@ import gcash from './img/gcash-icon.png';
 import applepay from './img/apple-pay-icon.png';
 
 const PaymentMethods = () => {
+
+  useEffect(() => {
+    fetch('/api/Payment')
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error('Error fetching data:', error));
+  }, []); // The empty array means this effect runs only once, after the initial render.
+
   return (
     <div style={{ display: 'flex', margin: '0', padding: '0', height: '100vh', fontFamily: "'Manjari', sans-serif" }}>
       {/* Sidebar */}
