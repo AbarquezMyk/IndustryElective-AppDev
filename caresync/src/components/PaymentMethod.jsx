@@ -22,7 +22,6 @@ const PaymentMethods = () => {
   return (
     <div style={{ display: 'flex', margin: '0', padding: '0', height: '100vh', fontFamily: "'Manjari', sans-serif" }}>
       {/* Sidebar */}
-      <h1>MeTHOD PAYMENT</h1>
       <div style={{
         width: '250px',
         backgroundColor: 'white',

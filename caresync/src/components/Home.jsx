@@ -34,26 +34,26 @@ function Home() {
       <body>
         <main style={{ padding: '20px', maxWidth: '100vw', overflowX: 'hidden', height: '100vh' }} id="top">
           {/* Navbar */}
-          <nav style={{ padding: '10px 0', backgroundColor: '#fff' }}>
+          <nav style={{ padding: '10px 0', backgroundColor: '#fff', marginBottom: '20px' }}>
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <a href="/">
-                <img src={logo} width="600" alt="logo" style={{ marginLeft: '100px' }}/>
+                <img src={logo} width="180" alt="logo" style={{ marginLeft: '90px', marginTop: '10px' }}/>
               </a>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <ul style={{ listStyle: 'none', display: 'flex', padding: 0, margin: 0 }}>
                   <li style={{ margin: '0 15px' }}>
-                    <a href="#about" style={{ textDecoration: 'none', color: '#333', fontSize: '90px', marginLeft: '20px' }}>About Us</a>
+                    <a href="#about" style={{ textDecoration: 'none', color: '#333', fontSize: '20px', fontFamily: 'Manjari' }}>About Us</a>
                   </li>
                   <li style={{ margin: '0 15px' }}>
-                    <a href="#departments" style={{ textDecoration: 'none', color: '#333', fontSize: '90px', marginLeft: '20px' }}>Find Doctor</a>
+                    <a href="#departments" style={{ textDecoration: 'none', color: '#333', fontSize: '20px', fontFamily: 'Manjari' }}>Find Doctor</a>
                   </li>
                   <li style={{ margin: '0 15px' }}>
-                    <a href="#findUs" style={{ textDecoration: 'none', color: '#333', fontSize: '90px', marginLeft: '20px' }}>Contact</a>
+                    <a href="#findUs" style={{ textDecoration: 'none', color: '#333', fontSize: '20px', fontFamily: 'Manjari' }}>Contact</a>
                   </li>
                 </ul>
                 <a
                   href="/login"
-                  style={{ padding: '5px 15px', border: '1px solid #007bff', borderRadius: '25px', textDecoration: 'none', color: '#007bff', marginLeft: '20px', fontSize: '90px' }}
+                  style={{ padding: '5px 15px', border: '1px solid #007bff', borderRadius: '25px', textDecoration: 'none', color: '#007bff', fontSize: '20px', fontFamily: 'Manjari', marginRight: '100px' }}
                 >
                   Log In
                 </a>
@@ -64,25 +64,25 @@ function Home() {
           {/* Hero Section */}
           <section style={{ padding: '50px 0', backgroundColor: '#fff', height: 'calc(100vh - 80px)' }} id="home">
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', height: '100%' }}>
-              <div style={{ flex: '1', padding: '20px', marginTop: '-1000px', marginLeft: '100px' }}>
-                <h1 style={{ fontSize: '150px', marginBottom: '20px' }}>
+              <div style={{ flex: '1', padding: '20px', marginTop: '-500px', marginLeft: '100px' }}>
+                <h1 style={{ fontSize: '30px', marginBottom: '20px', fontFamily: 'Manjari' }}>
                   Find Your Doctor and <br /> make an appointment.
                 </h1>
-                <p style={{ fontSize: '100px', marginBottom: '30px' }}>
+                <p style={{ fontSize: '25px', marginBottom: '30px', fontFamily: 'Manjari' }}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
                 <a
                   href="/register"
-                  style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', borderRadius: '25px', textDecoration: 'none', fontSize: '100px' }}
+                  style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', borderRadius: '25px', textDecoration: 'none', fontSize: '25px', fontFamily: 'Manjari' }}
                 >
-                  Register Here
+                  Register
                 </a>
               </div>
               <div style={{ flex: '1', textAlign: 'center', padding: '20px' }}>
                 <img
                   src={hero}
                   alt="hero-header"
-                  style={{ width: '2400px', height: 'auto', objectFit: 'contain', marginTop: '-1000px' }}
+                  style={{ width: '700px', height: 'auto', objectFit: 'contain', marginTop: '-800px' }}
                 />
               </div>
             </div>

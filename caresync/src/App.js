@@ -7,7 +7,7 @@ const App = () => {
   return (
     <Router>
       {/* <Home />  */}
-      {/* <PaymentMethods /> */}
+      <PaymentMethods />
     </Router>
   );
 };
