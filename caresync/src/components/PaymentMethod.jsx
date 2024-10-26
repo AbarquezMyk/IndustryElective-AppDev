@@ -13,7 +13,7 @@ import applepay from './img/apple-pay-icon.png';
 const PaymentMethods = () => {
 
   useEffect(() => {
-    fetch('/api/Payment')
+    fetch('/api/payments')
       .then(response => response.json())
       .then(data => console.log(data))
       .catch(error => console.error('Error fetching data:', error));
