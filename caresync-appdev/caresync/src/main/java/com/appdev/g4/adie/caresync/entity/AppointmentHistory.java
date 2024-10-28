@@ -1,7 +1,5 @@
 package com.appdev.g4.adie.caresync.entity;
 
-package com.appdev.g4.projectCareSync.entity;
-
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
