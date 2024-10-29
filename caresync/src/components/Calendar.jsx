@@ -43,7 +43,7 @@ const Sidebar = () => (
                 { icon: dashboard, label: 'Dashboard', link: '/' },
                 { icon: appointment, label: 'Appointments', link: '/appointment' },
                 { icon: calendar, label: 'Calendar', link: '/calendar', highlighted: true },
-                { icon: payment, label: 'Payments', link: '/payments' },
+                { icon: payment, label: 'Payments', link: '/payment' },
                 { icon: setting, label: 'Settings', link: '/settings' },
             ].map((item, index) => (
                 <li key={index} style={{
