@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from './img/logo.png';
+import logo from './img/Logo1.png';
 import dashboard from './img/dashboard.png';
 import appointment from './img/appointment-icon.png';
 import calendar from './img/calendar_icon.png';
@@ -10,52 +10,74 @@ import logout from './img/logout_icon.png';
 
 // Sidebar component
 const Sidebar = () => (
-  <div style={{
-    width: '250px',
-    backgroundColor: 'white',
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    borderRight: '1px solid #CED4DA',
-    height: '100vh'
-  }}>
-    <div style={{ textAlign: 'center' }}>
-      <img src={logo} alt="CareSync Logo" style={{ width: '60px', height: 'auto', marginBottom: '20px' }} />
-      <h3 style={{ fontWeight: '400', color: '#023350', fontSize: '24px', letterSpacing: '2px' }}>CareSync</h3>
-    </div>
-    <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
-      {[
-        { icon: dashboard, label: 'Dashboard', link: '/' },
-        { icon: appointment, label: 'Appointments', link: '/appointment' },
-        { icon: calendar, label: 'Calendar', link: '/calendar', highlighted: true },
-        { icon: payment, label: 'Payments', link: '/payments' },
-        { icon: setting, label: 'Settings', link: '/settings' },
-      ].map((item, index) => (
-        <li key={index} style={{ 
-          margin: '15px 0', 
-          display: 'flex', 
-          alignItems: 'center',
-          backgroundColor: item.highlighted ? '#F1F3F5' : 'transparent',
-          borderRadius: item.highlighted ? '8px' : 'none',
-          padding: item.highlighted ? '10px' : '0' 
+    <div style={{
+      width: '250px',
+      backgroundColor: 'white',
+      padding: '20px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      borderRight: '1px solid #CED4DA',
+      height: '100vh',
+      fontFamily: 'Manjari, sans-serif', // Set uniform font for the sidebar
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+        <img src={logo} alt="Logo1" style={{ width: '55px', height: '55px', marginRight: '20px' }} />
+        <h2 style={{
+          color: '#023350',
+          fontSize: '20px',
+          fontWeight: 'normal', // Regular weight instead of bold
+          letterSpacing: '0.4em', // Set letter spacing to 40%
         }}>
-          <img src={item.icon} alt={`${item.label} Icon`} style={{ width: '20px', height: '20px', marginRight: '10px' }} />
-          <Link to={item.link} style={{ textDecoration: 'none', color: '#023350', fontSize: '16px' }}>{item.label}</Link>
-        </li>
-      ))}
-    </ul>
-    <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-      <button
-        onClick={() => console.log("Logout")}
-        style={{ color: '#E74C3C', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-      >
-        <img src={logout} alt="Logout Icon" style={{ width: '20px', height: '20px', marginRight: '5px' }} />
-        Log Out
-      </button>
+          CareSync
+        </h2>
+      </div>
+      
+      <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
+        {[
+          { icon: dashboard, label: 'Dashboard', link: '/' },
+          { icon: appointment, label: 'Appointments', link: '/appointment' },
+          { icon: calendar, label: 'Calendar', link: '/calendar', highlighted: true },
+          { icon: payment, label: 'Payments', link: '/payments' },
+          { icon: setting, label: 'Settings', link: '/settings' },
+        ].map((item, index) => (
+          <li key={index} style={{ 
+            margin: '15px 0', 
+            display: 'flex', 
+            alignItems: 'center',
+            backgroundColor: item.highlighted ? '#F1F3F5' : 'transparent',
+            borderRadius: item.highlighted ? '8px' : 'none',
+            padding: item.highlighted ? '10px' : '0',
+            letterSpacing: '0.1em' // Add letter spacing for menu items
+          }}>
+            <img src={item.icon} alt={`${item.label} Icon`} style={{ width: '20px', height: '20px', marginRight: '20px' }} />
+            <Link to={item.link} style={{ textDecoration: 'none', color: '#023350', fontSize: '16px' }}>{item.label}</Link>
+          </li>
+        ))}
+      </ul>
+      
+      <div style={{ textAlign: 'center', marginTop: 'auto' }}>
+        <button
+          onClick={() => console.log("Logout")}
+          style={{
+            color: '#E74C3C',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            letterSpacing: '0.1em', // Add letter spacing for Log Out
+            fontSize: '16px'
+          }}
+        >
+          <img src={logout} alt="Logout Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
+          Log Out
+        </button>
+      </div>
     </div>
-  </div>
 );
+  
+  
 
 // Calendar component
 const Calendar = () => {
