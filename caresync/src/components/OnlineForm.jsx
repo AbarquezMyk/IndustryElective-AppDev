@@ -1,107 +1,110 @@
-import React, { useState } from 'react';
+import React from 'react';
+import logo from './logo.png';
 
 function OnlineForm() {
-  const [name, setName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [sex, setSex] = useState('');
-  const [maritalStatus, setMaritalStatus] = useState('');
-  const [height, setHeight] = useState('');
-  const [weight, setWeight] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
-  const [takingMedications, setTakingMedications] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', {
-      name,
-      dateOfBirth,
-      sex,
-      maritalStatus,
-      height,
-      weight,
-      phoneNumber,
-      email,
-      address,
-      takingMedications,
-    });
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Name:</label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
+    <div style={styles.formContainer}>
+      <div style={styles.header}>
+        <img src={logo} alt="Logo" style={styles.logo} />
+        <h1 style={styles.title}>ONLINE FORM</h1>
       </div>
-
-      <div>
-        <label htmlFor="dateOfBirth">Date of Birth:</label>
-        <input
-          type="date"
-          id="dateOfBirth"
-          value={dateOfBirth}
-          onChange={(e) => setDateOfBirth(e.target.value)}
-          required
-        />
-      </div>
-
-      <div>
-        <label htmlFor="sex">Sex:</label>
-        <select id="sex" value={sex} onChange={(e) => setSex(e.target.value)}>
-          <option value="">Please select</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor="maritalStatus">Marital Status:</label>
-        <select
-          id="maritalStatus"
-          value={maritalStatus}
-          onChange={(e) => setMaritalStatus(e.target.value)}
-        >
-          <option value="">Please select</option>
-          <option value="single">Single</option>
-          <option value="married">Married</option>
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor="takingMedications">Taking any medications, currently?</label>
-        <div>
-          <input
-            type="radio"
-            id="yes"
-            name="takingMedications"
-            value="yes"
-            checked={takingMedications}
-            onChange={() => setTakingMedications(true)}
-          />
-          <label htmlFor="yes">Yes</label>
-          <input
-            type="radio"
-            id="no"
-            name="takingMedications"
-            value="no"
-            checked={!takingMedications}
-            onChange={() => setTakingMedications(false)}
-          />
-          <label htmlFor="no">No</label>
+      <form style={styles.form}>
+        <div style={styles.row}>
+          <input type="text" placeholder="First Name" style={styles.input} />
+          <input type="text" placeholder="Last Name" style={styles.input} />
         </div>
-      </div>
-
-      <button type="submit">Submit</button>
-    </form>
+        <div style={styles.row}>
+          <input type="date" placeholder="MM-DD-YYYY" style={styles.input} />
+          <select style={styles.input}>
+            <option>Please select</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+          <select style={styles.input}>
+            <option>Please select</option>
+            <option>Single</option>
+            <option>Married</option>
+          </select>
+        </div>
+        <div style={styles.row}>
+          <input type="number" placeholder="Height (inches)" style={styles.input} />
+          <input type="number" placeholder="Weight (pounds)" style={styles.input} />
+        </div>
+        <div style={styles.row}>
+          <input type="text" placeholder="Phone Number" style={styles.input} />
+          <input type="email" placeholder="Email" style={styles.input} />
+        </div>
+        <input type="text" placeholder="Address" style={{ ...styles.input, width: '100%' }} />
+        <div style={styles.row}>
+          <input type="text" placeholder="City" style={styles.input} />
+          <input type="text" placeholder="State/Province" style={styles.input} />
+          <input type="text" placeholder="Postal Code" style={styles.input} />
+        </div>
+        <div style={styles.row}>
+          <p>Taking any medications, currently?</p>
+          <label>
+            <input type="radio" name="medications" value="yes" /> Yes
+          </label>
+          <label>
+            <input type="radio" name="medications" value="no" /> No
+          </label>
+        </div>
+        <button type="submit" style={styles.submitButton}>Submit</button>
+      </form>
+    </div>
   );
 }
+
+const styles = {
+  formContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    fontFamily: 'Arial, sans-serif',
+    color: '#4F4F4F',
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '20px',
+  },
+  logo: {
+    height: '50px',
+    marginRight: '10px',
+  },
+  title: {
+    fontSize: '36px',
+    letterSpacing: '2px',
+    color: '#4F4F4F',
+  },
+  form: {
+    width: '80%',
+    maxWidth: '600px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  row: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'space-between',
+    marginBottom: '10px',
+  },
+  input: {
+    width: '48%',
+    padding: '10px',
+    marginBottom: '10px',
+    borderRadius: '5px',
+    border: '1px solid #4F4F4F',
+  },
+  submitButton: {
+    padding: '10px 20px',
+    backgroundColor: '#4F4F4F',
+    color: '#FFFFFF',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+  },
+};
 
 export default OnlineForm;
