@@ -280,8 +280,8 @@ const styles = {
     padding: '5px',
     border: '1px solid #ccc',
     borderRadius: '4px',
-    width: '90%', // Make it smaller
-    maxWidth: '300px' // Set max width for smaller inputs
+    width: '90%',
+    maxWidth: '300px'
   },
   textarea: {
     marginBottom: '10px',
@@ -289,7 +289,7 @@ const styles = {
     border: '1px solid #ccc',
     borderRadius: '4px',
     height: '60px',
-    width: '90%', // Adjust textarea width
+    width: '90%',
     maxWidth: '300px'
   },
   submitButton: {
