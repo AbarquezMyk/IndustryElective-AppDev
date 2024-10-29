@@ -1,16 +1,22 @@
 import React from 'react';
-import logo from './logo.png'; // Ensure this path is correct
+import logo from './img/Logo1.png';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 
 function Patient() {
   return (
     <div style={styles.profilePage}>
+      {/* Header with Logo and App Name */}
       <header style={styles.header}>
-        <img src={logo} alt="Logo" style={styles.logo} />
+        <div style={styles.logoContainer}>
+          <img src={logo} alt="Logo" style={styles.logo} />
+          <h1 style={styles.appName}>CareSync</h1>
+        </div>
         <h1 style={styles.headerText}>Patient's Profile</h1>
       </header>
 
+      {/* Profile Content Section */}
       <div style={styles.profileContent}>
+        {/* Left Panel: Contact and Lab Results */}
         <div style={styles.leftPanel}>
           <div style={styles.contactDetails}>
             <div style={styles.profilePic}>
@@ -22,6 +28,7 @@ function Patient() {
             <p style={styles.contactItem}><FaMapMarkerAlt /> Natalio B. Bacalso Ave, Cebu City</p>
           </div>
           
+          {/* Latest Lab Results */}
           <div style={styles.labResults}>
             <h3 style={styles.sectionTitle}>Latest Lab Results:</h3>
             <p style={styles.resultItem}>📄 Blood Test ABC, 0.7 MB</p>
@@ -29,6 +36,7 @@ function Patient() {
           </div>
         </div>
 
+        {/* Right Panel: Overview and Buttons */}
         <div style={styles.rightPanel}>
           <div style={styles.overview}>
             <h3 style={styles.sectionTitle}>Overview:</h3>
@@ -40,6 +48,7 @@ function Patient() {
             <p style={styles.overviewItem}>Next Kin: Gianne Dela Cruz</p>
           </div>
 
+          {/* Action Buttons */}
           <div style={styles.buttonsGrid}>
             <button style={styles.button}>Appointments</button>
             <button style={styles.button}>Billings</button>
@@ -56,6 +65,7 @@ function Patient() {
   );
 }
 
+// Styles
 const styles = {
   profilePage: {
     display: 'flex',
@@ -70,11 +80,23 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    marginBottom: '20px'
+    marginBottom: '20px',
+    justifyContent: 'space-between'
+  },
+  logoContainer: {
+    display: 'flex',
+    alignItems: 'center'
   },
   logo: {
     width: '50px',
     marginRight: '10px'
+  },
+  appName: {
+    fontFamily: 'Manjari, sans-serif',
+    fontSize: '20px',
+    letterSpacing: '0.1em',
+    fontWeight: 'bold',
+    color: '#333'
   },
   headerText: {
     fontSize: '24px',
