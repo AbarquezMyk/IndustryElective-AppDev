@@ -44,7 +44,6 @@ const PatientProfileForm = () => {
 
     if (type === "checkbox") {
       if (name === "allergies") {
-        // Handle allergies checkbox
         if (checked) {
           setFormData((prevData) => ({
             ...prevData,
@@ -57,7 +56,6 @@ const PatientProfileForm = () => {
           }));
         }
       } else if (name === "immunizationRecords") {
-        // Handle immunization records checkbox
         if (checked) {
           setFormData((prevData) => ({
             ...prevData,
@@ -140,181 +138,185 @@ const PatientProfileForm = () => {
   ];
 
   return (
-    <div style={styles.container}>
+    <div>
       <div style={styles.header}>
         <img src={logo} alt="Logo" style={styles.logo} />
         <span style={styles.title}>CareSync</span>
       </div>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <div style={styles.profilePictureSection}>
-          {profileImage ? (
-            <img src={profileImage} alt="Profile" style={styles.profileImage} />
-          ) : (
-            <div style={styles.placeholderImage}>Profile Picture</div>
-          )}
-          <input 
-            type="file" 
-            accept="image/*" 
-            onChange={handleImageUpload} 
-            ref={fileInputRef}
-            style={styles.fileInput}
-          />
-          {profileImage && (
-            <button type="button" onClick={handleDeleteImage} style={styles.deleteButton}>
-              Delete Image
-            </button>
-          )}
-        </div>
-
-        <div style={styles.nameContainer}>
-          <label style={styles.label}>
-            First Name*:
+      <div style={styles.container}>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.profilePictureSection}>
+            {profileImage ? (
+              <img src={profileImage} alt="Profile" style={styles.profileImage} />
+            ) : (
+              <div style={styles.placeholderImage}>Profile Picture</div>
+            )}
             <input 
-              type="text" 
-              name="firstName" 
-              value={formData.firstName} 
-              onChange={handleChange} 
-              style={styles.input} 
-              required 
+              type="file" 
+              accept="image/*" 
+              onChange={handleImageUpload} 
+              ref={fileInputRef}
+              style={styles.fileInput}
             />
-          </label>
-          
-          <label style={styles.label}>
-            Last Name*:
-            <input 
-              type="text" 
-              name="lastName" 
-              value={formData.lastName} 
-              onChange={handleChange} 
-              style={styles.input} 
-              required 
-            />
-          </label>
-        </div>
-
-        <div style={styles.sexAndBirthdateContainer}>
-          <label style={styles.labelCenter}>
-            Sex:
-            <select name="sex" value={formData.sex} onChange={handleChange} style={styles.input}>
-              <option value="">Select</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
-
-          <label style={styles.labelCenter}>
-            Birthdate:
-            <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} style={styles.input} />
-          </label>
-        </div>
-
-        <div style={styles.phoneAndEmailContainer}>
-          <label style={styles.labelCenter}>
-            Phone:
-            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={styles.input} />
-          </label>
-
-          <label style={styles.labelCenter}>
-            Email:
-            <input type="email" name="email" value={formData.email} onChange={handleChange} style={styles.input} />
-          </label>
-        </div>
-
-        <label style={styles.labelCenter}>
-          Address:
-          <input type="text" name="address" value={formData.address} onChange={handleChange} style={styles.input} />
-        </label>
-
-        <div style={styles.labelCenter}>
-          <span>Allergies:</span>
-          <div style={styles.checkboxContainer}>
-            {allergyOptions.map((allergy) => (
-              <label key={allergy} style={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  name="allergies"
-                  value={allergy}
-                  checked={formData.allergies.includes(allergy)}
-                  onChange={handleChange}
-                />
-                {allergy}
-              </label>
-            ))}
+            {profileImage && (
+              <button type="button" onClick={handleDeleteImage} style={styles.deleteButton}>
+                Delete Image
+              </button>
+            )}
           </div>
-          <label style={styles.label}>
-            Other Allergy (if applicable):
-            <input
-              type="text"
-              name="otherAllergy"
-              value={formData.otherAllergy}
-              onChange={handleChange}
-              style={styles.input}
-              placeholder="Specify other allergies..."
-            />
-          </label>
-        </div>
 
-        <label style={styles.labelCenter}>
-          Medical History:
-          <textarea name="medicalHistory" value={formData.medicalHistory} onChange={handleChange} style={styles.textarea} />
-        </label>
-
-        <label style={styles.labelCenter}>
-          Current Medicals:
-          <input type="text" name="currentMedicals" value={formData.currentMedicals} onChange={handleChange} style={styles.input} />
-        </label>
-
-        <div style={styles.labelCenter}>
-          <span>Immunization Records:</span>
-          <div style={styles.checkboxContainer}>
-            {immunizationOptions.map((record) => (
-              <label key={record} style={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  name="immunizationRecords"
-                  value={record}
-                  checked={formData.immunizationRecords.includes(record)}
-                  onChange={handleChange}
-                />
-                {record}
-              </label>
-            ))}
+          <div style={styles.nameContainer}>
+            <label style={styles.label}>
+              First Name*:
+              <input 
+                type="text" 
+                name="firstName" 
+                value={formData.firstName} 
+                onChange={handleChange} 
+                style={styles.input} 
+                required 
+              />
+            </label>
+            
+            <label style={styles.label}>
+              Last Name*:
+              <input 
+                type="text" 
+                name="lastName" 
+                value={formData.lastName} 
+                onChange={handleChange} 
+                style={styles.input} 
+                required 
+              />
+            </label>
           </div>
-        </div>
 
-        <label style={styles.labelCenter}>
-          Family Medical History:
-          <textarea name="familyMedicalHistory" value={formData.familyMedicalHistory} onChange={handleChange} style={styles.textarea} />
-        </label>
+          <div style={styles.sexAndBirthdateContainer}>
+            <label style={styles.labelCenter}>
+              Sex:
+              <select name="sex" value={formData.sex} onChange={handleChange} style={styles.input}>
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
 
-        <label style={styles.labelCenter}>
-          Next of Kin:
-          <input type="text" name="nextOfKin" value={formData.nextOfKin} onChange={handleChange} style={styles.input} />
-        </label>
+            <label style={styles.labelCenter}>
+              Birthdate:
+              <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} style={styles.input} />
+            </label>
+          </div>
 
-        <label style={styles.labelCenter}>
-          Contact Information:
-          <input type="text" name="contactInformation" value={formData.contactInformation} onChange={handleChange} style={styles.input} />
-        </label>
+          <div style={styles.phoneAndEmailContainer}>
+            <label style={styles.labelCenter}>
+              Phone:
+              <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={styles.input} />
+            </label>
 
-        <label style={styles.labelCenter}>
-          Secondary Contact:
-          <input type="text" name="secondaryContact" value={formData.secondaryContact} onChange={handleChange} style={styles.input} />
-        </label>
+            <label style={styles.labelCenter}>
+              Email:
+              <input type="email" name="email" value={formData.email} onChange={handleChange} style={styles.input} />
+            </label>
+          </div>
 
-        <label style={styles.labelCenter}>
-          Secondary Contact Information:
-          <input type="text" name="secondaryContactInformation" value={formData.secondaryContactInformation} onChange={handleChange} style={styles.input} />
-        </label>
+          <label style={styles.labelCenter}>
+            Address:
+            <input type="text" name="address" value={formData.address} onChange={handleChange} style={styles.input} />
+          </label>
 
-        <label style={styles.labelCenter}>
-          Special Instructions:
-          <textarea name="specialInstructions" value={formData.specialInstructions} onChange={handleChange} style={styles.textarea} />
-        </label>
+          <div style={styles.labelCenter}>
+            <span>Allergies:</span>
+            <div style={styles.checkboxContainer}>
+              {allergyOptions.map((allergy) => (
+                <label key={allergy} style={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    name="allergies"
+                    value={allergy}
+                    checked={formData.allergies.includes(allergy)}
+                    onChange={handleChange}
+                  />
+                  {allergy}
+                </label>
+              ))}
+            </div>
+            <label style={styles.label}>
+              Other Allergy (if applicable):
+              <input
+                type="text"
+                name="otherAllergy"
+                value={formData.otherAllergy}
+                onChange={handleChange}
+                style={styles.input}
+                placeholder="Specify other allergies..."
+              />
+            </label>
+          </div>
 
-        <button type="submit" style={styles.submitButton}>Save Profile</button>
-      </form>
+          <label style={styles.labelCenter}>
+            Medical History:
+            <textarea name="medicalHistory" value={formData.medicalHistory} onChange={handleChange} style={styles.textarea} />
+          </label>
+
+          <label style={styles.labelCenter}>
+            Current Medicals:
+            <input type="text" name="currentMedicals" value={formData.currentMedicals} onChange={handleChange} style={styles.input} />
+          </label>
+
+          <div style={styles.labelCenter}>
+            <span>Immunization Records:</span>
+            <div style={styles.checkboxContainer}>
+              {immunizationOptions.map((record) => (
+                <label key={record} style={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    name="immunizationRecords"
+                    value={record}
+                    checked={formData.immunizationRecords.includes(record)}
+                    onChange={handleChange}
+                  />
+                  {record}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <label style={styles.labelCenter}>
+            Family Medical History:
+            <textarea name="familyMedicalHistory" value={formData.familyMedicalHistory} onChange={handleChange} style={styles.textarea} />
+          </label>
+
+          <div style={styles.labelCenter}>
+            <label style={styles.label}>
+              Next of Kin:
+              <input type="text" name="nextOfKin" value={formData.nextOfKin} onChange={handleChange} style={styles.input} />
+            </label>
+
+            <label style={styles.label}>
+              Contact Information:
+              <input type="text" name="contactInformation" value={formData.contactInformation} onChange={handleChange} style={styles.input} />
+            </label>
+
+            <label style={styles.label}>
+              Secondary Contact:
+              <input type="text" name="secondaryContact" value={formData.secondaryContact} onChange={handleChange} style={styles.input} />
+            </label>
+
+            <label style={styles.label}>
+              Secondary Contact Information:
+              <input type="text" name="secondaryContactInformation" value={formData.secondaryContactInformation} onChange={handleChange} style={styles.input} />
+            </label>
+          </div>
+
+          <label style={styles.labelCenter}>
+            Special Instructions:
+            <textarea name="specialInstructions" value={formData.specialInstructions} onChange={handleChange} style={styles.textarea} />
+          </label>
+
+          <button type="submit" style={styles.submitButton}>Save Profile</button>
+        </form>
+      </div>
     </div>
   );
 };
@@ -322,16 +324,28 @@ const PatientProfileForm = () => {
 const styles = {
   header: {
     display: 'flex',
-    alignItems: 'center',
-    marginBottom: '20px',
+    alignItems: 'left',
+    justifyContent: 'left',
+    backgroundColor: '#fff',
+    padding: '10px',
   },
   logo: {
-    height: '50px',
-    marginRight: '10px',
+    fontSize: '24px',
+    fontWeight: '300',
+    color: '#000',
+    marginRight: '20px'
   },
   title: {
     fontSize: '24px',
-    fontWeight: 'bold',
+    fontWeight: '300', // Thinner text
+    color: '#023350', // Grayish color
+  },
+  container: {
+    padding: '20px',
+    maxWidth: '600px',
+    margin: '0 auto',
+    borderRadius: '8px',
+    backgroundColor: '#fff',
   },
   form: {
     display: 'flex',
@@ -339,6 +353,7 @@ const styles = {
   },
   profilePictureSection: {
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     marginBottom: '20px',
   },
@@ -346,69 +361,62 @@ const styles = {
     width: '100px',
     height: '100px',
     borderRadius: '50%',
-    marginRight: '10px',
+    objectFit: 'cover',
+    marginBottom: '10px',
   },
   placeholderImage: {
     width: '100px',
     height: '100px',
     borderRadius: '50%',
-    backgroundColor: '#023350',
+    backgroundColor: '#ccc',
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
-    marginRight: '10px',
-    color: '#7d7d7d',
+    alignItems: 'center',
+    marginBottom: '10px',
   },
   fileInput: {
-    marginLeft: '10px',
+    marginBottom: '10px',
   },
   deleteButton: {
-    marginLeft: '10px',
-    padding: '5px 10px',
-    backgroundColor: '#f44336',
-    color: 'white',
+    backgroundColor: '#e74c3c',
+    color: '#fff',
     border: 'none',
     borderRadius: '5px',
+    padding: '5px 10px',
     cursor: 'pointer',
   },
   nameContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: '15px',
   },
   sexAndBirthdateContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: '15px',
+    marginBottom: '10px',
   },
   phoneAndEmailContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: '15px',
-  },
-  label: {
     marginBottom: '10px',
   },
   labelCenter: {
-    marginBottom: '10px',
     display: 'flex',
     flexDirection: 'column',
+    marginBottom: '10px',
+  },
+  label: {
+    marginBottom: '5px',
   },
   input: {
-    padding: '10px',
-    fontSize: '16px',
+    padding: '8px',
     border: '1px solid #ccc',
-    borderRadius: '5px',
-    width: '100%',
-    maxWidth: '300px',
+    borderRadius: '4px',
   },
   textarea: {
-    padding: '10px',
-    fontSize: '16px',
+    padding: '8px',
     border: '1px solid #ccc',
-    borderRadius: '5px',
-    width: '100%',
-    height: '80px',
+    borderRadius: '4px',
+    resize: 'vertical',
   },
   checkboxContainer: {
     display: 'flex',
@@ -418,13 +426,11 @@ const styles = {
     marginBottom: '5px',
   },
   submitButton: {
-    marginTop: '20px',
-    padding: '10px',
-    fontSize: '16px',
-    backgroundColor: '#023350',
-    color: 'white',
+    backgroundColor: '#3498db',
+    color: '#fff',
     border: 'none',
     borderRadius: '5px',
+    padding: '10px',
     cursor: 'pointer',
   },
 };
