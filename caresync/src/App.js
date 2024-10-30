@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import CreditCard from './components/CreditCard';
 import Login from './components/Login';
 import Register from './components/Register';
+// import AppointmentHistory from './components/AppointmentHistory';
 
 const App = () => {
   return (
@@ -21,6 +22,8 @@ const App = () => {
       {/*<Patient /> */}
       {/*<PatientProfileForm /> */}
       {/*<CreditCard /> */}
+      {/*<CreditCard />  */}
+      {/*<AppointmentHistory /> */}
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       </Routes>
