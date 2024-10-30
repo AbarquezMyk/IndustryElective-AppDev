@@ -24,6 +24,7 @@ const PatientProfileForm = () => {
     specialInstructions: ''
   });
   const [profileImage, setProfileImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -80,20 +81,32 @@ const PatientProfileForm = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfileImage(URL.createObjectURL(file));
+      setImageFile(file);
+      setProfileImage(URL.createObjectURL(file)); // Preview the image
     }
   };
 
   const handleDeleteImage = () => {
     setProfileImage(null);
+    setImageFile(null);
     fileInputRef.current.value = '';
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dataToSubmit = { ...formData, profileImage };
+    const dataToSubmit = new FormData();
+    dataToSubmit.append('profileImage', imageFile); // Append the image file
 
-    axios.post('/api/patient/profile', dataToSubmit)
+    // Append other form data
+    for (const key in formData) {
+      dataToSubmit.append(key, formData[key]);
+    }
+
+    axios.post('/api/patient/profile', dataToSubmit, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
       .then(response => {
         console.log("Profile saved successfully:", response.data);
         alert("Profile saved successfully!");
@@ -161,7 +174,7 @@ const PatientProfileForm = () => {
               name="firstName" 
               value={formData.firstName} 
               onChange={handleChange} 
-              style={styles.halfInput} 
+              style={styles.input} 
               required 
             />
           </label>
@@ -173,7 +186,7 @@ const PatientProfileForm = () => {
               name="lastName" 
               value={formData.lastName} 
               onChange={handleChange} 
-              style={styles.halfInput} 
+              style={styles.input} 
               required 
             />
           </label>
@@ -199,12 +212,12 @@ const PatientProfileForm = () => {
         <div style={styles.phoneAndEmailContainer}>
           <label style={styles.labelCenter}>
             Phone:
-            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={styles.halfInput} />
+            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={styles.input} />
           </label>
 
           <label style={styles.labelCenter}>
             Email:
-            <input type="email" name="email" value={formData.email} onChange={handleChange} style={styles.halfInput} />
+            <input type="email" name="email" value={formData.email} onChange={handleChange} style={styles.input} />
           </label>
         </div>
 
@@ -255,16 +268,16 @@ const PatientProfileForm = () => {
         <div style={styles.labelCenter}>
           <span>Immunization Records:</span>
           <div style={styles.checkboxContainer}>
-            {immunizationOptions.map((option) => (
-              <label key={option} style={styles.checkboxLabel}>
+            {immunizationOptions.map((record) => (
+              <label key={record} style={styles.checkboxLabel}>
                 <input
                   type="checkbox"
                   name="immunizationRecords"
-                  value={option}
-                  checked={formData.immunizationRecords.includes(option)}
+                  value={record}
+                  checked={formData.immunizationRecords.includes(record)}
                   onChange={handleChange}
                 />
-                {option}
+                {record}
               </label>
             ))}
           </div>
@@ -280,21 +293,19 @@ const PatientProfileForm = () => {
           <input type="text" name="nextOfKin" value={formData.nextOfKin} onChange={handleChange} style={styles.input} />
         </label>
 
-        <div style={styles.phoneAndEmailContainer}>
-          <label style={styles.labelCenter}>
-            Contact Information:
-            <input type="tel" name="contactInformation" value={formData.contactInformation} onChange={handleChange} style={styles.halfInput} />
-          </label>
+        <label style={styles.labelCenter}>
+          Contact Information:
+          <input type="text" name="contactInformation" value={formData.contactInformation} onChange={handleChange} style={styles.input} />
+        </label>
 
-          <label style={styles.labelCenter}>
-            Secondary Contact:
-            <input type="text" name="secondaryContact" value={formData.secondaryContact} onChange={handleChange} style={styles.halfInput} />
-          </label>
-        </div>
+        <label style={styles.labelCenter}>
+          Secondary Contact:
+          <input type="text" name="secondaryContact" value={formData.secondaryContact} onChange={handleChange} style={styles.input} />
+        </label>
 
         <label style={styles.labelCenter}>
           Secondary Contact Information:
-          <input type="tel" name="secondaryContactInformation" value={formData.secondaryContactInformation} onChange={handleChange} style={styles.input} />
+          <input type="text" name="secondaryContactInformation" value={formData.secondaryContactInformation} onChange={handleChange} style={styles.input} />
         </label>
 
         <label style={styles.labelCenter}>
@@ -308,29 +319,19 @@ const PatientProfileForm = () => {
   );
 };
 
-// Styles for the component
 const styles = {
-  container: {
-    padding: '20px',
-    maxWidth: '600px',
-    margin: 'auto',
-    backgroundColor: '#f4f4f4',
-    borderRadius: '8px',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-  },
   header: {
     display: 'flex',
     alignItems: 'center',
     marginBottom: '20px',
   },
   logo: {
-    width: '50px',
+    height: '50px',
     marginRight: '10px',
   },
   title: {
     fontSize: '24px',
     fontWeight: 'bold',
-    color: '#333',
   },
   form: {
     display: 'flex',
@@ -338,7 +339,6 @@ const styles = {
   },
   profilePictureSection: {
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
     marginBottom: '20px',
   },
@@ -346,92 +346,86 @@ const styles = {
     width: '100px',
     height: '100px',
     borderRadius: '50%',
-    objectFit: 'cover',
-    marginBottom: '10px',
+    marginRight: '10px',
   },
   placeholderImage: {
     width: '100px',
     height: '100px',
-    border: '1px dashed #ccc',
     borderRadius: '50%',
+    backgroundColor: '#023350',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: '10px',
-    color: '#aaa',
+    marginRight: '10px',
+    color: '#7d7d7d',
   },
   fileInput: {
-    marginBottom: '10px',
+    marginLeft: '10px',
   },
   deleteButton: {
-    backgroundColor: '#e74c3c',
+    marginLeft: '10px',
+    padding: '5px 10px',
+    backgroundColor: '#f44336',
     color: 'white',
     border: 'none',
-    padding: '5px 10px',
     borderRadius: '5px',
     cursor: 'pointer',
   },
   nameContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-  },
-  halfInput: {
-    flex: '0 0 48%',
-    padding: '8px',
-    margin: '5px 0',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
+    marginBottom: '15px',
   },
   sexAndBirthdateContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: '10px',
-  },
-  input: {
-    padding: '8px',
-    margin: '5px 0',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    width: '100%',
-  },
-  label: {
-    display: 'block',
-    marginBottom: '5px',
-  },
-  labelCenter: {
-    display: 'block',
-    textAlign: 'center',
-    marginBottom: '10px',
-  },
-  textarea: {
-    padding: '8px',
-    margin: '5px 0',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    width: '100%',
-    resize: 'vertical',
-  },
-  checkboxContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  checkboxLabel: {
-    margin: '0 10px',
-  },
-  submitButton: {
-    padding: '10px',
-    backgroundColor: '#3498db',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    fontSize: '16px',
+    marginBottom: '15px',
   },
   phoneAndEmailContainer: {
     display: 'flex',
     justifyContent: 'space-between',
+    marginBottom: '15px',
+  },
+  label: {
     marginBottom: '10px',
+  },
+  labelCenter: {
+    marginBottom: '10px',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  input: {
+    padding: '10px',
+    fontSize: '16px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    width: '100%',
+    maxWidth: '300px',
+  },
+  textarea: {
+    padding: '10px',
+    fontSize: '16px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    width: '100%',
+    height: '80px',
+  },
+  checkboxContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  checkboxLabel: {
+    marginBottom: '5px',
+  },
+  submitButton: {
+    marginTop: '20px',
+    padding: '10px',
+    fontSize: '16px',
+    backgroundColor: '#023350',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
   },
 };
 
