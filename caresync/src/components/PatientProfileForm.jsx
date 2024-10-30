@@ -11,10 +11,11 @@ const PatientProfileForm = () => {
     phone: '',
     email: '',
     address: '',
-    allergies: '',
+    allergies: [],
+    otherAllergy: '',
     medicalHistory: '',
     currentMedicals: '',
-    immunizationRecords: '',
+    immunizationRecords: [],
     familyMedicalHistory: '',
     nextOfKin: '',
     contactInformation: '',
@@ -26,6 +27,7 @@ const PatientProfileForm = () => {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
+    // Fetch existing profile data when component mounts
     axios.get('/api/patient/profile')
       .then(response => {
         setFormData(response.data);
@@ -37,11 +39,42 @@ const PatientProfileForm = () => {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value
-    }));
+    const { name, value, type, checked } = e.target;
+
+    if (type === "checkbox") {
+      if (name === "allergies") {
+        // Handle allergies checkbox
+        if (checked) {
+          setFormData((prevData) => ({
+            ...prevData,
+            allergies: [...prevData.allergies, value]
+          }));
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            allergies: prevData.allergies.filter(allergy => allergy !== value)
+          }));
+        }
+      } else if (name === "immunizationRecords") {
+        // Handle immunization records checkbox
+        if (checked) {
+          setFormData((prevData) => ({
+            ...prevData,
+            immunizationRecords: [...prevData.immunizationRecords, value]
+          }));
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            immunizationRecords: prevData.immunizationRecords.filter(record => record !== value)
+          }));
+        }
+      }
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value
+      }));
+    }
   };
 
   const handleImageUpload = (e) => {
@@ -71,6 +104,28 @@ const PatientProfileForm = () => {
       });
   };
 
+  const allergyOptions = [
+    "Peanuts", "Tree Nuts", "Milk", "Eggs", "Wheat", "Soy",
+    "Fish", "Shellfish", "Sesame", "Corn", "Mustard", "Celery",
+    "Lupin", "Gluten", "Fruits", "Vegetables", "Pollen", "Dust Mites",
+    "Animal Dander", "Mold Spores", "Latex", "Insect Stings",
+    "Medications", "Cosmetics and Skincare Products", "Nickel", "Others"
+  ];
+
+  const immunizationOptions = [
+    "BCG - Tuberculosis",
+    "DTP - Diphtheria, Tetanus, Pertussis",
+    "Hepatitis B",
+    "OPV - Poliomyelitis",
+    "Hib - Invasive Hib disease",
+    "Measles, Mumps, Rubella (MMR)",
+    "Pneumococcal Conjugate Vaccine (PCV)",
+    "Rotavirus Vaccine",
+    "Varicella (Chickenpox)",
+    "Td - Tetanus, Diphtheria",
+    "Influenza Vaccine"
+  ];
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -98,106 +153,151 @@ const PatientProfileForm = () => {
           )}
         </div>
 
-        <label>
-          First Name*:
-          <input 
-            type="text" 
-            name="firstName" 
-            value={formData.firstName} 
-            onChange={handleChange} 
-            style={styles.input} 
-            required 
-          />
-        </label>
+        <div style={styles.nameContainer}>
+          <label style={styles.label}>
+            First Name*:
+            <input 
+              type="text" 
+              name="firstName" 
+              value={formData.firstName} 
+              onChange={handleChange} 
+              style={styles.halfInput} 
+              required 
+            />
+          </label>
+          
+          <label style={styles.label}>
+            Last Name*:
+            <input 
+              type="text" 
+              name="lastName" 
+              value={formData.lastName} 
+              onChange={handleChange} 
+              style={styles.halfInput} 
+              required 
+            />
+          </label>
+        </div>
 
-        <label>
-          Last Name*:
-          <input 
-            type="text" 
-            name="lastName" 
-            value={formData.lastName} 
-            onChange={handleChange} 
-            style={styles.input} 
-            required 
-          />
-        </label>
+        <div style={styles.sexAndBirthdateContainer}>
+          <label style={styles.labelCenter}>
+            Sex:
+            <select name="sex" value={formData.sex} onChange={handleChange} style={styles.input}>
+              <option value="">Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
 
-        <label>
-          Sex:
-          <select name="sex" value={formData.sex} onChange={handleChange} style={styles.input}>
-            <option value="">Select</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </label>
+          <label style={styles.labelCenter}>
+            Birthdate:
+            <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} style={styles.input} />
+          </label>
+        </div>
 
-        <label>
-          Birthdate:
-          <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} style={styles.input} />
-        </label>
+        <div style={styles.phoneAndEmailContainer}>
+          <label style={styles.labelCenter}>
+            Phone:
+            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={styles.halfInput} />
+          </label>
 
-        <label>
-          Phone:
-          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={styles.input} />
-        </label>
+          <label style={styles.labelCenter}>
+            Email:
+            <input type="email" name="email" value={formData.email} onChange={handleChange} style={styles.halfInput} />
+          </label>
+        </div>
 
-        <label>
-          Email:
-          <input type="email" name="email" value={formData.email} onChange={handleChange} style={styles.input} />
-        </label>
-
-        <label>
+        <label style={styles.labelCenter}>
           Address:
           <input type="text" name="address" value={formData.address} onChange={handleChange} style={styles.input} />
         </label>
 
-        <label>
-          Allergies:
-          <input type="text" name="allergies" value={formData.allergies} onChange={handleChange} style={styles.input} />
-        </label>
+        <div style={styles.labelCenter}>
+          <span>Allergies:</span>
+          <div style={styles.checkboxContainer}>
+            {allergyOptions.map((allergy) => (
+              <label key={allergy} style={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  name="allergies"
+                  value={allergy}
+                  checked={formData.allergies.includes(allergy)}
+                  onChange={handleChange}
+                />
+                {allergy}
+              </label>
+            ))}
+          </div>
+          <label style={styles.label}>
+            Other Allergy (if applicable):
+            <input
+              type="text"
+              name="otherAllergy"
+              value={formData.otherAllergy}
+              onChange={handleChange}
+              style={styles.input}
+              placeholder="Specify other allergies..."
+            />
+          </label>
+        </div>
 
-        <label>
+        <label style={styles.labelCenter}>
           Medical History:
           <textarea name="medicalHistory" value={formData.medicalHistory} onChange={handleChange} style={styles.textarea} />
         </label>
 
-        <label>
+        <label style={styles.labelCenter}>
           Current Medicals:
           <input type="text" name="currentMedicals" value={formData.currentMedicals} onChange={handleChange} style={styles.input} />
         </label>
 
-        <label>
-          Immunization Records:
-          <textarea name="immunizationRecords" value={formData.immunizationRecords} onChange={handleChange} style={styles.textarea} />
-        </label>
+        <div style={styles.labelCenter}>
+          <span>Immunization Records:</span>
+          <div style={styles.checkboxContainer}>
+            {immunizationOptions.map((option) => (
+              <label key={option} style={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  name="immunizationRecords"
+                  value={option}
+                  checked={formData.immunizationRecords.includes(option)}
+                  onChange={handleChange}
+                />
+                {option}
+              </label>
+            ))}
+          </div>
+        </div>
 
-        <label>
+        <label style={styles.labelCenter}>
           Family Medical History:
           <textarea name="familyMedicalHistory" value={formData.familyMedicalHistory} onChange={handleChange} style={styles.textarea} />
         </label>
 
-        <label>
+        <label style={styles.labelCenter}>
           Next of Kin:
           <input type="text" name="nextOfKin" value={formData.nextOfKin} onChange={handleChange} style={styles.input} />
         </label>
 
-        <label>
-          Contact Information (Phone Number):
-          <input type="tel" name="contactInformation" value={formData.contactInformation} onChange={handleChange} style={styles.input} />
-        </label>
+        <div style={styles.phoneAndEmailContainer}>
+          <label style={styles.labelCenter}>
+            Contact Information:
+            <input type="tel" name="contactInformation" value={formData.contactInformation} onChange={handleChange} style={styles.halfInput} />
+          </label>
 
-        <label>
-          Secondary Contact:
-          <input type="text" name="secondaryContact" value={formData.secondaryContact} onChange={handleChange} style={styles.input} />
-        </label>
+          <label style={styles.labelCenter}>
+            Secondary Contact:
+            <input type="text" name="secondaryContact" value={formData.secondaryContact} onChange={handleChange} style={styles.halfInput} />
+          </label>
+        </div>
 
-        <label>
+        <label style={styles.labelCenter}>
           Secondary Contact Information:
           <input type="tel" name="secondaryContactInformation" value={formData.secondaryContactInformation} onChange={handleChange} style={styles.input} />
         </label>
 
-        <label>
+        <label style={styles.labelCenter}>
           Special Instructions:
           <textarea name="specialInstructions" value={formData.specialInstructions} onChange={handleChange} style={styles.textarea} />
         </label>
@@ -208,98 +308,130 @@ const PatientProfileForm = () => {
   );
 };
 
+// Styles for the component
 const styles = {
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: '#FFFFFF',
-    padding: '10px',
-    fontFamily: 'Arial',
-    width: '100%',
+    padding: '20px',
+    maxWidth: '600px',
+    margin: 'auto',
+    backgroundColor: '#f4f4f4',
+    borderRadius: '8px',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
   },
   header: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: '100%',
-    marginBottom: '20px'
+    marginBottom: '20px',
   },
   logo: {
-    width: '70px',
-    height: '70px',
-    marginRight: '10px'
+    width: '50px',
+    marginRight: '10px',
   },
   title: {
-    color: '#023350',
-    letterSpacing: '2px',
     fontSize: '24px',
+    fontWeight: 'bold',
+    color: '#333',
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
-    width: '100%',
-    padding: '20px'
   },
   profilePictureSection: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginBottom: '20px'
+    marginBottom: '20px',
   },
   profileImage: {
     width: '100px',
     height: '100px',
     borderRadius: '50%',
     objectFit: 'cover',
-    marginBottom: '10px'
+    marginBottom: '10px',
   },
   placeholderImage: {
     width: '100px',
     height: '100px',
+    border: '1px dashed #ccc',
     borderRadius: '50%',
-    backgroundColor: '#E0E0E0',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: '10px',
-    fontWeight: 'bold'
+    color: '#aaa',
   },
   fileInput: {
-    marginBottom: '10px'
+    marginBottom: '10px',
   },
   deleteButton: {
-    backgroundColor: '#FF6F61',
-    color: '#FFFFFF',
+    backgroundColor: '#e74c3c',
+    color: 'white',
     border: 'none',
-    borderRadius: '5px',
     padding: '5px 10px',
-    cursor: 'pointer'
+    borderRadius: '5px',
+    cursor: 'pointer',
+  },
+  nameContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  halfInput: {
+    flex: '0 0 48%',
+    padding: '8px',
+    margin: '5px 0',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+  },
+  sexAndBirthdateContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '10px',
   },
   input: {
-    marginBottom: '10px',
-    padding: '5px',
+    padding: '8px',
+    margin: '5px 0',
     border: '1px solid #ccc',
     borderRadius: '4px',
-    width: '90%',
-    maxWidth: '300px'
+    width: '100%',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '5px',
+  },
+  labelCenter: {
+    display: 'block',
+    textAlign: 'center',
+    marginBottom: '10px',
   },
   textarea: {
-    marginBottom: '10px',
-    padding: '5px',
+    padding: '8px',
+    margin: '5px 0',
     border: '1px solid #ccc',
     borderRadius: '4px',
-    height: '60px',
-    width: '90%',
-    maxWidth: '300px'
+    width: '100%',
+    resize: 'vertical',
+  },
+  checkboxContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  checkboxLabel: {
+    margin: '0 10px',
   },
   submitButton: {
-    backgroundColor: '#FF6F61',
-    color: '#FFFFFF',
+    padding: '10px',
+    backgroundColor: '#3498db',
+    color: 'white',
     border: 'none',
     borderRadius: '5px',
-    padding: '10px',
     cursor: 'pointer',
     fontSize: '16px',
+  },
+  phoneAndEmailContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '10px',
   },
 };
 
