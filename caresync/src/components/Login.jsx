@@ -10,14 +10,29 @@ const Login = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setError(''); // Reset error message on new submission
         try {
-            if (email === 'test@example.com' && password === 'password') {
+            const response = await fetch('http://your-api-url.com/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json(); // Parse the response as JSON
+
+            if (response.ok) {
+                console.log('Login successful:', data); // Debugging line
                 navigate('/Home');
             } else {
-                setError('Invalid email or password.');
+                // Check the response from the server for a specific error message
+                setError(data.message || 'Invalid email or password.');
+                console.log('Login failed:', data); // Debugging line
             }
         } catch (err) {
             setError('Something went wrong. Please try again.');
+            console.error('Error during login:', err); // Log error details
         }
     };
 
