@@ -1,12 +1,13 @@
 package com.appdev.g4.adie.caresync.service;
 
-import com.appdev.g4.adie.caresync.entity.Patient;
-import com.appdev.g4.adie.caresync.repository.PatientRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.appdev.g4.adie.caresync.entity.Patient;
+import com.appdev.g4.adie.caresync.repository.PatientRepository;
 
 @Service
 public class PatientService {
@@ -23,6 +24,10 @@ public class PatientService {
     }
 
     public Patient createPatient(Patient patient) {
+        // Add basic validation (could be enhanced)
+        if (patient.getFirstName() == null || patient.getLastName() == null) {
+            throw new IllegalArgumentException("First name and last name are required.");
+        }
         return patientRepository.save(patient);
     }
 
@@ -30,6 +35,8 @@ public class PatientService {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Patient not found with id " + id));
 
+        patient.setFirstName(patientDetails.getFirstName());
+        patient.setLastName(patientDetails.getLastName());
         patient.setSex(patientDetails.getSex());
         patient.setBirthdate(patientDetails.getBirthdate());
         patient.setPhone(patientDetails.getPhone());
