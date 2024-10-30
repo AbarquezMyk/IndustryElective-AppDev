@@ -5,8 +5,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 // import Calendar from './components/Calendar';
 // import OnlineForm from './components/OnlineForm';
 // import Patient from './components/Patient';
-import PatientProfileForm from './components/PatientProfileForm';
+// import PatientProfileForm from './components/PatientProfileForm';
 // import CreditCard from './components/CreditCard';
+import AppointmentHistory from './components/AppointmentHistory';
 
 const App = () => {
   return (
@@ -16,8 +17,9 @@ const App = () => {
       {/* <Calendar /> */}
       {/*<OnlineForm /> */}
       {/*<Patient /> */}
-      <PatientProfileForm />
+      {/*<PatientProfileForm /> */}
       {/*<CreditCard />  */}
+      <AppointmentHistory />
     </Router>
   );
 };
