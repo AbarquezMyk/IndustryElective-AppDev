@@ -50,4 +50,9 @@ public class PatientController {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/search/lastName/{lastName}") // New endpoint
+    public List<Patient> getPatientsByLastName(@PathVariable String lastName) {
+        return patientService.findPatientsByLastName(lastName);
+    }
 }

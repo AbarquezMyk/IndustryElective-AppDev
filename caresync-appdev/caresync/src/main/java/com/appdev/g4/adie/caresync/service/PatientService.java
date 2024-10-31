@@ -24,7 +24,6 @@ public class PatientService {
     }
 
     public Patient createPatient(Patient patient) {
-        // Add basic validation (could be enhanced)
         if (patient.getFirstName() == null || patient.getLastName() == null) {
             throw new IllegalArgumentException("First name and last name are required.");
         }
@@ -58,5 +57,9 @@ public class PatientService {
 
     public void deletePatient(Long id) {
         patientRepository.deleteById(id);
+    }
+
+    public List<Patient> findPatientsByLastName(String lastName) {
+        return patientRepository.findByLastName(lastName);
     }
 }
