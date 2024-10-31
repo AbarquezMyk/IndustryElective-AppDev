@@ -36,12 +36,11 @@ function App() {
             { name: 'Dr. Robert Wilson', specialty: 'Neurologist', image: doctor2 },
             { name: 'Dr. Anna Thompson', specialty: 'Neurologist', image: doctor3 }
         ],
-
         CardiacCare: [
-            { name: 'Dr. James Smith', specialty: 'Cardiologist', image: doctor4 },
-            { name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', image: doctor5 },
-            { name: 'Dr. Michael Brown', specialty: 'Cardiologist', image: doctor6 },
-            { name: 'Dr. Jennifer Davis', specialty: 'Cardiologist', image: doctor7 }
+            { name: 'Dr. John Smith', specialty: 'Cardiologist', image: doctor4 },
+            { name: 'Dr. Jane Doe', specialty: 'Cardiologist', image: doctor5 },
+            { name: 'Dr. Mary Johnson', specialty: 'Cardiologist', image: doctor6 },
+            { name: 'Dr. Peter Brown', specialty: 'Cardiologist', image: doctor7 }
         ],
         // Add other departments' doctors here if needed...
     };
@@ -189,7 +188,7 @@ function App() {
                     <div style={styles.feedbackSection}>
                         <p><strong>Patient Feedback:</strong></p>
                         <blockquote>
-                            <p>"The {selectedDepartment} department was very thorough and attentive."</p>
+                            <p>"The neurology department was very thorough and attentive."</p>
                             <footer>- Patient A</footer>
                         </blockquote>
                         <blockquote>
