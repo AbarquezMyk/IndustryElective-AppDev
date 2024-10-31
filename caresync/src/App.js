@@ -5,10 +5,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import Calendar from './components/Calendar';
 // import OnlineForm from './components/OnlineForm';
 // import Patient from './components/Patient';
-// import PatientProfileForm from './components/PatientProfileForm';
+import PatientProfileForm from './components/PatientProfileForm';
 // import CreditCard from './components/CreditCard';
-import Login from './components/Login';
-import Register from './components/Register';
+// import Login from './components/Login';
+// import Register from './components/Register';
 // import AppointmentHistory from './components/AppointmentHistory';
 
 const App = () => {
@@ -24,8 +24,9 @@ const App = () => {
       {/*<CreditCard /> */}
       {/*<CreditCard />  */}
       {/*<AppointmentHistory /> */}
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
+      <Route path="/profilesetup" element={<PatientProfileForm />} />
+      {/*<Route path="/register" element={<Register />} /> */}
+      {/*<Route path="/login" element={<Login />} /> */}
       </Routes>
     </Router>
   );

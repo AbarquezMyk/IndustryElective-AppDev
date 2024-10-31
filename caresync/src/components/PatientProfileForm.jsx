@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import logo from './img/Logo1.png';
+import logo from './img/logo.png';
 
 const PatientProfileForm = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +28,6 @@ const PatientProfileForm = () => {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    // Fetch existing profile data when component mounts
     axios.get('/api/patient/profile')
       .then(response => {
         setFormData(response.data);
@@ -80,7 +79,7 @@ const PatientProfileForm = () => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
-      setProfileImage(URL.createObjectURL(file)); // Preview the image
+      setProfileImage(URL.createObjectURL(file));
     }
   };
 
@@ -93,9 +92,8 @@ const PatientProfileForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const dataToSubmit = new FormData();
-    dataToSubmit.append('profileImage', imageFile); // Append the image file
+    dataToSubmit.append('profileImage', imageFile);
 
-    // Append other form data
     for (const key in formData) {
       dataToSubmit.append(key, formData[key]);
     }
@@ -337,8 +335,8 @@ const styles = {
   },
   title: {
     fontSize: '24px',
-    fontWeight: '300', // Thinner text
-    color: '#023350', // Grayish color
+    fontWeight: '300',
+    color: '#023350',
   },
   container: {
     padding: '20px',
@@ -368,7 +366,7 @@ const styles = {
     width: '100px',
     height: '100px',
     borderRadius: '50%',
-    backgroundColor: '#ccc',
+    backgroundColor: '#023350',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -417,6 +415,7 @@ const styles = {
     border: '1px solid #ccc',
     borderRadius: '4px',
     resize: 'vertical',
+    minHeight: '100px',
   },
   checkboxContainer: {
     display: 'flex',
@@ -426,13 +425,14 @@ const styles = {
     marginBottom: '5px',
   },
   submitButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#023350',
     color: '#fff',
     border: 'none',
     borderRadius: '5px',
-    padding: '10px',
+    padding: '10px 15px',
     cursor: 'pointer',
-  },
+    marginTop: '10px',
+  }
 };
 
 export default PatientProfileForm;
