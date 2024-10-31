@@ -17,13 +17,26 @@ const Register = () => {
             password: formData.get('password1'),
         };
 
-        // Perform your registration logic here (e.g., API call)
-        // Assuming you have a function called registerUser for handling registration
+        // Perform your registration logic here (API call)
         try {
-            // await registerUser(data); // Uncomment and implement your registration logic
-            navigate('/login'); // Redirect to login page upon success
+            const response = await fetch('http://localhost:8080/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                navigate('/login'); // Redirect to login page upon success
+            } else {
+                const errorData = await response.json();
+                console.error('Registration failed:', errorData.message);
+                alert('Registration failed: ' + errorData.message);
+            }
         } catch (error) {
-            console.error('Registration failed', error); // Handle registration errors
+            console.error('Registration error:', error);
+            alert('Registration error. Please try again.');
         }
     };
 
@@ -142,7 +155,9 @@ const Register = () => {
 
                                 <div style={styles.checkboxContainer}>
                                     <input type="checkbox" id="terms" name="terms" required style={styles.checkbox} />
-                                    <label htmlFor="terms">I agree to the <a href="#" style={styles.link}>Terms and Conditions</a></label>
+                                    <label htmlFor="terms">
+                                        I agree to the <button type="button" onClick={() => alert('Terms and Conditions')} style={styles.link}>Terms and Conditions</button>
+                                    </label>
                                 </div>
 
                                 <button type="submit" style={styles.button}>Sign Up</button>

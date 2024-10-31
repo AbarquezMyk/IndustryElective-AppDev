@@ -18,9 +18,9 @@ const Login = () => {
                 },
                 body: JSON.stringify({ email, password }),
             });
-    
+
             const data = await response.json();
-    
+
             if (response.ok) {
                 console.log('Login successful:', data);
                 navigate('/PatientProfileForm');
@@ -54,7 +54,7 @@ const Login = () => {
                     </button>
                 </div>
                 <p style={styles.orSeparator}>⸻⸻⸻⸻ or ⸻⸻⸻⸻</p>
-                <form method="post" action="/login" onSubmit={handleSubmit} style={styles.form}>
+                <form onSubmit={handleSubmit} style={styles.form}>
                     <input
                         type="text"
                         name="email"
@@ -73,14 +73,7 @@ const Login = () => {
                         required
                         style={styles.input}
                     />
-                    <button
-                        type="button"
-                        onClick={() => console.log('Forgot Password clicked')}
-                        style={styles.forgotPasswordButton}
-                    >
-                        Forgot Password?
-                    </button>
-                    <button type="submit" style={styles.submitButton}>Log In</button>
+                    <button type="submit" style={styles.button}>Log In</button>
                 </form>
             </div>
         </section>
@@ -89,28 +82,25 @@ const Login = () => {
 
 const styles = {
     section: {
-        paddingTop: '60px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        marginTop: '50px',
     },
     textCenter: {
         textAlign: 'center',
-        marginBottom: '30px',
     },
     title: {
         fontSize: '40px',
-        margin: '10px 0',
+        fontFamily: "'Manjari', sans-serif",
     },
     subtitle: {
         fontSize: '20px',
+        fontFamily: "'Manjari', sans-serif",
     },
     loginSection: {
         backgroundColor: 'white',
         padding: '40px',
         borderRadius: '8px',
-        maxWidth: '400px',
-        width: '100%',
+        maxWidth: '600px',
+        margin: '20px auto',
     },
     loginOptions: {
         marginBottom: '20px',
@@ -118,7 +108,7 @@ const styles = {
     googleButton: {
         backgroundColor: '#fff',
         border: '1px solid #d9d9d9',
-        padding: '5px 10px',
+        padding: '10px 20px',
         cursor: 'pointer',
         borderRadius: '5px',
         display: 'flex',
@@ -126,49 +116,36 @@ const styles = {
         justifyContent: 'center',
         width: '100%',
         color: 'black',
-        fontSize: '12px',
         transition: 'background-color 0.3s ease, border-color 0.3s ease',
     },
     googleIcon: {
-        marginRight: '8px',
-        width: '16px',
-        height: '16px',
+        width: '20px',
+        marginRight: '10px',
     },
     orSeparator: {
-        color: 'black',
         textAlign: 'center',
+        padding: '20px 0',
+        color: 'black',
     },
     form: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        textAlign: 'center',
     },
     input: {
         padding: '10px',
         marginBottom: '20px',
         borderRadius: '5px',
         border: '1px solid #d9d9d9',
-        width: '65%',
-        maxWidth: '300px',
+        width: '85%',
     },
-    forgotPasswordButton: {
-        color: '#2d3e50',
-        background: 'none',
-        border: 'none',
-        textDecoration: 'underline',
-        cursor: 'pointer',
-        marginBottom: '20px',
-        textAlign: 'center',
-    },
-    submitButton: {
+    button: {
         backgroundColor: '#2d3e50',
         color: 'white',
         padding: '10px',
         border: 'none',
         borderRadius: '5px',
         cursor: 'pointer',
-        width: '50%',
-        maxWidth: '300px',
+        width: '80%',
+        margin: '0 auto',
     },
 };
 
