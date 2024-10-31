@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 
 // Import department logos
-import neurologyLogo from './path/to/neurology-logo.svg';
-import cardiacLogo from './path/to/cardiac-logo.svg';
-import osteoporosisLogo from './path/to/osteoporosis-logo.svg';
-import eyecareLogo from './path/to/eyecare-logo.svg';
-import heartcareLogo from './path/to/heartcare-logo.svg';
-import entLogo from './path/to/ent-logo.svg';
+import neurologyLogo from './img/neurology-logo.svg';
+import cardiacLogo from './img/cardiac-logo.svg';
+import osteoporosisLogo from './img/osteoporosis-logo.svg';
+import eyecareLogo from './img/eyecare-logo.svg';
+import heartcareLogo from './img/heartcare-logo.svg';
+import entLogo from './img/ent-logo.svg';
 
 // Import doctor images
-import doctor1 from './path/to/doctor1.jpg';
-import doctor2 from './path/to/doctor2.png';
-import doctor3 from './path/to/doctor3.png';
+import doctor1 from './img/doctor1.jpg';
+import doctor2 from './img/doctor2.png';
+import doctor3 from './img/doctor3.png';
+import doctor4 from './img/doctor4.png';
+import doctor5 from './img/doctor5.png';
+import doctor6 from './img/doctor6.png';
+import doctor7 from './img/doctor7.jpg';
 
 function App() {
     const [currentStep, setCurrentStep] = useState('departments');
@@ -31,6 +35,13 @@ function App() {
             { name: 'Dr. Emily Carter', specialty: 'Neurologist', image: doctor1 },
             { name: 'Dr. Robert Wilson', specialty: 'Neurologist', image: doctor2 },
             { name: 'Dr. Anna Thompson', specialty: 'Neurologist', image: doctor3 }
+        ],
+
+        CardiacCare: [
+            { name: 'Dr. James Smith', specialty: 'Cardiologist', image: doctor4 },
+            { name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', image: doctor5 },
+            { name: 'Dr. Michael Brown', specialty: 'Cardiologist', image: doctor6 },
+            { name: 'Dr. Jennifer Davis', specialty: 'Cardiologist', image: doctor7 }
         ],
         // Add other departments' doctors here if needed...
     };
@@ -59,20 +70,38 @@ function App() {
         textCenter: {
             textAlign: 'center'
         },
+        header: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '40px'
+        },
+        logo: {
+            height: '60px'
+        },
+        title: {
+            fontSize: '24px',
+            fontWeight: '300',
+            color: '#333'
+        },
+        brainIcon: {
+            height: '50px'
+        },
         departments: {
             display: 'flex',
             justifyContent: 'space-around',
             flexWrap: 'wrap',
             gap: '20px'
         },
-        card: {
+        departmentCard: {
             border: '1px solid #ddd',
             padding: '20px',
             borderRadius: '10px',
             width: '150px',
             textAlign: 'center',
             cursor: 'pointer',
-            transition: 'transform 0.2s'
+            transition: 'transform 0.2s',
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)'
         },
         logoImage: {
             width: '100px',
@@ -94,10 +123,41 @@ function App() {
             fontSize: '16px'
         },
         doctorCards: {
-            display: 'flex',
-            justifyContent: 'center',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '20px',
-            flexWrap: 'wrap'
+            justifyContent: 'center'
+        },
+        doctorCard: {
+            border: '1px solid #ddd',
+            padding: '20px',
+            borderRadius: '10px',
+            textAlign: 'center',
+            cursor: 'pointer',
+            transition: 'transform 0.2s',
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)'
+        },
+        doctorImage: {
+            width: '100%',
+            height: '200px',
+            objectFit: 'cover',
+            borderRadius: '10px',
+            marginBottom: '10px'
+        },
+        doctorName: {
+            fontSize: '18px',
+            fontWeight: 'bold',
+            color: '#333'
+        },
+        doctorSpecialty: {
+            color: '#777',
+            fontSize: '14px',
+            marginBottom: '5px'
+        },
+        rating: {
+            color: '#FFD700', // gold color for stars
+            fontSize: '14px',
+            marginBottom: '10px'
         }
     };
 
@@ -110,7 +170,7 @@ function App() {
                         {departments.map(dept => (
                             <div
                                 key={dept.name}
-                                style={styles.card}
+                                style={styles.departmentCard}
                                 onClick={() => handleDepartmentSelect(dept.name)}
                                 onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
                                 onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
@@ -129,7 +189,7 @@ function App() {
                     <div style={styles.feedbackSection}>
                         <p><strong>Patient Feedback:</strong></p>
                         <blockquote>
-                            <p>"The neurology department was very thorough and attentive."</p>
+                            <p>"The {selectedDepartment} department was very thorough and attentive."</p>
                             <footer>- Patient A</footer>
                         </blockquote>
                         <blockquote>
@@ -149,19 +209,24 @@ function App() {
             )}
             {currentStep === 'doctors' && (
                 <div style={styles.textCenter}>
-                    <h2>Our Doctors</h2>
+                    <div style={styles.header}>
+                        <img src="logo.png" alt="Logo" style={styles.logo} />
+                        <h2 style={styles.title}>Our Doctors</h2>
+                        <img src="neurology-logo.svg" alt="Brain Icon" style={styles.brainIcon} />
+                    </div>
                     <div style={styles.doctorCards}>
                         {doctors[selectedDepartment]?.map((doctor, index) => (
                             <div
                                 key={index}
-                                style={styles.card}
+                                style={styles.doctorCard}
                                 onClick={() => handleDoctorSelect(doctor)}
                                 onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
                                 onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                             >
-                                <img src={doctor.image} alt={doctor.name} style={styles.logoImage} />
-                                <p><strong>{doctor.name}</strong></p>
-                                <p>{doctor.specialty}</p>
+                                <img src={doctor.image} alt={doctor.name} style={styles.doctorImage} />
+                                <p style={styles.doctorName}>{doctor.name}</p>
+                                <p style={styles.rating}>★★★★</p>
+                                <p style={styles.doctorSpecialty}>{doctor.specialty}</p>
                             </div>
                         ))}
                     </div>
