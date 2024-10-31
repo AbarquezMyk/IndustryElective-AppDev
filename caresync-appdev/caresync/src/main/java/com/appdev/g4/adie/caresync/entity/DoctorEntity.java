@@ -18,19 +18,19 @@ public class DoctorEntity {
     private String contactInformation;
     private String status;
     private String location;
+    private String department; // New department attribute
 
-    
     public DoctorEntity() {
     }
 
-    public DoctorEntity(String doctorName, String contactInformation, String status, String location) {
+    public DoctorEntity(String doctorName, String contactInformation, String status, String location, String department) {
         this.doctorName = doctorName;
         this.contactInformation = contactInformation;
         this.status = status;
         this.location = location;
+        this.department = department;
     }
 
-    
     public Long getDoctorId() {
         return doctorId;
     }
@@ -69,5 +69,13 @@ public class DoctorEntity {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getDepartment() { // Getter for department
+        return department;
+    }
+
+    public void setDepartment(String department) { // Setter for department
+        this.department = department;
     }
 }
