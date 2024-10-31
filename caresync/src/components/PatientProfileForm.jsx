@@ -29,7 +29,7 @@ const PatientProfileForm = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios.get('/api/patient/profile')
+    axios.get('/api/patient/all')
       .then(response => {
         setFormData(response.data);
         if (response.data.profileImage) {
