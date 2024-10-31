@@ -25,8 +25,8 @@ const App = () => {
       {/*<CreditCard />  */}
       {/*<AppointmentHistory /> */}
       <Route path="/profilesetup" element={<PatientProfileForm />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
+      {/*<Route path="/register" element={<Register />} /> */}
+      {/*<Route path="/login" element={<Login />} /> */}
       </Routes>
     </Router>
   );

@@ -10,6 +10,7 @@ const PatientProfileForm = () => {
     sex: '',
     phoneNumber: '',
     email: '',
+    address: '',
     allergies: [],
     otherAllergy: '',
     immunizationRecords: [],
@@ -74,28 +75,52 @@ const PatientProfileForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const dataToSubmit = new FormData();
-    dataToSubmit.append('profileImage', imageFile);
 
-    for (const key in formData) {
-      dataToSubmit.append(key, formData[key]);
+    console.log('Submitting data:', {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        address: formData.address,
+        gender: formData.gender,
+        dateOfBirth: formData.dateOfBirth,
+        allergies: formData.allergies,
+        previousVisit: formData.previousVisit,
+        nextVisit: formData.nextVisit,
+        nextKin: formData.nextKin,
+        profileImage: imageFile
+    });
+
+    dataToSubmit.append('firstName', formData.firstName);
+    dataToSubmit.append('lastName', formData.lastName);
+    dataToSubmit.append('email', formData.email);
+    dataToSubmit.append('address', formData.address);
+    dataToSubmit.append('gender', formData.gender);
+    dataToSubmit.append('dateOfBirth', formData.dateOfBirth);
+    dataToSubmit.append('allergies', formData.allergies);
+    dataToSubmit.append('previousVisit', formData.previousVisit);
+    dataToSubmit.append('nextVisit', formData.nextVisit);
+    dataToSubmit.append('nextKin', formData.nextKin);
+    if (imageFile) {
+        dataToSubmit.append('profileImage', imageFile);
     }
 
     setLoading(true);
     axios.post('/api/patient/add', dataToSubmit, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
     })
-      .then(response => {
+    .then(response => {
         console.log("Profile saved successfully:", response.data);
         alert("Profile saved successfully!");
-      })
-      .catch(error => {
+    })
+    .catch(error => {
         console.error("Error saving profile data:", error);
         alert("Failed to save profile. Try again.");
-      })
-      .finally(() => setLoading(false));
-  };
+    })
+    .finally(() => setLoading(false));
+};
+
 
   const allergyOptions = [
     "Peanuts", "Tree Nuts", "Milk", "Eggs", "Wheat", "Soy",
@@ -190,7 +215,7 @@ const PatientProfileForm = () => {
 
               <label style={styles.labelCenter}>
                 Birthdate:
-                <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} style={styles.input} />
+                <input type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} style={styles.input} />
               </label>
             </div>
 
@@ -208,7 +233,13 @@ const PatientProfileForm = () => {
 
             <label style={styles.labelCenter}>
               Address:
-              <input type="text" name="address" value={formData.address} onChange={handleChange} style={styles.input} />
+              <input 
+                type="text" 
+                name="address" 
+                value={formData.address} 
+                onChange={handleChange} 
+                style={styles.input} 
+              />
             </label>
 
             <div style={styles.labelCenter}>
@@ -281,53 +312,49 @@ const PatientProfileForm = () => {
               />
             </label>
 
-            <div style={styles.nextOfKinContainer}>
-              <label style={styles.label}>
-                Next of Kin:
-                <input 
-                  type="text" 
-                  name="nextOfKin" 
-                  value={formData.nextOfKin} 
-                  onChange={handleChange} 
-                  style={styles.input} 
-                />
-              </label>
+            <label style={styles.labelCenter}>
+              Next of Kin:
+              <input 
+                type="text" 
+                name="nextOfKin" 
+                value={formData.nextOfKin} 
+                onChange={handleChange} 
+                style={styles.input} 
+              />
+            </label>
 
-              <label style={styles.label}>
-                Contact Information:
-                <input 
-                  type="text" 
-                  name="contactInformation" 
-                  value={formData.contactInformation} 
-                  onChange={handleChange} 
-                  style={styles.input} 
-                />
-              </label>
-            </div>
+            <label style={styles.labelCenter}>
+              Contact Information:
+              <input 
+                type="text" 
+                name="contactInformation" 
+                value={formData.contactInformation} 
+                onChange={handleChange} 
+                style={styles.input} 
+              />
+            </label>
 
-            <div style={styles.secondaryContactContainer}>
-              <label style={styles.label}>
-                Secondary Contact:
-                <input 
-                  type="text" 
-                  name="secondaryContact" 
-                  value={formData.secondaryContact} 
-                  onChange={handleChange} 
-                  style={styles.input} 
-                />
-              </label>
+            <label style={styles.labelCenter}>
+              Secondary Contact:
+              <input 
+                type="text" 
+                name="secondaryContact" 
+                value={formData.secondaryContact} 
+                onChange={handleChange} 
+                style={styles.input} 
+              />
+            </label>
 
-              <label style={styles.label}>
-                Secondary Contact Information:
-                <input 
-                  type="text" 
-                  name="secondaryContactInformation" 
-                  value={formData.secondaryContactInformation} 
-                  onChange={handleChange} 
-                  style={styles.input} 
-                />
-              </label>
-            </div>
+            <label style={styles.labelCenter}>
+              Secondary Contact Information:
+              <input 
+                type="text" 
+                name="secondaryContactInformation" 
+                value={formData.secondaryContactInformation} 
+                onChange={handleChange} 
+                style={styles.input} 
+              />
+            </label>
 
             <label style={styles.labelCenter}>
               Special Instructions:
@@ -339,9 +366,11 @@ const PatientProfileForm = () => {
               />
             </label>
 
-            <button type="submit" style={styles.submitButton}>
-              Save Profile
-            </button>
+            <div style={styles.submitButtonContainer}>
+              <button type="submit" style={styles.submitButton}>
+                Save Profile
+              </button>
+            </div>
           </form>
         )}
       </div>
@@ -442,8 +471,9 @@ const styles = {
     backgroundColor: '#FF6F61',
     color: '#fff',
     border: 'none',
-    padding: '8px 16px',
+    padding: '10px 20px',
     cursor: 'pointer',
+    borderRadius: '5px',
   },
   submitButton: {
     display: 'block',

@@ -1,187 +1,133 @@
-import React from 'react';
-import logo from './img/Logo1.png';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function Patient() {
-  return (
-    <div style={styles.profilePage}>
-      {/* Header with Logo and App Name */}
-      <header style={styles.header}>
-        <div style={styles.logoContainer}>
-          <img src={logo} alt="Logo" style={styles.logo} />
-          <h1 style={styles.appName}>CareSync</h1>
+const Patient = () => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
+    const [gender, setGender] = useState('');
+    const [email, setEmail] = useState('');
+    const [address, setAddress] = useState('');
+    const [allergies, setAllergies] = useState('');
+    const [previousVisit, setPreviousVisit] = useState('');
+    const [nextVisit, setNextVisit] = useState('');
+    const [nextKins, setNextKins] = useState('');
+    const [profileImage, setProfileImage] = useState(null);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('firstName', firstName);
+        formData.append('lastName', lastName);
+        formData.append('dateOfBirth', dateOfBirth);
+        formData.append('gender', gender);
+        formData.append('email', email);
+        formData.append('address', address);
+        formData.append('allergies', allergies);
+        formData.append('previousVisit', previousVisit);
+        formData.append('nextVisit', nextVisit);
+        formData.append('nextKins', nextKins);
+        if (profileImage) {
+            formData.append('profileImage', profileImage);
+        }
+
+        try {
+            const response = await axios.post('/api/patient/add', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            if (response.status === 200) {
+                alert('Profile saved successfully!');
+            }
+        } catch (error) {
+            console.error("Error saving profile data:", error);
+            alert("Failed to save profile. Try again.");
+            if (error.response) {
+                console.error("Response data:", error.response.data); // Log response data
+                console.error("Response status:", error.response.status); // Log response status
+            }
+        }
+    };
+
+    return (
+        <div>
+            <h1>Patient Profile</h1>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    placeholder="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                />
+                <input
+                    type="text"
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                />
+                <input
+                    type="date"
+                    value={dateOfBirth}
+                    onChange={(e) => setDateOfBirth(e.target.value)}
+                    required
+                />
+                <select value={gender} onChange={(e) => setGender(e.target.value)} required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input
+                    type="email"
+                    placeholder="Email Address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <input
+                    type="text"
+                    placeholder="Address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    required
+                />
+                <input
+                    type="text"
+                    placeholder="Allergies"
+                    value={allergies}
+                    onChange={(e) => setAllergies(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Previous Visit"
+                    value={previousVisit}
+                    onChange={(e) => setPreviousVisit(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Next Visit"
+                    value={nextVisit}
+                    onChange={(e) => setNextVisit(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Next of Kin"
+                    value={nextKins}
+                    onChange={(e) => setNextKins(e.target.value)}
+                />
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setProfileImage(e.target.files[0])}
+                />
+                <button type="submit">Save Profile</button>
+            </form>
         </div>
-        <h1 style={styles.headerText}>Patient's Profile</h1>
-      </header>
-
-      {/* Profile Content Section */}
-      <div style={styles.profileContent}>
-        {/* Left Panel: Contact and Lab Results */}
-        <div style={styles.leftPanel}>
-          <div style={styles.contactDetails}>
-            <div style={styles.profilePic}>
-              <i className="fas fa-user-circle" style={styles.userIcon}></i>
-            </div>
-            <h2 style={styles.name}>Mr. Juan Dela Cruz</h2>
-            <p style={styles.contactItem}><FaPhone /> 09123789654</p>
-            <p style={styles.contactItem}><FaEnvelope /> juandelacruz@gmail.com</p>
-            <p style={styles.contactItem}><FaMapMarkerAlt /> Natalio B. Bacalso Ave, Cebu City</p>
-          </div>
-          
-          {/* Latest Lab Results */}
-          <div style={styles.labResults}>
-            <h3 style={styles.sectionTitle}>Latest Lab Results:</h3>
-            <p style={styles.resultItem}>📄 Blood Test ABC, 0.7 MB</p>
-            <p style={styles.resultItem}>📄 Blood Test XYZ, 0.7 MB</p>
-          </div>
-        </div>
-
-        {/* Right Panel: Overview and Buttons */}
-        <div style={styles.rightPanel}>
-          <div style={styles.overview}>
-            <h3 style={styles.sectionTitle}>Overview:</h3>
-            <p style={styles.overviewItem}>Gender: Male</p>
-            <p style={styles.overviewItem}>Date of Birth: 01/02/2022</p>
-            <p style={styles.overviewItem}>Allergies: Peanuts, Shellfish</p>
-            <p style={styles.overviewItem}>Previous Visit: 08/02/2024</p>
-            <p style={styles.overviewItem}>Next Visit: 10/02/2024</p>
-            <p style={styles.overviewItem}>Next Kin: Gianne Dela Cruz</p>
-          </div>
-
-          {/* Action Buttons */}
-          <div style={styles.buttonsGrid}>
-            <button style={styles.button}>Appointments</button>
-            <button style={styles.button}>Billings</button>
-            <button style={styles.button}>Tests & Results</button>
-            <button style={styles.button}>Treatment</button>
-            <button style={styles.button}>Doctors</button>
-            <button style={styles.button}>Partner Profile</button>
-            <button style={styles.button}>Vital Signs</button>
-            <button style={styles.button}>Consent Forms</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Styles
-const styles = {
-  profilePage: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    fontFamily: 'Arial, sans-serif',
-    color: '#333',
-    backgroundColor: '#f8f8f8',
-    padding: '20px'
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: '20px',
-    justifyContent: 'space-between'
-  },
-  logoContainer: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  logo: {
-    width: '50px',
-    marginRight: '10px'
-  },
-  appName: {
-    fontFamily: 'Manjari, sans-serif',
-    fontSize: '20px',
-    letterSpacing: '0.1em',
-    fontWeight: 'bold',
-    color: '#333'
-  },
-  headerText: {
-    fontSize: '24px',
-    fontWeight: 'bold'
-  },
-  profileContent: {
-    display: 'flex',
-    maxWidth: '900px',
-    width: '100%',
-    gap: '20px'
-  },
-  leftPanel: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    padding: '20px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-  },
-  rightPanel: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    padding: '20px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-  },
-  contactDetails: {
-    marginBottom: '20px'
-  },
-  profilePic: {
-    fontSize: '50px',
-    color: '#4F4F4F',
-    marginBottom: '10px'
-  },
-  userIcon: {
-    fontSize: '50px',
-    color: '#4F4F4F'
-  },
-  name: {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    color: '#333',
-    margin: '10px 0'
-  },
-  contactItem: {
-    margin: '5px 0',
-    fontSize: '16px'
-  },
-  labResults: {
-    marginBottom: '20px'
-  },
-  sectionTitle: {
-    fontSize: '18px',
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: '10px'
-  },
-  resultItem: {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: '14px'
-  },
-  overview: {
-    marginBottom: '20px'
-  },
-  overviewItem: {
-    fontSize: '16px',
-    margin: '5px 0'
-  },
-  buttonsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gap: '10px'
-  },
-  button: {
-    padding: '10px',
-    border: '1px solid #ccc',
-    borderRadius: '6px',
-    backgroundColor: '#f9f9f9',
-    color: '#333',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
+    );
 };
 
 export default Patient;
