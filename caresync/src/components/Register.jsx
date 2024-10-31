@@ -115,13 +115,19 @@ const Register = () => {
     return (
         <main className="main" id="top">
             <nav className="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
-                <div className="container d-flex justify-content-between">
-                    <Link className="navbar-brand" to="/" style={{ flexGrow: 1 }}>
-                        <img src={logo} width="160" alt="logo" />
-                    </Link>
-                    <Link to="/login" style={{ color: '#2d3e50', marginLeft: '20px' }}>
-                        Already have an account? Log In
-                    </Link>
+                <div className="container d-flex justify-content-between" style={{ flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+                        <Link className="navbar-brand" to="/" style={{ marginLeft: '20px', marginTop: "-50px" }}>
+                        <img src={logo} width="230" alt="logo" />
+                        </Link>
+                    </div>
+                    
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginRight: '20px' }}>
+                        <span style={{ color: '#2d3e50', marginTop: "-140px" }}>Already have an account? </span>
+                        <Link to="/login" style={{ color: '#2d3e50', marginLeft: '5px', marginTop: "-140px", marginRight: "30px" }}>
+                        Log In
+                        </Link>
+                    </div>
                 </div>
             </nav>
 
@@ -129,8 +135,8 @@ const Register = () => {
                 <div className="container">
                     <div className="row min-vh-xl-100 min-vh-xxl-25 align-items-center justify-content-center">
                         <div style={styles.titleContainer}>
-                            <h1 style={{ fontSize: '40px', fontFamily: "'Manjari', sans-serif", marginBottom: "-10px"}}>C R E A T E&ensp;A N&ensp;A C C O U N T</h1>
-                            <p style={{ fontSize: '20px', fontFamily: "'Manjari', sans-serif", marginBottom: "-27px"}}>Join our community and start booking appointments with ease.</p>
+                            <h1 style={{ color: '#023350', fontSize: '40px', marginBottom: "-10px", marginTop: "-50px"}}>C R E A T E&ensp;A N&ensp;A C C O U N T</h1>
+                            <p style={{ color: '#023350', fontSize: '20px', marginBottom: "-27px"}}>Join our community and start booking appointments with ease.</p>
                         </div>
 
                         <div style={styles.registerSection}>
