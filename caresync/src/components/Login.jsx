@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from './img/logo.png';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -12,19 +11,19 @@ const Login = () => {
         event.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://your-api-url.com/login', {
+            const response = await fetch('http://localhost:8080/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
             });
-
+    
             const data = await response.json();
-
+    
             if (response.ok) {
                 console.log('Login successful:', data);
-                navigate('/Home');
+                navigate('/PatientProfileForm');
             } else {
                 setError(data.message || 'Invalid email or password.');
                 console.log('Login failed:', data);
