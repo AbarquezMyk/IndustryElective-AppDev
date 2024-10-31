@@ -6,9 +6,8 @@ const Register = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
-        // Get form data
         const formData = new FormData(e.target);
         const data = {
             first_name: formData.get('first_name'),
@@ -17,7 +16,6 @@ const Register = () => {
             password: formData.get('password1'),
         };
 
-        // Perform your registration logic here (API call)
         try {
             const response = await fetch('http://localhost:8080/register', {
                 method: 'POST',
@@ -28,7 +26,7 @@ const Register = () => {
             });
 
             if (response.ok) {
-                navigate('/login'); // Redirect to login page upon success
+                navigate('/login');
             } else {
                 const errorData = await response.json();
                 console.error('Registration failed:', errorData.message);
