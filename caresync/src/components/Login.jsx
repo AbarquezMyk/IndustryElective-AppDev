@@ -10,7 +10,7 @@ const Login = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(''); // Reset error message on new submission
+        setError('');
         try {
             const response = await fetch('http://your-api-url.com/login', {
                 method: 'POST',
@@ -20,19 +20,18 @@ const Login = () => {
                 body: JSON.stringify({ email, password }),
             });
 
-            const data = await response.json(); // Parse the response as JSON
+            const data = await response.json();
 
             if (response.ok) {
-                console.log('Login successful:', data); // Debugging line
+                console.log('Login successful:', data);
                 navigate('/Home');
             } else {
-                // Check the response from the server for a specific error message
                 setError(data.message || 'Invalid email or password.');
-                console.log('Login failed:', data); // Debugging line
+                console.log('Login failed:', data);
             }
         } catch (err) {
             setError('Something went wrong. Please try again.');
-            console.error('Error during login:', err); // Log error details
+            console.error('Error during login:', err);
         }
     };
 

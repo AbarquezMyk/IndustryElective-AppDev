@@ -139,8 +139,13 @@ const PatientProfileForm = () => {
     <div>
       <div style={styles.header}>
         <img src={logo} alt="Logo" style={styles.logo} />
-        <span style={styles.title}>CareSync</span>
       </div>
+
+      <div style={styles.profileSetupText}>P R O F I L E  S E T - U P</div>
+      <div style={styles.container}>
+        <form onSubmit={handleSubmit} style={styles.form}></form>
+      </div>
+
       <div style={styles.container}>
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.profilePictureSection}>
@@ -285,27 +290,25 @@ const PatientProfileForm = () => {
             <textarea name="familyMedicalHistory" value={formData.familyMedicalHistory} onChange={handleChange} style={styles.textarea} />
           </label>
 
-          <div style={styles.labelCenter}>
-            <label style={styles.label}>
-              Next of Kin:
-              <input type="text" name="nextOfKin" value={formData.nextOfKin} onChange={handleChange} style={styles.input} />
-            </label>
+          <label style={styles.labelCenter}>
+            Next of Kin:
+            <input type="text" name="nextOfKin" value={formData.nextOfKin} onChange={handleChange} style={styles.input} />
+          </label>
 
-            <label style={styles.label}>
-              Contact Information:
-              <input type="text" name="contactInformation" value={formData.contactInformation} onChange={handleChange} style={styles.input} />
-            </label>
+          <label style={styles.labelCenter}>
+            Contact Information:
+            <input type="tel" name="contactInformation" value={formData.contactInformation} onChange={handleChange} style={styles.input} />
+          </label>
 
-            <label style={styles.label}>
-              Secondary Contact:
-              <input type="text" name="secondaryContact" value={formData.secondaryContact} onChange={handleChange} style={styles.input} />
-            </label>
+          <label style={styles.labelCenter}>
+            Secondary Contact:
+            <input type="text" name="secondaryContact" value={formData.secondaryContact} onChange={handleChange} style={styles.input} />
+          </label>
 
-            <label style={styles.label}>
-              Secondary Contact Information:
-              <input type="text" name="secondaryContactInformation" value={formData.secondaryContactInformation} onChange={handleChange} style={styles.input} />
-            </label>
-          </div>
+          <label style={styles.labelCenter}>
+            Secondary Contact Information:
+            <input type="tel" name="secondaryContactInformation" value={formData.secondaryContactInformation} onChange={handleChange} style={styles.input} />
+          </label>
 
           <label style={styles.labelCenter}>
             Special Instructions:
@@ -322,116 +325,108 @@ const PatientProfileForm = () => {
 const styles = {
   header: {
     display: 'flex',
-    alignItems: 'left',
-    justifyContent: 'left',
-    backgroundColor: '#fff',
-    padding: '10px',
-  },
-  logo: {
-    fontSize: '24px',
-    fontWeight: '300',
-    color: '#000',
-    marginRight: '20px'
-  },
-  title: {
-    fontSize: '24px',
-    fontWeight: '300',
-    color: '#023350',
-  },
-  container: {
-    padding: '20px',
-    maxWidth: '600px',
-    margin: '0 auto',
-    borderRadius: '8px',
-    backgroundColor: '#fff',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  profilePictureSection: {
-    display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
     marginBottom: '20px',
   },
+  logo: {
+    height: '200px',
+    marginLeft: '20px',
+    marginBottom: '-40px'
+  },
+  container: {
+    padding: '20px',
+    backgroundColor: '#fff',
+    fontFamily: 'Arial, sans-serif',
+  },
+  profileSetupText: {
+    textAlign: 'center',
+    fontSize: '40px',
+    fontWeight: '300',
+    letterSpacing: '8px',
+    color: '#023350',
+    margin: '20px 0',
+    marginBottom: '-10px'
+  },
+  form: {
+    maxWidth: '800px',
+    margin: '0 auto',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '10px',
+  },
+  labelCenter: {
+    display: 'block',
+    marginBottom: '15px',
+    textAlign: 'center',
+  },
+  input: {
+    width: '100%',
+    padding: '8px',
+    marginBottom: '10px',
+    fontSize: '14px',
+    boxSizing: 'border-box',
+  },
+  textarea: {
+    width: '100%',
+    padding: '8px',
+    height: '80px',
+    marginBottom: '10px',
+    fontSize: '14px',
+    boxSizing: 'border-box',
+  },
+  checkboxContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    marginBottom: '15px',
+  },
+  checkboxLabel: {
+    marginRight: '10px',
+    fontSize: '14px',
+  },
+  profilePictureSection: {
+    textAlign: 'center',
+    marginBottom: '20px',
+  },
   profileImage: {
-    width: '100px',
-    height: '100px',
+    width: '150px',
+    height: '150px',
     borderRadius: '50%',
     objectFit: 'cover',
     marginBottom: '10px',
   },
   placeholderImage: {
-    width: '100px',
-    height: '100px',
+    width: '150px',
+    height: '150px',
     borderRadius: '50%',
-    backgroundColor: '#023350',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#ddd',
+    display: 'inline-block',
+    lineHeight: '150px',
+    color: '#666',
     marginBottom: '10px',
   },
   fileInput: {
-    marginBottom: '10px',
+    display: 'block',
+    margin: '10px auto',
   },
   deleteButton: {
-    backgroundColor: '#e74c3c',
+    display: 'block',
+    margin: '10px auto',
+    backgroundColor: '#FF6F61',
     color: '#fff',
     border: 'none',
-    borderRadius: '5px',
-    padding: '5px 10px',
+    padding: '8px 16px',
     cursor: 'pointer',
   },
-  nameContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  sexAndBirthdateContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '10px',
-  },
-  phoneAndEmailContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '10px',
-  },
-  labelCenter: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: '10px',
-  },
-  label: {
-    marginBottom: '5px',
-  },
-  input: {
-    padding: '8px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-  },
-  textarea: {
-    padding: '8px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    resize: 'vertical',
-    minHeight: '100px',
-  },
-  checkboxContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  checkboxLabel: {
-    marginBottom: '5px',
-  },
   submitButton: {
+    display: 'block',
+    width: '100%',
+    padding: '10px',
+    fontSize: '16px',
     backgroundColor: '#023350',
     color: '#fff',
     border: 'none',
-    borderRadius: '5px',
-    padding: '10px 15px',
     cursor: 'pointer',
-    marginTop: '10px',
   }
 };
 
