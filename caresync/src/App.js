@@ -10,7 +10,8 @@ const App = () => {
     <Router>
       {/* <Home /> */}
       {/* <PaymentMethods /> */}
-      <Calendar />
+      {/* Calendar /> */}
+      <Doctor />
     </Router>
   );
 };
