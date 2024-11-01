@@ -16,7 +16,17 @@ import Doctor4 from './img/Doctor4.png';
 import Doctor5 from './img/Doctor5.png';
 import Doctor6 from './img/Doctor6.png';
 import Doctor7 from './img/Doctor7.jpg';
-
+import Doctor8 from './img/Doctor8.jpg';
+import Doctor9 from './img/Doctor9.png';
+import Doctor10 from './img/Doctor10.png';
+import Doctor11 from './img/Doctor11.jpg';
+import Doctor12 from './img/Doctor12.png';
+import Doctor13 from './img/Doctor13.png';
+import Doctor14 from './img/Doctor14.png';
+import Doctor15 from './img/Doctor15.png';
+import Doctor16 from './img/Doctor16.png';
+import Doctor17 from './img/Doctor17.png';
+import Doctor18 from './img/Doctor18.png';
 
 function App() {
     const [currentStep, setCurrentStep] = useState('departments');
@@ -37,13 +47,31 @@ function App() {
             { name: 'Dr. Robert Wilson', specialty: 'Neurologist', image: doctor2 },
             { name: 'Dr. Anna Thompson', specialty: 'Neurologist', image: doctor3 }
         ],
-        CardiacCare: [
-            { name: 'Dr. John Smith', specialty: 'Cardiologist', image: Doctor4 },
-            { name: 'Dr. Jane Doe', specialty: 'Cardiologist', image: Doctor5 },
-            { name: 'Dr. Mary Johnson', specialty: 'Cardiologist', image: Doctor6 },
-            { name: 'Dr. Peter Brown', specialty: 'Cardiologist', image: Doctor7 }
+        "Cardiac Care": [
+            { name: 'Dr. John Smith', specialty: 'Pulmonologist', image: Doctor4 },
+            { name: 'Dr. Jane Doe', specialty: 'Pulmonologist', image: Doctor5 },
+            { name: 'Dr. Mary Johnson', specialty: 'Pulmonologist', image: Doctor6 },
+            { name: 'Dr. Peter Brown', specialty: 'Pulmonologist', image: Doctor7 }
         ],
-        // Add other departments' doctors here if needed...
+        Osteoporosis: [
+            { name: 'Dr. Kim Daniel', specialty: 'Cardiologist', image: Doctor8 },
+            { name: 'Dr. Maria Santos', specialty: 'Cardiologist', image: Doctor9 }
+        ],
+        "Eye Care": [
+            { name: 'Dr. Hannah Collins', specialty: 'Ophthalmologist', image: Doctor10 },
+            { name: 'Dr. Jonathan Blake', specialty: 'Ophthalmologist', image: Doctor11 },
+            { name: 'Dr. Isabella Hughes', specialty: 'Ophthalmologist', image: Doctor12 }
+        ],
+        "Heart Care": [
+            { name: 'Dr. Lisa Martin', specialty: 'Cardiologist', image: Doctor13 },
+            { name: 'Dr. Benjamin Foster', specialty: 'Cardiologist', image: Doctor14 },
+            { name: 'Dr. Michael Jordanon', specialty: 'Cardiologist', image: Doctor15 },
+            { name: 'Dr. Jason Hill', specialty: 'Cardiologist', image: Doctor16 }
+        ],
+        ENT: [
+            { name: 'Dr. Rosie Turner', specialty: 'ENT Specialist', image: Doctor17 },
+            { name: 'Dr. Robert Scott', specialty: 'ENT Specialist', image: Doctor18 }
+        ]
     };
 
     const handleDepartmentSelect = (department) => {
@@ -51,9 +79,7 @@ function App() {
         setCurrentStep('dashboard');
     };
 
-    const handleFindDoctor = () => {
-        setCurrentStep('doctors');
-    };
+    const handleFindDoctor = () => setCurrentStep('doctors');
 
     const handleDoctorSelect = (doctor) => {
         alert(`You selected ${doctor.name}`);
@@ -67,26 +93,7 @@ function App() {
             margin: '0 auto',
             padding: '20px'
         },
-        textCenter: {
-            textAlign: 'center'
-        },
-        header: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '40px'
-        },
-        logo: {
-            height: '60px'
-        },
-        title: {
-            fontSize: '24px',
-            fontWeight: '300',
-            color: '#333'
-        },
-        brainIcon: {
-            height: '50px'
-        },
+        textCenter: { textAlign: 'center' },
         departments: {
             display: 'flex',
             justifyContent: 'space-around',
@@ -103,16 +110,7 @@ function App() {
             transition: 'transform 0.2s',
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)'
         },
-        logoImage: {
-            width: '100px',
-            height: '100px',
-            borderRadius: '50%',
-            marginBottom: '10px'
-        },
-        feedbackSection: {
-            margin: '20px 0',
-            fontSize: '14px'
-        },
+        logoImage: { width: '100px', height: '100px', borderRadius: '50%', marginBottom: '10px' },
         button: {
             backgroundColor: '#007bff',
             color: 'white',
@@ -120,7 +118,8 @@ function App() {
             border: 'none',
             borderRadius: '5px',
             cursor: 'pointer',
-            fontSize: '16px'
+            fontSize: '16px',
+            transition: 'background-color 0.2s'
         },
         doctorCards: {
             display: 'grid',
@@ -137,27 +136,13 @@ function App() {
             transition: 'transform 0.2s',
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)'
         },
-        doctorImage: {
-            width: '100%',
-            height: '200px',
-            objectFit: 'cover',
-            borderRadius: '10px',
-            marginBottom: '10px'
-        },
-        doctorName: {
-            fontSize: '18px',
-            fontWeight: 'bold',
-            color: '#333'
-        },
-        doctorSpecialty: {
-            color: '#777',
-            fontSize: '14px',
-            marginBottom: '5px'
-        },
-        rating: {
-            color: '#FFD700', // gold color for stars
-            fontSize: '14px',
-            marginBottom: '10px'
+        doctorImage: { width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' },
+        doctorName: { fontSize: '18px', fontWeight: 'bold' },
+        doctorSpecialty: { color: '#777', fontSize: '14px' },
+        rating: { color: '#FFD700', fontSize: '14px' },
+        cardiacCareInfo: {
+            textAlign: 'left',
+            marginTop: '30px'
         }
     };
 
@@ -185,18 +170,16 @@ function App() {
             {currentStep === 'dashboard' && (
                 <div style={styles.textCenter}>
                     <h2>{selectedDepartment} Department</h2>
-                    <p>Welcome to the {selectedDepartment} Department. Here we specialize in...</p>
-                    <div style={styles.feedbackSection}>
-                        <p><strong>Patient Feedback:</strong></p>
-                        <blockquote>
-                            <p>"The neurology department was very thorough and attentive."</p>
-                            <footer>- Patient A</footer>
-                        </blockquote>
-                        <blockquote>
-                            <p>"Excellent doctors and caring staff!"</p>
-                            <footer>- Patient B</footer>
-                        </blockquote>
-                    </div>
+                    <p>Welcome to the {selectedDepartment} Department. Here we specialize in personalized care, focusing on your unique needs and treatment options.</p>
+                    
+                    {/* Understanding Cardiac Care Section */}
+                    {selectedDepartment === 'Cardiac Care' && (
+                        <div style={styles.cardiacCareInfo}>
+                            <h3>Understanding Cardiac Care</h3>
+                            <p>At CareSync, our Cardiac Care Department is committed to diagnosing, treating, and managing a wide range of heart and vascular conditions. Our team of experienced cardiologists uses state-of-the-art technology and personalized treatment approaches to ensure the best outcomes for our patients. From routine check-ups to advanced cardiac procedures, we provide compassionate care tailored to each patient's unique needs.</p>
+                        </div>
+                    )}
+
                     <button
                         onClick={handleFindDoctor}
                         style={styles.button}
@@ -209,11 +192,7 @@ function App() {
             )}
             {currentStep === 'doctors' && (
                 <div style={styles.textCenter}>
-                    <div style={styles.header}>
-                        <img src="logo.png" alt="Logo" style={styles.logo} />
-                        <h2 style={styles.title}>Our Doctors</h2>
-                        <img src="neurology-logo.svg" alt="Brain Icon" style={styles.brainIcon} />
-                    </div>
+                    <h2>Our Doctors</h2>
                     <div style={styles.doctorCards}>
                         {doctors[selectedDepartment]?.map((doctor, index) => (
                             <div
@@ -225,8 +204,8 @@ function App() {
                             >
                                 <img src={doctor.image} alt={doctor.name} style={styles.doctorImage} />
                                 <p style={styles.doctorName}>{doctor.name}</p>
-                                <p style={styles.rating}>★★★★</p>
                                 <p style={styles.doctorSpecialty}>{doctor.specialty}</p>
+                                <p style={styles.rating}>Rating: ⭐⭐⭐⭐⭐</p>
                             </div>
                         ))}
                     </div>
