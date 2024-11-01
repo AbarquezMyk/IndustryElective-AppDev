@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from './img/Logo1.png';
 import dashboard from './img/dashboard.png';
@@ -7,7 +7,6 @@ import calendar from './img/calendar_icon.png';
 import payment from './img/payment-method.png';
 import setting from './img/setting.png';
 import logout from './img/logout_icon.png';
-
 
 // Sidebar component  
 const Sidebar = () => (
@@ -29,9 +28,9 @@ const Sidebar = () => (
                 color: '#023350',
                 fontSize: '17px',
                 fontWeight: 'normal',
-                letterSpacing: '0.4em', // 40% letter spacing for CareSync
-                margin: 0, // Remove default margin
-                paddingLeft: '10px', // Added padding to align with other items
+                letterSpacing: '0.4em',
+                margin: 0,
+                paddingLeft: '10px',
             }}>
                 CareSync
             </h2>
@@ -53,7 +52,7 @@ const Sidebar = () => (
                     backgroundColor: item.highlighted ? 'transparent' : 'transparent',
                     borderRadius: '8px',
                     padding: '10px',
-                    border: item.highlighted ? '2px solid #023350' : 'none', // Stroke effect
+                    border: item.highlighted ? '2px solid #023350' : 'none',
                 }}>
                     <img src={item.icon} alt={`${item.label} Icon`} style={{ width: '20px', height: '20px', marginRight: '15px', paddingLeft: '20px' }} />
                     <Link to={item.link} style={{
@@ -61,7 +60,7 @@ const Sidebar = () => (
                         color: '#023350',
                         fontSize: '16px',
                         letterSpacing: '0.1em',
-                        paddingLeft: '30px', // Aligns labels with "CareSync"
+                        paddingLeft: '30px',
                     }}>
                         {item.label}
                     </Link>
@@ -82,17 +81,15 @@ const Sidebar = () => (
                     alignItems: 'center',
                     letterSpacing: '0.1em',
                     fontSize: '16px',
-                    padding: '10px 20px', // Aligns logout icon and text with other menu items
+                    padding: '10px 20px',
                 }}
             >
-                <img src={logout} alt="Logout Icon" style={{ width: '20px', height: '20px', marginRight: '10px', paddingLeft: '20px' }} /> {/* Added paddingLeft for logout icon */}
-                <span style={{ paddingLeft: '30px' }}>Log Out</span> {/* Aligns with other labels */}
+                <img src={logout} alt="Logout Icon" style={{ width: '20px', height: '20px', marginRight: '10px', paddingLeft: '20px' }} />
+                <span style={{ paddingLeft: '30px' }}>Log Out</span>
             </button>
         </div>
     </div>
 );
-
-  
 
 // Calendar component
 const Calendar = () => {
@@ -107,6 +104,26 @@ const Calendar = () => {
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
+
+    // Fetch events when the component mounts or when the month/year changes
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/events/${currentYear}/${currentMonth + 1}`);
+                const data = await response.json();
+                const formattedEvents = data.reduce((acc, event) => {
+                    const dateKey = `${event.year}-${event.month}-${event.day}`;
+                    acc[dateKey] = acc[dateKey] ? [...acc[dateKey], event.title] : [event.title];
+                    return acc;
+                }, {});
+                setEvents(formattedEvents);
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        };
+
+        fetchEvents();
+    }, [currentMonth, currentYear]);
 
     const handlePreviousMonth = () => {
         if (currentMonth === 0) {
@@ -134,13 +151,32 @@ const Calendar = () => {
         setModalVisible(true);
     };
 
-    const handleAddEvent = () => {
+    const handleAddEvent = async () => {
         if (eventTitle) {
-            const dateKey = `${currentYear}-${currentMonth + 1}-${selectedDate}`;
-            const newEvents = { ...events, [dateKey]: [...(events[dateKey] || []), eventTitle] };
-            setEvents(newEvents);
-            setEventTitle('');
-            setModalVisible(false);
+            const newEvent = {
+                title: eventTitle,
+                year: currentYear,
+                month: currentMonth + 1,
+                day: selectedDate,
+            };
+
+            try {
+                await fetch('http://localhost:8080/api/events', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newEvent),
+                });
+
+                const dateKey = `${currentYear}-${currentMonth + 1}-${selectedDate}`;
+                const newEvents = { ...events, [dateKey]: [...(events[dateKey] || []), eventTitle] };
+                setEvents(newEvents);
+                setEventTitle('');
+                setModalVisible(false);
+            } catch (error) {
+                console.error('Error adding event:', error);
+            }
         }
     };
 
@@ -192,43 +228,52 @@ const Calendar = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {[...Array(6)].map((_, weekIndex) => (
-                                <tr key={weekIndex}>
-                                    {[...Array(7)].map((_, dayIndex) => {
-                                        const day = weekIndex * 7 + dayIndex - startDay + 1;
+                            {Array.from({ length: 6 }, (_, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {Array.from({ length: 7 }, (_, dayIndex) => {
+                                        const day = rowIndex * 7 + dayIndex - startDay + 1;
                                         const dateKey = `${currentYear}-${currentMonth + 1}-${day}`;
+                                        const dayEvents = events[dateKey] || [];
 
                                         return (
-                                            <td key={dayIndex} style={{ padding: '15px', textAlign: 'center', color: day > 0 && day <= daysInMonth ? '#023350' : '#CED4DA' }}>
+                                            <td key={dayIndex} style={{
+                                                padding: '20px',
+                                                border: '1px solid #CED4DA',
+                                                textAlign: 'center',
+                                                cursor: day > 0 && day <= daysInMonth ? 'pointer' : 'not-allowed',
+                                                backgroundColor: day > 0 && day <= daysInMonth ? '#FFFFFF' : '#F8F9FA',
+                                            }} onClick={() => day > 0 && day <= daysInMonth && handleDateClick(day)}>
                                                 {day > 0 && day <= daysInMonth ? (
-                                                    <div
-                                                        onClick={() => handleDateClick(day)}
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            borderRadius: '8px',
-                                                            padding: '5px',
-                                                            transition: 'background-color 0.2s',
-                                                            position: 'relative',
-                                                        }}
-                                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E0F7FA'}
-                                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                                                    >
-                                                        {day}
-                                                        {events[dateKey] && events[dateKey].map((event, index) => (
-                                                            <div key={index} style={{
-                                                                backgroundColor: '#BBDEFB',
-                                                                padding: '5px',
-                                                                borderRadius: '5px',
-                                                                marginTop: '5px',
+                                                    <div>
+                                                        <div>{day}</div>
+                                                        {dayEvents.length > 0 && (
+                                                            <div style={{
                                                                 fontSize: '12px',
-                                                                textAlign: 'center',
+                                                                color: '#6C757D',
+                                                                position: 'relative',
+                                                                height: '30px',
                                                             }}>
-                                                                {event}
+                                                                {dayEvents.map((event, index) => (
+                                                                    <div key={index} style={{
+                                                                        border: '1px solid #CED4DA',
+                                                                        borderRadius: '4px',
+                                                                        backgroundColor: '#E9ECEF',
+                                                                        marginTop: '2px',
+                                                                        padding: '2px 5px',
+                                                                        position: 'absolute',
+                                                                        left: '50%',
+                                                                        transform: 'translateX(-50%)',
+                                                                        width: '80%',
+                                                                        textAlign: 'center',
+                                                                    }}>
+                                                                        {event}
+                                                                    </div>
+                                                                ))}
                                                             </div>
-                                                        ))}
+                                                        )}
                                                     </div>
                                                 ) : (
-                                                    <span>{day}</span>
+                                                    day
                                                 )}
                                             </td>
                                         );
@@ -239,60 +284,48 @@ const Calendar = () => {
                     </table>
                 </div>
 
+                {/* Add Event Modal */}
                 {modalVisible && (
                     <div style={{
                         position: 'fixed',
-                        top: '0',
-                        left: '0',
-                        right: '0',
-                        bottom: '0',
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        backgroundColor: 'white',
+                        padding: '20px',
+                        borderRadius: '8px',
+                        boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+                        zIndex: 1000,
                     }}>
-                        <div style={{
-                            backgroundColor: 'white',
-                            padding: '20px',
-                            borderRadius: '8px',
-                            width: '300px',
-                            textAlign: 'center',
-                        }}>
-                            <h3>Add Event</h3>
-                            <input
-                                type="text"
-                                placeholder="Event Title"
-                                value={eventTitle}
-                                onChange={(e) => setEventTitle(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    padding: '10px',
-                                    marginBottom: '10px',
-                                    border: '1px solid #CED4DA',
-                                    borderRadius: '5px',
-                                }}
-                            />
-                            <button onClick={handleAddEvent} style={{
-                                backgroundColor: '#023350',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '5px',
-                                padding: '10px',
-                                cursor: 'pointer',
+                        <h3 style={{ marginBottom: '10px' }}>Add Event on {selectedDate}/{currentMonth + 1}/{currentYear}</h3>
+                        <input
+                            type="text"
+                            value={eventTitle}
+                            onChange={(e) => setEventTitle(e.target.value)}
+                            placeholder="Event Title"
+                            style={{
                                 width: '100%',
-                            }}>
-                                Add Event
-                            </button>
-                            <button onClick={() => setModalVisible(false)} style={{
-                                backgroundColor: 'transparent',
-                                color: '#E74C3C',
-                                border: 'none',
-                                cursor: 'pointer',
-                                marginTop: '10px',
-                            }}>
-                                Cancel
-                            </button>
-                        </div>
+                                padding: '10px',
+                                border: '1px solid #CED4DA',
+                                borderRadius: '4px',
+                                marginBottom: '10px',
+                            }}
+                        />
+                        <button onClick={handleAddEvent} style={{
+                            backgroundColor: '#023350',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            padding: '10px 20px',
+                            cursor: 'pointer',
+                        }}>Add Event</button>
+                        <button onClick={() => setModalVisible(false)} style={{
+                            backgroundColor: 'transparent',
+                            color: '#E74C3C',
+                            border: 'none',
+                            cursor: 'pointer',
+                            marginLeft: '10px',
+                        }}>Cancel</button>
                     </div>
                 )}
             </div>
