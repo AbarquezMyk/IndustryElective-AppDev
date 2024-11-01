@@ -12,10 +12,11 @@ import entLogo from './img/ent-logo.svg';
 import doctor1 from './img/doctor1.jpg';
 import doctor2 from './img/doctor2.png';
 import doctor3 from './img/doctor3.png';
-import doctor4 from './img/doctor4.png';
-import doctor5 from './img/doctor5.png';
-import doctor6 from './img/doctor6.png';
-import doctor7 from './img/doctor7.jpg';
+import Doctor4 from './img/Doctor4.png';
+import Doctor5 from './img/Doctor5.png';
+import Doctor6 from './img/Doctor6.png';
+import Doctor7 from './img/Doctor7.jpg';
+
 
 function App() {
     const [currentStep, setCurrentStep] = useState('departments');
@@ -37,10 +38,10 @@ function App() {
             { name: 'Dr. Anna Thompson', specialty: 'Neurologist', image: doctor3 }
         ],
         CardiacCare: [
-            { name: 'Dr. John Smith', specialty: 'Cardiologist', image: doctor4 },
-            { name: 'Dr. Jane Doe', specialty: 'Cardiologist', image: doctor5 },
-            { name: 'Dr. Mary Johnson', specialty: 'Cardiologist', image: doctor6 },
-            { name: 'Dr. Peter Brown', specialty: 'Cardiologist', image: doctor7 }
+            { name: 'Dr. John Smith', specialty: 'Cardiologist', image: Doctor4 },
+            { name: 'Dr. Jane Doe', specialty: 'Cardiologist', image: Doctor5 },
+            { name: 'Dr. Mary Johnson', specialty: 'Cardiologist', image: Doctor6 },
+            { name: 'Dr. Peter Brown', specialty: 'Cardiologist', image: Doctor7 }
         ],
         // Add other departments' doctors here if needed...
     };
