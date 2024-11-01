@@ -355,7 +355,7 @@ const styles = {
     marginBottom: '15px',
     width: '80%',
     fontSize: '1rem',
-    color: '#023350'
+    color: '#023350',
   },
   textarea: {
     padding: '10px',
