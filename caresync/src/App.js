@@ -15,18 +15,16 @@ const App = () => {
   return (
     <Router>
       <Routes>
-      <Route path="/home" element={<Home />} />
-      {/* <PaymentMethods /> */}
-      {/* <Calendar /> */}
-      {/*<OnlineForm /> */}
-      {/*<Patient /> */}
-      {/*<PatientProfileForm /> */}
-      {/*<CreditCard /> */}
-      {/*<CreditCard />  */}
-      {/*<AppointmentHistory /> */}
-      <Route path="/profilesetup" element={<PatientProfileForm />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
+        {/* Default route to Home component */}
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        {/* <PaymentMethods /> */}
+        {/* <Calendar /> */}
+        {/* <OnlineForm /> */}
+        {/* <Patient /> */}
+        <Route path="/profilesetup" element={<PatientProfileForm />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );

@@ -6,6 +6,7 @@ const path = require('path');
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Add this for form-urlencoded data
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -20,7 +21,7 @@ const upload = multer({ storage });
 let users = [];
 let patients = [];
 
-app.post('/register', async (req, res) => {
+app.post('/api/users/register', async (req, res) => {
     const { first_name, last_name, email, password } = req.body;
 
     const existingUser = users.find(user => user.email === email);
@@ -34,8 +35,13 @@ app.post('/register', async (req, res) => {
     res.status(201).json({ message: 'User registered successfully', user: newUser });
 });
 
-app.post('/login', async (req, res) => {
+app.post('/api/users/login', async (req, res) => {
+    console.log('Request Body:', req.body);
     const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required' });
+    }
 
     const user = users.find(user => user.email === email && user.password === password);
     if (!user) {
