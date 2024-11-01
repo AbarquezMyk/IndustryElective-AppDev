@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import Home from './components/Home';
+import Home from './components/Home';
 // import PaymentMethods from './components/PaymentMethod';
 // import Calendar from './components/Calendar';
 // import OnlineForm from './components/OnlineForm';
@@ -15,7 +15,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-      {/* <Home /> */}
+      <Route path="/home" element={<Home />} />
       {/* <PaymentMethods /> */}
       {/* <Calendar /> */}
       {/*<OnlineForm /> */}

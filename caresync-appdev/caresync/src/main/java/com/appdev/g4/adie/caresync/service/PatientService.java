@@ -23,16 +23,13 @@ public class PatientService {
         return patientRepository.findById(id);
     }
 
-    public Patient createPatient(Patient patient) {
-        if (patient.getFirstName() == null || patient.getLastName() == null) {
-            throw new IllegalArgumentException("First name and last name are required.");
-        }
+    public Patient addPatient(Patient patient) {
         return patientRepository.save(patient);
     }
 
     public Patient updatePatient(Long id, Patient patientDetails) {
         Patient patient = patientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Patient not found with id " + id));
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
 
         patient.setFirstName(patientDetails.getFirstName());
         patient.setLastName(patientDetails.getLastName());
@@ -51,15 +48,12 @@ public class PatientService {
         patient.setSecondaryContact(patientDetails.getSecondaryContact());
         patient.setSecondaryContactInformation(patientDetails.getSecondaryContactInformation());
         patient.setSpecialInstructions(patientDetails.getSpecialInstructions());
+        patient.setProfilePicture(patientDetails.getProfilePicture());
 
         return patientRepository.save(patient);
     }
 
     public void deletePatient(Long id) {
         patientRepository.deleteById(id);
-    }
-
-    public List<Patient> findPatientsByLastName(String lastName) {
-        return patientRepository.findByLastName(lastName);
     }
 }

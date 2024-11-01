@@ -35,24 +35,24 @@ public class PatientController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/add")
+    @PostMapping("/create")
     public Patient createPatient(@RequestBody Patient patient) {
-        return patientService.createPatient(patient);
+        return patientService.addPatient(patient);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody Patient patientDetails) {
-        return ResponseEntity.ok(patientService.updatePatient(id, patientDetails));
+        try {
+            Patient updatedPatient = patientService.updatePatient(id, patientDetails);
+            return ResponseEntity.ok(updatedPatient);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/search/lastName/{lastName}") // New endpoint
-    public List<Patient> getPatientsByLastName(@PathVariable String lastName) {
-        return patientService.findPatientsByLastName(lastName);
     }
 }

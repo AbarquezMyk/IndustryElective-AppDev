@@ -35,6 +35,8 @@ public class Patient {
     private String secondaryContactInformation;
     private String specialInstructions;
 
+    private String profilePicture;
+
     public Long getId() {
         return id;
     }
@@ -177,5 +179,13 @@ public class Patient {
 
     public void setSpecialInstructions(String specialInstructions) {
         this.specialInstructions = specialInstructions;
+    }
+
+    public String getProfilePicture() { // Getter for profilePicture
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) { // Setter for profilePicture
+        this.profilePicture = profilePicture;
     }
 }

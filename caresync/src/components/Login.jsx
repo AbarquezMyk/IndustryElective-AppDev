@@ -24,7 +24,7 @@ const Login = () => {
 
             if (response.ok) {
                 console.log('Login successful:', data);
-                navigate('/patientprofileform');
+                navigate('/profilesetup');
             } else {
                 setError(data.message || 'Invalid email or password.');
                 console.log('Login failed:', data);

@@ -1,11 +1,24 @@
 const express = require('express');
 const cors = require('cors');
-const app = express();
+const multer = require('multer');
+const path = require('path');
 
+const app = express();
 app.use(cors());
 app.use(express.json());
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage });
+
 let users = [];
+let patients = [];
 
 app.post('/register', async (req, res) => {
     const { first_name, last_name, email, password } = req.body;
@@ -34,6 +47,20 @@ app.post('/login', async (req, res) => {
 
 app.get('/users', (req, res) => {
     res.json(users);
+});
+
+app.post('/api/patients/create', upload.single('profilePicture'), (req, res) => {
+    const { firstName, lastName } = req.body;
+    const profilePicture = req.file ? req.file.path : null;
+
+    const newPatient = { firstName, lastName, profilePicture };
+    patients.push(newPatient);
+
+    res.status(201).json({ message: 'Patient added successfully', patient: newPatient });
+});
+
+app.get('/api/patients/all', (req, res) => {
+    res.json(patients);
 });
 
 const PORT = process.env.PORT || 8080;
