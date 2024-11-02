@@ -15,29 +15,19 @@ const App = () => {
   return (
     <Router>
       <Routes>
-<<<<<<< HEAD
-        <Route path="/" element={<Home />} />
-        {/* <PaymentMethods /> */}
-        {/* <Calendar /> */}
-        {/* <OnlineForm /> */}
-        {/* <Patient /> */}
-        <Route path="/profilesetup" element={<PatientProfileForm />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-=======
-      <Route path="/home" element={<Home />} />
-      {/* <PaymentMethods /> */} 
+      
+       {/* <Route path="/home" element={<Home />} /> */}
       <Route path="/Calendar" element={<Calendar />} />
+      {/* <PaymentMethods /> */}
       {/*<OnlineForm /> */}
       {/*<Patient /> */}
       {/*<PatientProfileForm /> */}
       {/*<CreditCard /> */}
       {/*<CreditCard />  */}
       {/*<AppointmentHistory /> */}
-      <Route path="/profilesetup" element={<PatientProfileForm />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
->>>>>>> f7e8284fb007bcfd7ae17af82d1c7b1c122bfc3f
+      {/* <Route path="/profilesetup" element={<PatientProfileForm />} /> */}
+        {/* <Route path="/register" element={<Register />} /> */}
+        {/* <Route path="/login" element={<Login />} /> */}
       </Routes>
     </Router>
   );
