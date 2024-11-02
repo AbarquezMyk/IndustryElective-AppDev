@@ -18,7 +18,7 @@ const App = () => {
         {/* <Route path="/" element={<Home />} /> */}
         {/* <Route path="/paymentmethod" element={<PaymentMethods />} /> */}
         {/* <Route path="/" element={<CreditCard />} /> */}
-        {/* <Calendar /> */}
+        {/* <Route path="/Calendar" element={<Calendar />} /> */}
         {/* <OnlineForm /> */}
         {/* <Patient /> */}
         {/* <Route path="/profilesetup" element={<PatientProfileForm />} />
