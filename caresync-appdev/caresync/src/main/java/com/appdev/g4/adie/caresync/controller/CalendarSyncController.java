@@ -37,38 +37,34 @@ public class CalendarSyncController {
     @GetMapping("/{id}")
     public ResponseEntity<CalendarSync> getCalendarSyncById(@PathVariable Long id) {
         CalendarSync calendarSync = calendarSyncService.getCalendarSyncById(id);
-        if (calendarSync != null) {
-            return ResponseEntity.ok(calendarSync);
-        }
-        return ResponseEntity.notFound().build();
+        return (calendarSync != null) ? ResponseEntity.ok(calendarSync) : ResponseEntity.notFound().build();
     }
 
     // Create a new Calendar Sync
     @PostMapping
-    public ResponseEntity<CalendarSync> createCalendarSync(@RequestBody CalendarSync calendarSync) {
+    public ResponseEntity<CalendarSync> createCalendarSync(@Valid @RequestBody CalendarSync calendarSync) {
         CalendarSync createdCalendarSync = calendarSyncService.createCalendarSync(calendarSync);
-        return ResponseEntity.ok(createdCalendarSync);
+        return ResponseEntity.status(201).body(createdCalendarSync); // 201 Created
     }
 
     // Update an existing Calendar Sync
     @PutMapping("/{id}")
     public ResponseEntity<CalendarSync> updateCalendarSync(@PathVariable Long id, @Valid @RequestBody CalendarSync calendarSyncDetails) {
         CalendarSync updatedCalendarSync = calendarSyncService.updateCalendarSync(id, calendarSyncDetails);
-        if (updatedCalendarSync != null) {
-            return ResponseEntity.ok(updatedCalendarSync);
-        }
-        return ResponseEntity.notFound().build();
+        return (updatedCalendarSync != null) ? ResponseEntity.ok(updatedCalendarSync) : ResponseEntity.notFound().build();
     }
 
     // Delete a Calendar Sync by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCalendarSync(@PathVariable Long id) {
-        calendarSyncService.deleteCalendarSync(id);
-        return ResponseEntity.noContent().build();
+        if (calendarSyncService.deleteCalendarSync(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build(); // return 404 if not found
     }
 
     // Get Calendar Syncs by year and month
-    @GetMapping("/{year}/{month}")
+    @GetMapping("/by-year-and-month/{year}/{month}")
     public List<CalendarSync> getCalendarSyncsByYearAndMonth(@PathVariable int year, @PathVariable int month) {
         return calendarSyncService.getCalendarSyncsByYearAndMonth(year, month);
     }

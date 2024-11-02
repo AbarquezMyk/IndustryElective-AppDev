@@ -31,7 +31,6 @@ public class CalendarSyncService {
 
     // Update an existing Calendar Sync
     public CalendarSync updateCalendarSync(Long id, CalendarSync calendarSyncDetails) {
-        // Implementation for updating an existing Calendar Sync
         CalendarSync calendarSync = calendarSyncRepository.findById(id).orElse(null);
         if (calendarSync != null) {
             // Update properties here
@@ -42,8 +41,12 @@ public class CalendarSyncService {
     }
 
     // Delete a Calendar Sync by ID
-    public void deleteCalendarSync(Long id) {
-        calendarSyncRepository.deleteById(id);
+    public boolean deleteCalendarSync(Long id) {
+        if (calendarSyncRepository.existsById(id)) {
+            calendarSyncRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     // Get Calendar Syncs by year and month

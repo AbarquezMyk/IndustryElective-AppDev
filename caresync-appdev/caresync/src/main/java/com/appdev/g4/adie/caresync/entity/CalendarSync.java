@@ -3,6 +3,8 @@ package com.appdev.g4.adie.caresync.entity;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,26 +19,51 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "calendar_sync")
 public class CalendarSync {
 
+    public enum SyncStatus {
+        PENDING, COMPLETED, FAILED
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long calendarId;
 
-    @NotBlank(message = "Sync status is required")
-    private String syncStatus;
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Sync status is required")
+    private SyncStatus syncStatus;
 
     @Lob
     @NotBlank(message = "Sync data is required")
     private String syncData;
 
     @Lob
-    private String eventDetails; // Made this field LOB for potential large data
+    private String eventDetails;
 
-    @NotNull(message = "Patient ID is required")
-    private Long patientId;  // Foreign key to the patient
+    // Commenting out the patient field for testing
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "patient_id", nullable = false)
+    // private Patient patient;  // Assuming a Patient entity exists
 
     @NotNull(message = "Event date is required")
-    @Temporal(TemporalType.TIMESTAMP) // Ensure the date is stored correctly
-    private Date eventDate; // Date field for event date
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date eventDate;
+
+    // New fields for year and month
+    private int startTimeYear;
+    private int startTimeMonth;
+
+    // Constructors
+    public CalendarSync() {
+    }
+
+    public CalendarSync(SyncStatus syncStatus, String syncData, String eventDetails, Date eventDate, int startTimeYear, int startTimeMonth) {
+        this.syncStatus = syncStatus;
+        this.syncData = syncData;
+        this.eventDetails = eventDetails;
+        // this.patient = patient; // Removed patient parameter from constructor
+        this.eventDate = eventDate;
+        this.startTimeYear = startTimeYear;
+        this.startTimeMonth = startTimeMonth;
+    }
 
     // Getters and setters
     public Long getCalendarId() {
@@ -47,11 +74,11 @@ public class CalendarSync {
         this.calendarId = calendarId;
     }
 
-    public String getSyncStatus() {
+    public SyncStatus getSyncStatus() {
         return syncStatus;
     }
 
-    public void setSyncStatus(String syncStatus) {
+    public void setSyncStatus(SyncStatus syncStatus) {
         this.syncStatus = syncStatus;
     }
 
@@ -71,13 +98,14 @@ public class CalendarSync {
         this.eventDetails = eventDetails;
     }
 
-    public Long getPatientId() {
-        return patientId;
-    }
+    // Commented out the getter and setter for patient
+    // public Patient getPatient() {
+    //     return patient;
+    // }
 
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
-    }
+    // public void setPatient(Patient patient) {
+    //     this.patient = patient;
+    // }
 
     public Date getEventDate() {
         return eventDate;
@@ -85,5 +113,21 @@ public class CalendarSync {
 
     public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public int getStartTimeYear() {
+        return startTimeYear;
+    }
+
+    public void setStartTimeYear(int startTimeYear) {
+        this.startTimeYear = startTimeYear;
+    }
+
+    public int getStartTimeMonth() {
+        return startTimeMonth;
+    }
+
+    public void setStartTimeMonth(int startTimeMonth) {
+        this.startTimeMonth = startTimeMonth;
     }
 }

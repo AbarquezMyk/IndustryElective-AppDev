@@ -24,6 +24,7 @@ const upload = multer({ storage });
 let users = [];
 let patients = [];
 let cards = [];
+let events = []; // Initialize the events array
 let calendarSyncs = []; // Array to store calendar syncs
 
 // User registration endpoint
@@ -140,10 +141,16 @@ app.get('/api/cards', (req, res) => {
 // CRUD Endpoints for CalendarSync
 // Create a new event
 app.post('/api/events', (req, res) => {
-    const newEvent = { id: uuidv4(), ...req.body };
-    events.push(newEvent);
+    const { title, year, month, day } = req.body;
+    // Validate the incoming data
+    if (!title || !year || !month || !day) {
+        return res.status(400).json({ message: 'Invalid event data' });
+    }
+    const newEvent = { id: uuidv4(), title, year, month, day };
+    events.push(newEvent); // Assuming 'events' is your in-memory storage
     res.status(201).json(newEvent);
 });
+
 
 // Fetch events for a specific month and year
 app.get('/api/events/:year/:month', (req, res) => {
