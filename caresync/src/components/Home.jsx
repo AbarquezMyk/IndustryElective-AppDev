@@ -69,7 +69,7 @@ function Home() {
                   Find Your Doctor and <br /> make an appointment.
                 </h1>
                 <p style={{ fontSize: '25px', marginBottom: '30px', fontFamily: 'Manjari' }}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Welcome to CareSync, your trusted partner in scheduling seamless healthcare appointments and connecting with your ideal doctors.
                 </p>
                 <a
                   href="/register"

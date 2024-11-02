@@ -15,9 +15,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Default route to Home component */}
         <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
         {/* <PaymentMethods /> */}
         {/* <Calendar /> */}
         {/* <OnlineForm /> */}
