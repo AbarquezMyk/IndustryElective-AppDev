@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 // import PaymentMethods from './components/PaymentMethod';
-// import Calendar from './components/Calendar';
+import Calendar from './components/Calendar';
 // import OnlineForm from './components/OnlineForm';
 // import Patient from './components/Patient';
 import PatientProfileForm from './components/PatientProfileForm';
@@ -15,16 +15,18 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Default route to Home component */}
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        {/* <PaymentMethods /> */}
-        {/* <Calendar /> */}
-        {/* <OnlineForm /> */}
-        {/* <Patient /> */}
-        <Route path="/profilesetup" element={<PatientProfileForm />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+      <Route path="/home" element={<Home />} />
+      {/* <PaymentMethods /> */} 
+      <Route path="/Calendar" element={<Calendar />} />
+      {/*<OnlineForm /> */}
+      {/*<Patient /> */}
+      {/*<PatientProfileForm /> */}
+      {/*<CreditCard /> */}
+      {/*<CreditCard />  */}
+      {/*<AppointmentHistory /> */}
+      <Route path="/profilesetup" element={<PatientProfileForm />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
