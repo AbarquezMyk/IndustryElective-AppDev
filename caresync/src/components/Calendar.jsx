@@ -112,7 +112,11 @@ const Calendar = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/events/${currentYear}/${currentMonth + 1}`);
+                const response = await fetch(`/api/events/${currentYear}/${currentMonth + 1}`);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
+                }
                 const data = await response.json();
                 const formattedEvents = data.reduce((acc, event) => {
                     const dateKey = `${event.year}-${event.month}-${event.day}`;
@@ -171,6 +175,11 @@ const Calendar = () => {
                     },
                     body: JSON.stringify(newEvent),
                 });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Error adding event: ${errorText}`);
+                }
 
                 const addedEvent = await response.json();
                 const dateKey = `${currentYear}-${currentMonth + 1}-${selectedDate}`;
@@ -331,21 +340,12 @@ const Calendar = () => {
                                                 <div style={{ fontWeight: 'bold', color: '#023350' }}>{day > 0 && day <= daysInMonth ? day : ''}</div>
                                                 <div>
                                                     {dayEvents.map(event => (
-                                                        <div key={event.id} onClick={(e) => {
-                                                            e.stopPropagation(); // Prevents triggering the date click event
-                                                            handleEventClick(event);
-                                                        }} style={{
-                                                            backgroundColor: '#6C757D',
-                                                            color: '#FFFFFF',
-                                                            borderRadius: '4px',
-                                                            padding: '2px 4px',
-                                                            margin: '2px 0',
+                                                        <div key={event.id} style={{
                                                             fontSize: '12px',
-                                                            textAlign: 'left',
+                                                            color: '#6C757D',
                                                             cursor: 'pointer',
-                                                        }}>
-                                                            {event.title}
-                                                        </div>
+                                                            textDecoration: 'underline',
+                                                        }} onClick={() => handleEventClick(event)}>{event.title}</div>
                                                     ))}
                                                 </div>
                                             </td>
@@ -357,142 +357,113 @@ const Calendar = () => {
                     </table>
                 </div>
 
-                {/* Modal for adding events */}
                 {modalVisible && (
                     <div style={{
                         position: 'fixed',
-                        top: '0',
-                        left: '0',
-                        right: '0',
-                        bottom: '0',
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        padding: '20px',
+                        backgroundColor: '#FFFFFF',
+                        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                        zIndex: '1000',
+                        borderRadius: '8px',
                     }}>
-                        <div style={{
-                            backgroundColor: '#FFFFFF',
-                            padding: '20px',
-                            borderRadius: '8px',
-                            width: '300px',
-                            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-                        }}>
-                            <h3>Add Event</h3>
-                            <input
-                                type="text"
-                                value={eventTitle}
-                                onChange={(e) => setEventTitle(e.target.value)}
-                                placeholder="Event Title"
-                                style={{
-                                    width: '100%',
-                                    padding: '10px',
-                                    borderRadius: '4px',
-                                    border: '1px solid #CED4DA',
-                                    marginBottom: '10px',
-                                }}
-                            />
-                            <button onClick={handleAddEvent} style={{
-                                backgroundColor: '#28A745',
-                                color: '#FFFFFF',
-                                border: 'none',
-                                borderRadius: '4px',
-                                padding: '10px',
-                                cursor: 'pointer',
-                                transition: 'background-color 0.3s',
+                        <h2>Add Event</h2>
+                        <input
+                            type="text"
+                            placeholder="Event Title"
+                            value={eventTitle}
+                            onChange={(e) => setEventTitle(e.target.value)}
+                            style={{
                                 width: '100%',
-                            }}>
-                                Add Event
-                            </button>
-                            <button onClick={() => setModalVisible(false)} style={{
-                                backgroundColor: '#DC3545',
-                                color: '#FFFFFF',
-                                border: 'none',
+                                padding: '8px',
                                 borderRadius: '4px',
-                                padding: '10px',
-                                cursor: 'pointer',
-                                transition: 'background-color 0.3s',
-                                width: '100%',
-                                marginTop: '10px',
-                            }}>
-                                Cancel
-                            </button>
-                        </div>
+                                border: '1px solid #CED4DA',
+                                marginBottom: '10px',
+                            }}
+                        />
+                        <button onClick={handleAddEvent} style={{
+                            width: '100%',
+                            backgroundColor: '#007BFF',
+                            color: '#FFFFFF',
+                            padding: '8px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.3s',
+                        }}>Add Event</button>
+                        <button onClick={() => setModalVisible(false)} style={{
+                            width: '100%',
+                            backgroundColor: '#E9ECEF',
+                            color: '#023350',
+                            padding: '8px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            marginTop: '10px',
+                            transition: 'background-color 0.3s',
+                        }}>Cancel</button>
                     </div>
                 )}
 
-                {/* Modal for editing event details */}
                 {eventDetailsVisible && (
                     <div style={{
                         position: 'fixed',
-                        top: '0',
-                        left: '0',
-                        right: '0',
-                        bottom: '0',
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        padding: '20px',
+                        backgroundColor: '#FFFFFF',
+                        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                        zIndex: '1000',
+                        borderRadius: '8px',
                     }}>
-                        <div style={{
-                            backgroundColor: '#FFFFFF',
-                            padding: '20px',
-                            borderRadius: '8px',
-                            width: '300px',
-                            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-                        }}>
-                            <h3>Edit Event</h3>
-                            <input
-                                type="text"
-                                value={eventToEdit}
-                                onChange={(e) => setEventToEdit(e.target.value)}
-                                placeholder="Event Title"
-                                style={{
-                                    width: '100%',
-                                    padding: '10px',
-                                    borderRadius: '4px',
-                                    border: '1px solid #CED4DA',
-                                    marginBottom: '10px',
-                                }}
-                            />
-                            <button onClick={handleEditEvent} style={{
-                                backgroundColor: '#28A745',
-                                color: '#FFFFFF',
-                                border: 'none',
-                                borderRadius: '4px',
-                                padding: '10px',
-                                cursor: 'pointer',
-                                transition: 'background-color 0.3s',
+                        <h2>Edit Event</h2>
+                        <input
+                            type="text"
+                            value={eventToEdit}
+                            onChange={(e) => setEventToEdit(e.target.value)}
+                            style={{
                                 width: '100%',
-                            }}>
-                                Update Event
-                            </button>
-                            <button onClick={handleDeleteEvent} style={{
-                                backgroundColor: '#DC3545',
-                                color: '#FFFFFF',
-                                border: 'none',
+                                padding: '8px',
                                 borderRadius: '4px',
-                                padding: '10px',
-                                cursor: 'pointer',
-                                transition: 'background-color 0.3s',
-                                width: '100%',
-                                marginTop: '10px',
-                            }}>
-                                Delete Event
-                            </button>
-                            <button onClick={() => setEventDetailsVisible(false)} style={{
-                                backgroundColor: '#6C757D',
-                                color: '#FFFFFF',
-                                border: 'none',
-                                borderRadius: '4px',
-                                padding: '10px',
-                                cursor: 'pointer',
-                                transition: 'background-color 0.3s',
-                                width: '100%',
-                                marginTop: '10px',
-                            }}>
-                                Close
-                            </button>
-                        </div>
+                                border: '1px solid #CED4DA',
+                                marginBottom: '10px',
+                            }}
+                        />
+                        <button onClick={handleEditEvent} style={{
+                            width: '100%',
+                            backgroundColor: '#007BFF',
+                            color: '#FFFFFF',
+                            padding: '8px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.3s',
+                        }}>Save Changes</button>
+                        <button onClick={handleDeleteEvent} style={{
+                            width: '100%',
+                            backgroundColor: '#DC3545',
+                            color: '#FFFFFF',
+                            padding: '8px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            marginTop: '10px',
+                            transition: 'background-color 0.3s',
+                        }}>Delete Event</button>
+                        <button onClick={() => setEventDetailsVisible(false)} style={{
+                            width: '100%',
+                            backgroundColor: '#E9ECEF',
+                            color: '#023350',
+                            padding: '8px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            marginTop: '10px',
+                            transition: 'background-color 0.3s',
+                        }}>Cancel</button>
                     </div>
                 )}
             </div>
