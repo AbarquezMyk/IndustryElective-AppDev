@@ -143,6 +143,10 @@ function App() {
         cardiacCareInfo: {
             textAlign: 'left',
             marginTop: '30px'
+        },
+        neurologyInfo: {
+            textAlign: 'left',
+            marginTop: '30px'
         }
     };
 
@@ -179,6 +183,26 @@ function App() {
                             <p>At CareSync, our Cardiac Care Department is committed to diagnosing, treating, and managing a wide range of heart and vascular conditions. Our team of experienced cardiologists uses state-of-the-art technology and personalized treatment approaches to ensure the best outcomes for our patients. From routine check-ups to advanced cardiac procedures, we provide compassionate care tailored to each patient's unique needs.</p>
                         </div>
                     )}
+                    
+                    {/* Understanding Neurology Section */}
+                    {selectedDepartment === 'Neurology' && (
+                        <div style={styles.neurologyInfo}>
+                            <h3>Understanding Neurology</h3>
+                            <p>At CareSync, our Neurology Department specializes in diagnosing and treating conditions that affect the brain, spinal cord, and nervous system. Our team of highly qualified neurologists is dedicated to providing comprehensive care using advanced diagnostic tools and personalized treatment plans.</p>
+                        </div>
+                    )}
+         
+                     {/* Understanding Osteo Care Section */}
+                     {selectedDepartment === 'Osteo Care' && (
+                        <div style={styles.OsteoporosisInfo}>
+                            <h3>Understanding Osteoporosis</h3>
+                            <p>At CareSync, our Osteoporosis Department is dedicated to the prevention, diagnosis, and treatment of osteoporosis and other bone health conditions. Our team of specialized doctors utilizes advanced diagnostic tools and personalized treatment plans to help strengthen bones and reduce the risk of fractures. From routine bone density screenings to comprehensive management strategies, we offer compassionate care designed to support each patient's journey toward better bone health.</p>
+                        </div>
+                    )}
+
+
+
+
 
                     <button
                         onClick={handleFindDoctor}
@@ -192,11 +216,11 @@ function App() {
             )}
             {currentStep === 'doctors' && (
                 <div style={styles.textCenter}>
-                    <h2>Our Doctors</h2>
+                    <h2>Our Doctors in {selectedDepartment}</h2>
                     <div style={styles.doctorCards}>
-                        {doctors[selectedDepartment]?.map((doctor, index) => (
+                        {doctors[selectedDepartment].map(doctor => (
                             <div
-                                key={index}
+                                key={doctor.name}
                                 style={styles.doctorCard}
                                 onClick={() => handleDoctorSelect(doctor)}
                                 onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
@@ -205,7 +229,7 @@ function App() {
                                 <img src={doctor.image} alt={doctor.name} style={styles.doctorImage} />
                                 <p style={styles.doctorName}>{doctor.name}</p>
                                 <p style={styles.doctorSpecialty}>{doctor.specialty}</p>
-                                <p style={styles.rating}>Rating: ⭐⭐⭐⭐⭐</p>
+                                <p style={styles.rating}>⭐⭐⭐⭐⭐</p>
                             </div>
                         ))}
                     </div>
