@@ -5,10 +5,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Calendar from './components/Calendar';
 // import OnlineForm from './components/OnlineForm';
 // import Patient from './components/Patient';
-//import PatientProfileForm from './components/PatientProfileForm';
+// import PatientProfileForm from './components/PatientProfileForm';
 // import CreditCard from './components/CreditCard';
-//import Login from './components/Login';
-//import Register from './components/Register';
+// import Login from './components/Login';
+// import Register from './components/Register';
 // import AppointmentHistory from './components/AppointmentHistory';
 
 const App = () => {
