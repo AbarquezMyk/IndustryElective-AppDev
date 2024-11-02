@@ -1,11 +1,15 @@
 package com.appdev.g4.adie.caresync.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -24,10 +28,15 @@ public class CalendarSync {
     @NotBlank(message = "Sync data is required")
     private String syncData;
 
-    private String eventDetails;
+    @Lob
+    private String eventDetails; // Made this field LOB for potential large data
 
     @NotNull(message = "Patient ID is required")
     private Long patientId;  // Foreign key to the patient
+
+    @NotNull(message = "Event date is required")
+    @Temporal(TemporalType.TIMESTAMP) // Ensure the date is stored correctly
+    private Date eventDate; // Date field for event date
 
     // Getters and setters
     public Long getCalendarId() {
@@ -68,5 +77,13 @@ public class CalendarSync {
 
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
+    }
+
+    public Date getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
     }
 }

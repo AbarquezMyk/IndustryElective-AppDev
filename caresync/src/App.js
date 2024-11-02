@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 //import Home from './components/Home';
 // import PaymentMethods from './components/PaymentMethod';
 import Calendar from './components/Calendar';
@@ -15,9 +15,10 @@ const App = () => {
   return (
     <Router>
       <Routes>
-      
+      <Route path="/" element={<Navigate to="/calendar" replace />} />
+      <Route path="/calendar" element={<Calendar />} />
        {/* <Route path="/home" element={<Home />} /> */}
-      <Route path="/Calendar" element={<Calendar />} />
+
       {/* <PaymentMethods /> */}
       {/*<OnlineForm /> */}
       {/*<Patient /> */}

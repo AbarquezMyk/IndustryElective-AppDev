@@ -1,25 +1,17 @@
 package com.appdev.g4.adie.caresync.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.appdev.g4.adie.caresync.entity.CalendarSync;
 import com.appdev.g4.adie.caresync.service.CalendarSyncService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/calendar-sync")
+@CrossOrigin(origins = "http://localhost:3000") // Replace with your frontend URL
 public class CalendarSyncController {
 
     @Autowired
@@ -48,7 +40,6 @@ public class CalendarSyncController {
         return ResponseEntity.ok(createdCalendarSync);
     }
 
-
     // Update an existing Calendar Sync
     @PutMapping("/{id}")
     public ResponseEntity<CalendarSync> updateCalendarSync(@PathVariable Long id, @Valid @RequestBody CalendarSync calendarSyncDetails) {
@@ -65,4 +56,11 @@ public class CalendarSyncController {
         calendarSyncService.deleteCalendarSync(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Get Calendar Syncs by specific date
+    @GetMapping("/date/{year}/{month}/{day}")
+    public List<CalendarSync> getCalendarSyncsByDate(@PathVariable int year, @PathVariable int month, @PathVariable int day) {
+        return calendarSyncService.getCalendarSyncsByDate(year, month, day);
+    }
 }
+
