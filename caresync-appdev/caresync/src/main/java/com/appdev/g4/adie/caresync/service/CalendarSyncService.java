@@ -1,12 +1,12 @@
 package com.appdev.g4.adie.caresync.service;
 
-import com.appdev.g4.adie.caresync.entity.CalendarSync;
-import com.appdev.g4.adie.caresync.repository.CalendarSyncRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.appdev.g4.adie.caresync.entity.CalendarSync;
+import com.appdev.g4.adie.caresync.repository.CalendarSyncRepository;
 
 @Service
 public class CalendarSyncService {
@@ -21,8 +21,7 @@ public class CalendarSyncService {
 
     // Get a specific Calendar Sync by ID
     public CalendarSync getCalendarSyncById(Long id) {
-        Optional<CalendarSync> calendarSync = calendarSyncRepository.findById(id);
-        return calendarSync.orElse(null);
+        return calendarSyncRepository.findById(id).orElse(null);
     }
 
     // Create a new Calendar Sync
@@ -32,13 +31,12 @@ public class CalendarSyncService {
 
     // Update an existing Calendar Sync
     public CalendarSync updateCalendarSync(Long id, CalendarSync calendarSyncDetails) {
-        CalendarSync existingCalendarSync = getCalendarSyncById(id);
-        if (existingCalendarSync != null) {
-            existingCalendarSync.setSyncStatus(calendarSyncDetails.getSyncStatus());
-            existingCalendarSync.setSyncData(calendarSyncDetails.getSyncData());
-            existingCalendarSync.setEventDetails(calendarSyncDetails.getEventDetails());
-            existingCalendarSync.setPatientId(calendarSyncDetails.getPatientId());
-            return calendarSyncRepository.save(existingCalendarSync);
+        // Implementation for updating an existing Calendar Sync
+        CalendarSync calendarSync = calendarSyncRepository.findById(id).orElse(null);
+        if (calendarSync != null) {
+            // Update properties here
+            // Example: calendarSync.setName(calendarSyncDetails.getName());
+            return calendarSyncRepository.save(calendarSync);
         }
         return null;
     }
@@ -48,8 +46,8 @@ public class CalendarSyncService {
         calendarSyncRepository.deleteById(id);
     }
 
-    // Get Calendar Syncs by specific date
-    public List<CalendarSync> getCalendarSyncsByDate(int year, int month, int day) {
-        return calendarSyncRepository.findByYearAndMonthAndDay(year, month, day);
+    // Get Calendar Syncs by year and month
+    public List<CalendarSync> getCalendarSyncsByYearAndMonth(int year, int month) {
+        return calendarSyncRepository.findByStartTimeYearAndStartTimeMonth(year, month);
     }
 }

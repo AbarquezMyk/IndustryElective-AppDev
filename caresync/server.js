@@ -24,6 +24,7 @@ const upload = multer({ storage });
 let users = [];
 let patients = [];
 let cards = [];
+let calendarSyncs = []; // Array to store calendar syncs
 
 // User registration endpoint
 app.post('/api/users/register', async (req, res) => {
@@ -134,6 +135,48 @@ app.delete('/api/delete_card/:id', (req, res) => {
 // Get all cards endpoint
 app.get('/api/cards', (req, res) => {
     res.json(cards);
+});
+
+// CRUD Endpoints for CalendarSync
+// Create a new event
+app.post('/api/events', (req, res) => {
+    const newEvent = { id: uuidv4(), ...req.body };
+    events.push(newEvent);
+    res.status(201).json(newEvent);
+});
+
+// Fetch events for a specific month and year
+app.get('/api/events/:year/:month', (req, res) => {
+    const { year, month } = req.params;
+    const filteredEvents = events.filter(event => {
+        const eventDate = new Date(event.date);
+        return eventDate.getFullYear() == year && eventDate.getMonth() + 1 == month;
+    });
+    res.json(filteredEvents);
+});
+
+// Update an existing event
+app.put('/api/events/:id', (req, res) => {
+    const eventId = req.params.id;
+    const eventIndex = events.findIndex(event => event.id === eventId);
+    if (eventIndex === -1) {
+        return res.status(404).json({ message: 'Event not found' });
+    }
+
+    events[eventIndex] = { ...events[eventIndex], ...req.body };
+    res.status(200).json(events[eventIndex]);
+});
+
+// Delete an event
+app.delete('/api/events/:id', (req, res) => {
+    const eventId = req.params.id;
+    const eventIndex = events.findIndex(event => event.id === eventId);
+    if (eventIndex === -1) {
+        return res.status(404).json({ message: 'Event not found' });
+    }
+
+    events.splice(eventIndex, 1);
+    res.status(204).end();
 });
 
 // Server setup

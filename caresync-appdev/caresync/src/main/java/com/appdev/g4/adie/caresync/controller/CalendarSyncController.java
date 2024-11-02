@@ -1,16 +1,26 @@
 package com.appdev.g4.adie.caresync.controller;
 
-import com.appdev.g4.adie.caresync.entity.CalendarSync;
-import com.appdev.g4.adie.caresync.service.CalendarSyncService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.appdev.g4.adie.caresync.entity.CalendarSync;
+import com.appdev.g4.adie.caresync.service.CalendarSyncService;
+
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("/api/calendar-sync")
+@RequestMapping("/api/events")
 @CrossOrigin(origins = "http://localhost:3000") // Replace with your frontend URL
 public class CalendarSyncController {
 
@@ -57,10 +67,9 @@ public class CalendarSyncController {
         return ResponseEntity.noContent().build();
     }
 
-    // Get Calendar Syncs by specific date
-    @GetMapping("/date/{year}/{month}/{day}")
-    public List<CalendarSync> getCalendarSyncsByDate(@PathVariable int year, @PathVariable int month, @PathVariable int day) {
-        return calendarSyncService.getCalendarSyncsByDate(year, month, day);
+    // Get Calendar Syncs by year and month
+    @GetMapping("/{year}/{month}")
+    public List<CalendarSync> getCalendarSyncsByYearAndMonth(@PathVariable int year, @PathVariable int month) {
+        return calendarSyncService.getCalendarSyncsByYearAndMonth(year, month);
     }
 }
-
