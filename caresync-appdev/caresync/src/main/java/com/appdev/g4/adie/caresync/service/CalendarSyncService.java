@@ -14,32 +14,43 @@ public class CalendarSyncService {
     @Autowired
     private CalendarSyncRepository calendarSyncRepository;
 
+    // Get all Calendar Syncs
     public List<CalendarSync> getAllCalendarSyncs() {
         return calendarSyncRepository.findAll();
     }
 
+    // Get a specific Calendar Sync by ID
     public CalendarSync getCalendarSyncById(Long id) {
         return calendarSyncRepository.findById(id).orElse(null);
     }
 
+    // Create a new Calendar Sync
     public CalendarSync createCalendarSync(CalendarSync calendarSync) {
         return calendarSyncRepository.save(calendarSync);
     }
 
+    // Update an existing Calendar Sync
     public CalendarSync updateCalendarSync(Long id, CalendarSync calendarSyncDetails) {
         CalendarSync calendarSync = calendarSyncRepository.findById(id).orElse(null);
         if (calendarSync != null) {
-            // Update the calendar sync fields with the new details
-            calendarSync.setSyncStatus(calendarSyncDetails.getSyncStatus());
-            calendarSync.setSyncData(calendarSyncDetails.getSyncData());
-            calendarSync.setEventDetails(calendarSyncDetails.getEventDetails());
-            calendarSync.setPatientId(calendarSyncDetails.getPatientId());
+            // Update properties here
+            // Example: calendarSync.setName(calendarSyncDetails.getName());
             return calendarSyncRepository.save(calendarSync);
         }
         return null;
     }
 
-    public void deleteCalendarSync(Long id) {
-        calendarSyncRepository.deleteById(id);
+    // Delete a Calendar Sync by ID
+    public boolean deleteCalendarSync(Long id) {
+        if (calendarSyncRepository.existsById(id)) {
+            calendarSyncRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    // Get Calendar Syncs by year and month
+    public List<CalendarSync> getCalendarSyncsByYearAndMonth(int year, int month) {
+        return calendarSyncRepository.findByStartTimeYearAndStartTimeMonth(year, month);
     }
 }
