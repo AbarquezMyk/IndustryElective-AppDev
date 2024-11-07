@@ -9,17 +9,21 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 // import CreditCard from './components/CreditCard';
 // import Login from './components/Login';
 // import Register from './components/Register';
-import AppointmentHistory from './components/AppointmentHistory';
+// import AppointmentHistory from './components/AppointmentHistory';
+import Doctor from './components/Doctor';
 
 const App = () => {
   return (
     <Router>
       <Routes>
       {/*<Route path="/" element={<Navigate to="/calendar" replace />} /> */}
-      {/*<Route path="/calendar" element={<Calendar />} /> */}
+      {/* <Route path="/calendar" element={<Calendar />} /> */}
       {/* <Route path="/home" element={<Home />} /> */}
+      <Route path="/" element={<Doctor />} />
+
       {/* <PaymentMethods /> */}
-      <Calendar />
+      {/* <Calendar /> */}
+      </Routes>
     </Router>
   );
 };
