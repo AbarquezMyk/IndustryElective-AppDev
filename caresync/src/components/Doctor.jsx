@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
 
-import { Link } from 'react-router-dom';
-import logo from './img/Logo1.png';
-import dashboard from './img/dashboard.png';
-import appointment from './img/appointment-icon.png';
-import calendar from './img/calendar_icon.png';
-import payment from './img/payment-method.png';
-import setting from './img/setting.png';
-import logout from './img/logout_icon.png';
 
 // Import department logos
 import neurologyLogo from './img/neurology-logo.svg';
@@ -37,86 +29,6 @@ import Doctor16 from './img/Doctor16.png';
 import Doctor17 from './img/Doctor17.png';
 import Doctor18 from './img/Doctor18.png';
 
-
-// Sidebar component
-const Sidebar = () => (
-    <div style={{
-        width: '250px',
-        backgroundColor: 'white',
-        padding: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        borderRight: '1px solid #CED4DA',
-        height: '100vh',
-        fontFamily: 'Manjari, sans-serif',
-    }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
-            <img src={logo} alt="Logo1" style={{ width: '60px', height: '60px', marginRight: '20px' }} />
-            <h2 style={{
-                color: '#023350',
-                fontSize: '17px',
-                fontWeight: 'normal',
-                letterSpacing: '0.4em',
-                margin: 0,
-                paddingLeft: '10px',
-            }}>
-                CareSync
-            </h2>
-        </div>
-
-        <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
-            {[
-                { icon: dashboard, label: 'Dashboard', link: '/' },
-                { icon: appointment, label: 'Appointments', link: '/AppointmentHistory' },
-                { icon: calendar, label: 'Calendar', link: '/calendar', highlighted: true },
-                { icon: payment, label: 'Payments', link: '/PaymentMethod' },
-                { icon: setting, label: 'Settings', link: '/settings' },
-            ].map((item, index) => (
-                <li key={index} style={{
-                    margin: '40px 0',
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: item.highlighted ? 'transparent' : 'transparent',
-                    borderRadius: '8px',
-                    padding: '10px',
-                    border: item.highlighted ? '2px solid #023350' : 'none',
-                }}>
-                    <img src={item.icon} alt={`${item.label} Icon`} style={{ width: '20px', height: '20px', marginRight: '15px', paddingLeft: '20px' }} />
-                    <Link to={item.link} style={{
-                        textDecoration: 'none',
-                        color: '#023350',
-                        fontSize: '16px',
-                        letterSpacing: '0.1em',
-                        paddingLeft: '30px',
-                    }}>
-                        {item.label}
-                    </Link>
-                </li>
-            ))}
-        </ul>
-
-        <div style={{ textAlign: 'center', marginTop: 'auto', marginBottom: '20px' }}>
-            <button
-                onClick={() => console.log("Logout")}
-                style={{
-                    color: '#E74C3C',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    letterSpacing: '0.1em',
-                    fontSize: '16px',
-                    padding: '10px 20px',
-                }}
-            >
-                <img src={logout} alt="Logout Icon" style={{ width: '20px', height: '20px', marginRight: '10px', paddingLeft: '20px' }} />
-                <span style={{ paddingLeft: '30px' }}>Log Out</span>
-            </button>
-        </div>
-    </div>
-);
 
 function App() {
     const [currentStep, setCurrentStep] = useState('departments');
