@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from './img/Logo1.png';
 import dashboard from './img/dashboard.png';
@@ -8,11 +8,10 @@ import payment from './img/payment-method.png';
 import setting from './img/setting.png';
 import logout from './img/logout_icon.png';
 
-// Sidebar component  
 const Sidebar = () => (
     <div style={{
         width: '250px',
-        backgroundColor: 'white',
+        backgroundColor: '#F0F4F8',
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
@@ -21,7 +20,6 @@ const Sidebar = () => (
         height: '100vh',
         fontFamily: 'Manjari, sans-serif',
     }}>
-        {/* Logo and Title */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
             <img src={logo} alt="Logo1" style={{ width: '60px', height: '60px', marginRight: '20px' }} />
             <h2 style={{
@@ -35,21 +33,22 @@ const Sidebar = () => (
                 CareSync
             </h2>
         </div>
-
-        {/* Menu Items */}
         <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
-            {[
-                { icon: dashboard, label: 'Dashboard', link: '/' },
-                { icon: appointment, label: 'Appointments', link: '/AppointmentHistory' },
-                { icon: calendar, label: 'Calendar', link: '/calendar', highlighted: true },
-                { icon: payment, label: 'Payments', link: '/PaymentMethod' },
-                { icon: setting, label: 'Settings', link: '/settings' },
-            ].map((item, index) => (
+            {[{
+                icon: dashboard, label: 'Dashboard', link: '/'
+            }, {
+                icon: appointment, label: 'Appointments', link: '/AppointmentHistory'
+            }, {
+                icon: calendar, label: 'Calendar', link: '/calendar', highlighted: true
+            }, {
+                icon: payment, label: 'Payments', link: '/PaymentMethod'
+            }, {
+                icon: setting, label: 'Settings', link: '/settings'
+            }].map((item, index) => (
                 <li key={index} style={{
                     margin: '40px 0',
                     display: 'flex',
                     alignItems: 'center',
-                    backgroundColor: item.highlighted ? 'transparent' : 'transparent',
                     borderRadius: '8px',
                     padding: '10px',
                     border: item.highlighted ? '2px solid #023350' : 'none',
@@ -67,8 +66,6 @@ const Sidebar = () => (
                 </li>
             ))}
         </ul>
-
-        {/* Logout Button */}
         <div style={{ textAlign: 'center', marginTop: 'auto', marginBottom: '20px' }}>
             <button
                 onClick={() => console.log("Logout")}
@@ -82,6 +79,7 @@ const Sidebar = () => (
                     letterSpacing: '0.1em',
                     fontSize: '16px',
                     padding: '10px 20px',
+                    fontFamily: 'Manjari, sans-serif',
                 }}
             >
                 <img src={logout} alt="Logout Icon" style={{ width: '20px', height: '20px', marginRight: '10px', paddingLeft: '20px' }} />
@@ -91,379 +89,213 @@ const Sidebar = () => (
     </div>
 );
 
-//Calendar 
+const getDaysInMonth = (month, year) => {
+    const date = new Date(year, month, 1);
+    const days = [];
+    const startDay = date.getDay();
+
+    for (let i = 0; i < startDay; i++) days.push(null);
+    while (date.getMonth() === month) {
+        days.push(new Date(date));
+        date.setDate(date.getDate() + 1);
+    }
+    while (days.length % 7 !== 0) days.push(null);
+    return days;
+};
 
 const Calendar = () => {
-    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-    const [events, setEvents] = useState({});
-    const [modalVisible, setModalVisible] = useState(false);
-    const [eventDetailsVisible, setEventDetailsVisible] = useState(false);
+    const [appointments, setAppointments] = useState({});
     const [selectedDate, setSelectedDate] = useState(null);
-    const [eventTitle, setEventTitle] = useState('');
-    const [selectedEventId, setSelectedEventId] = useState(null);
-    const [eventToEdit, setEventToEdit] = useState('');
+    const [selectedAppointments, setSelectedAppointments] = useState([]);
+    const [newAppointment, setNewAppointment] = useState({ title: '', details: '', time: '', doctor: '', room: '', location: '' });
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
+    const today = new Date();
+    const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+    const monthDays = getDaysInMonth(currentMonth, today.getFullYear());
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const response = await fetch(`/api/events/${currentYear}/${currentMonth + 1}`);
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
-                }
-                const data = await response.json();
-                const formattedEvents = data.reduce((acc, event) => {
-                    const dateKey = `${event.year}-${event.month}-${event.day}`;
-                    acc[dateKey] = acc[dateKey] ? [...acc[dateKey], { id: event.id, title: event.title }] : [{ id: event.id, title: event.title }];
-                    return acc;
-                }, {});
-                setEvents(formattedEvents);
-            } catch (error) {
-                console.error('Error fetching events:', error);
-            }
-        };
-
-        fetchEvents();
-    }, [currentMonth, currentYear]);
-
-    const handlePreviousMonth = () => {
-        if (currentMonth === 0) {
-            setCurrentMonth(11);
-            setCurrentYear(currentYear - 1);
-        } else {
-            setCurrentMonth(currentMonth - 1);
-        }
-    };
-
-    const handleNextMonth = () => {
-        if (currentMonth === 11) {
-            setCurrentMonth(0);
-            setCurrentYear(currentYear + 1);
-        } else {
-            setCurrentMonth(currentMonth + 1);
-        }
-    };
-
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const startDay = new Date(currentYear, currentMonth, 1).getDay();
+    const goToPreviousMonth = () => setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1));
+    const goToNextMonth = () => setCurrentMonth((prev) => (prev === 11 ? 0 : prev + 1));
 
     const handleDateClick = (date) => {
-        setSelectedDate(date);
-        setModalVisible(true);
-    };
-
-    const handleAddEvent = async () => {
-        if (eventTitle) {
-            const newEvent = {
-                title: eventTitle,
-                year: currentYear,
-                month: currentMonth + 1,
-                day: selectedDate,
-            };
-
-            try {
-                const response = await fetch('http://localhost:8080/api/events', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(newEvent),
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Error adding event: ${errorText}`);
-                }
-
-                const addedEvent = await response.json();
-                const dateKey = `${currentYear}-${currentMonth + 1}-${selectedDate}`;
-                const newEvents = { ...events, [dateKey]: [...(events[dateKey] || []), { id: addedEvent.id, title: eventTitle }] };
-
-                setEvents(newEvents);
-                setEventTitle('');
-                setModalVisible(false);
-            } catch (error) {
-                console.error('Error adding event:', error);
-            }
+        if (date) {
+            setSelectedDate(date);
+            const dateKey = date.toDateString();
+            setSelectedAppointments(appointments[dateKey] || []);
         }
     };
 
-    const handleEventClick = (event) => {
-        setEventToEdit(event.title);
-        setSelectedEventId(event.id);
-        setEventDetailsVisible(true);
-    };
-
-    const handleEditEvent = async () => {
-        if (eventToEdit) {
-            const updatedEvent = {
-                id: selectedEventId,
-                title: eventToEdit,
-                year: currentYear,
-                month: currentMonth + 1,
-                day: selectedDate,
-            };
-
-            try {
-                await fetch(`http://localhost:8080/api/events/${selectedEventId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(updatedEvent),
-                });
-
-                const dateKey = `${currentYear}-${currentMonth + 1}-${selectedDate}`;
-                const updatedEvents = {
-                    ...events,
-                    [dateKey]: events[dateKey].map(event => event.id === selectedEventId ? { ...event, title: eventToEdit } : event)
-                };
-
-                setEvents(updatedEvents);
-                setEventToEdit('');
-                setEventDetailsVisible(false);
-            } catch (error) {
-                console.error('Error updating event:', error);
-            }
-        }
-    };
-
-    const handleDeleteEvent = async () => {
-        try {
-            await fetch(`http://localhost:8080/api/events/${selectedEventId}`, {
-                method: 'DELETE',
-            });
-
-            const dateKey = `${currentYear}-${currentMonth + 1}-${selectedDate}`;
-            const updatedEvents = {
-                ...events,
-                [dateKey]: events[dateKey].filter(event => event.id !== selectedEventId),
-            };
-
-            setEvents(updatedEvents);
-            setEventDetailsVisible(false);
-        } catch (error) {
-            console.error('Error deleting event:', error);
-        }
+    const handleAddAppointment = () => {
+        const dateKey = selectedDate.toDateString();
+        const updatedAppointments = { ...appointments };
+        if (!updatedAppointments[dateKey]) updatedAppointments[dateKey] = [];
+        updatedAppointments[dateKey].push({ ...newAppointment });
+        setAppointments(updatedAppointments);
+        setNewAppointment({ title: '', details: '', time: '', doctor: '', room: '', location: '' });
+        setIsModalVisible(false);
     };
 
     return (
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', fontFamily: 'Manjari, sans-serif' }}>
             <Sidebar />
-            <div style={{ flex: '1', padding: '20px', backgroundColor: '#F8F9FA' }}>
+            <div style={{
+                flex: '1',
+                padding: '20px',
+                backgroundColor: '#FFFFFF',
+                borderRadius: '8px',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            }}>
                 <h1 style={{
                     fontSize: '36px',
                     fontWeight: 'bold',
                     color: '#023350',
                     textAlign: 'center',
                     marginBottom: '20px',
+                    lineHeight: '1.4',
+                    letterSpacing: '10px'
                 }}>
                     CALENDAR
                 </h1>
 
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px' }}>
-                    <button onClick={handlePreviousMonth} style={{
-                        fontSize: '16px',
-                        backgroundColor: '#E9ECEF',
-                        border: '1px solid #CED4DA',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        padding: '4px 8px',
-                        marginRight: '10px',
-                        color: '#023350',
-                        transition: 'background-color 0.3s',
-                    }}>
-                        ◀
-                    </button>
-                    <h2 style={{ fontSize: '20px', color: '#023350', margin: '0 20px' }}>{monthNames[currentMonth]} {currentYear}</h2>
-                    <button onClick={handleNextMonth} style={{
-                        fontSize: '16px',
-                        backgroundColor: '#E9ECEF',
-                        border: '1px solid #CED4DA',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        padding: '4px 8px',
-                        marginLeft: '10px',
-                        color: '#023350',
-                        transition: 'background-color 0.3s',
-                    }}>
-                        ▶
-                    </button>
-                </div>
-
                 <div style={{
-                    border: '1px solid #CED4DA',
-                    borderRadius: '8px',
-                    padding: '10px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '10px'
                 }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead>
-                            <tr>
-                                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                                    <th key={day} style={{
-                                        padding: '5px',
-                                        borderBottom: '1px solid #CED4DA',
-                                        color: '#6C757D',
-                                        fontSize: '14px',
-                                        textAlign: 'center',
-                                    }}>
-                                        {day}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Array.from({ length: 6 }, (_, rowIndex) => (
-                                <tr key={rowIndex}>
-                                    {Array.from({ length: 7 }, (_, dayIndex) => {
-                                        const day = rowIndex * 7 + dayIndex - startDay + 1;
-                                        const dateKey = `${currentYear}-${currentMonth + 1}-${day}`;
-                                        const dayEvents = events[dateKey] || [];
-
-                                        return (
-                                            <td key={dayIndex} style={{
-                                                padding: '5px',
-                                                border: '1px solid #CED4DA',
-                                                textAlign: 'center',
-                                                cursor: day > 0 && day <= daysInMonth ? 'pointer' : 'not-allowed',
-                                                backgroundColor: day > 0 && day <= daysInMonth ? '#FFFFFF' : '#F8F9FA',
-                                                position: 'relative',
-                                                height: '60px',
-                                                width: '60px',
-                                            }} onClick={() => day > 0 && day <= daysInMonth ? handleDateClick(day) : null}>
-                                                <div style={{ fontWeight: 'bold', color: '#023350' }}>{day > 0 && day <= daysInMonth ? day : ''}</div>
-                                                <div>
-                                                    {dayEvents.map(event => (
-                                                        <div key={event.id} style={{
-                                                            fontSize: '12px',
-                                                            color: '#6C757D',
-                                                            cursor: 'pointer',
-                                                            textDecoration: 'underline',
-                                                        }} onClick={() => handleEventClick(event)}>{event.title}</div>
-                                                    ))}
-                                                </div>
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <button onClick={goToPreviousMonth} style={{
+                        backgroundColor: '#041E42',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        padding: '10px 15px',
+                        borderRadius: '5px',
+                        cursor: 'pointer'
+                    }}>← Previous</button>
+                    <h2 style={{ color: '#023350' }}>
+                        {new Date(today.getFullYear(), currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                    </h2>
+                    <button onClick={goToNextMonth} style={{
+                        backgroundColor: '#023350',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        padding: '10px 15px',
+                        borderRadius: '5px',
+                        cursor: 'pointer'
+                    }}>Next →</button>
                 </div>
 
-                {modalVisible && (
-                    <div style={{
-                        position: 'fixed',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        padding: '20px',
-                        backgroundColor: '#FFFFFF',
-                        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-                        zIndex: '1000',
-                        borderRadius: '8px',
-                    }}>
-                        <h2>Add Event</h2>
-                        <input
-                            type="text"
-                            placeholder="Event Title"
-                            value={eventTitle}
-                            onChange={(e) => setEventTitle(e.target.value)}
+                <div className="calendar-grid" style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(7, 1fr)',
+                    gap: '10px',
+                    padding: '20px',
+                    border: '2px solid #023350',
+                    borderRadius: '8px',
+                    backgroundColor: '#F0F4F8',
+                }}>
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                        <div key={day} style={{
+                            textAlign: 'center',
+                            fontWeight: 'bold',
+                            color: '#023350'
+                        }}>
+                            {day}
+                        </div>
+                    ))}
+                    {monthDays.map((date, index) => (
+                        <div
+                            key={index}
+                            onClick={() => handleDateClick(date)}
                             style={{
-                                width: '100%',
-                                padding: '8px',
-                                borderRadius: '4px',
-                                border: '1px solid #CED4DA',
-                                marginBottom: '10px',
+                                padding: '10px',
+                                textAlign: 'center',
+                                cursor: 'pointer',
+                                backgroundColor: date?.toDateString() === selectedDate?.toDateString() ? '#023350' : 'transparent',
+                                color: date?.toDateString() === selectedDate?.toDateString() ? '#FFFFFF' : '#023350',
+                                borderRadius: '4px'
                             }}
-                        />
-                        <button onClick={handleAddEvent} style={{
-                            width: '100%',
-                            backgroundColor: '#007BFF',
-                            color: '#FFFFFF',
-                            padding: '8px',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            transition: 'background-color 0.3s',
-                        }}>Add Event</button>
-                        <button onClick={() => setModalVisible(false)} style={{
-                            width: '100%',
-                            backgroundColor: '#E9ECEF',
-                            color: '#023350',
-                            padding: '8px',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            marginTop: '10px',
-                            transition: 'background-color 0.3s',
-                        }}>Cancel</button>
-                    </div>
-                )}
+                        >
+                            {date ? date.getDate() : ''}
+                        </div>
+                    ))}
+                </div>
 
-                {eventDetailsVisible && (
+                <div style={{ marginTop: '20px' }}>
+                    <h3>Appointments for {selectedDate?.toDateString() || "Select a Date"}</h3>
+                    <ul>
+                        {selectedAppointments.map((appt, idx) => (
+                            <li key={idx}>
+                                <strong>{appt.title}</strong> - {appt.time}
+                                <p>{appt.details}</p>
+                            </li>
+                        ))}
+                    </ul>
+                    {selectedDate && (
+                        <button
+                            onClick={() => setIsModalVisible(true)}
+                            style={{
+                                marginTop: '10px',
+                                padding: '10px 20px',
+                                backgroundColor: '#023350',
+                                color: '#FFFFFF',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Add Appointment
+                        </button>
+                    )}
+                </div>
+
+                {isModalVisible && (
                     <div style={{
                         position: 'fixed',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        padding: '20px',
-                        backgroundColor: '#FFFFFF',
-                        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-                        zIndex: '1000',
-                        borderRadius: '8px',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                     }}>
-                        <h2>Edit Event</h2>
-                        <input
-                            type="text"
-                            value={eventToEdit}
-                            onChange={(e) => setEventToEdit(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '8px',
-                                borderRadius: '4px',
-                                border: '1px solid #CED4DA',
-                                marginBottom: '10px',
-                            }}
-                        />
-                        <button onClick={handleEditEvent} style={{
-                            width: '100%',
-                            backgroundColor: '#007BFF',
-                            color: '#FFFFFF',
-                            padding: '8px',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            transition: 'background-color 0.3s',
-                        }}>Save Changes</button>
-                        <button onClick={handleDeleteEvent} style={{
-                            width: '100%',
-                            backgroundColor: '#DC3545',
-                            color: '#FFFFFF',
-                            padding: '8px',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            marginTop: '10px',
-                            transition: 'background-color 0.3s',
-                        }}>Delete Event</button>
-                        <button onClick={() => setEventDetailsVisible(false)} style={{
-                            width: '100%',
-                            backgroundColor: '#E9ECEF',
-                            color: '#023350',
-                            padding: '8px',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            marginTop: '10px',
-                            transition: 'background-color 0.3s',
-                        }}>Cancel</button>
+                        <div style={{
+                            backgroundColor: '#FFFFFF',
+                            padding: '20px',
+                            borderRadius: '8px',
+                            width: '400px',
+                            textAlign: 'center'
+                        }}>
+                            <h3>Add New Appointment for {selectedDate?.toDateString()}</h3>
+                            <input
+                                type="text"
+                                placeholder="Title"
+                                value={newAppointment.title}
+                                onChange={(e) => setNewAppointment({ ...newAppointment, title: e.target.value })}
+                                style={{ margin: '10px 0', width: '100%', padding: '10px' }}
+                            />
+                            <textarea
+                                placeholder="Details"
+                                value={newAppointment.details}
+                                onChange={(e) => setNewAppointment({ ...newAppointment, details: e.target.value })}
+                                style={{ margin: '10px 0', width: '100%', padding: '10px' }}
+                            />
+                            <button
+                                onClick={handleAddAppointment}
+                                style={{
+                                    marginTop: '10px',
+                                    padding: '10px 20px',
+                                    backgroundColor: '#023350',
+                                    color: '#FFFFFF',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Save Appointment
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
