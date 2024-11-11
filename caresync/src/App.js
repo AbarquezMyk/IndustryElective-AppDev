@@ -17,7 +17,7 @@ const App = () => {
     <Router>
       <Routes>
         {/* Default route to Home */}
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
 
         {/* Authentication routes */}
         <Route path="/login" element={<Login />} />
@@ -31,7 +31,7 @@ const App = () => {
         <Route path="/patient-profile" element={<PatientProfileForm />} />
         <Route path="/credit-card" element={<CreditCard />} />
         <Route path="/appointment-history" element={<AppointmentHistory />} />
-        <Route path="/" element={<Doctor />} /> 
+        <Route path="/doctor" element={<Doctor />} /> 
 
         {/* Redirect any unknown routes to Home */}
         <Route path="*" element={<Navigate to="/" />} />
