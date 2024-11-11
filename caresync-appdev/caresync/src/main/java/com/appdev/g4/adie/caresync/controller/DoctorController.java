@@ -36,13 +36,13 @@ public class DoctorController {
         return doctorService.getAllDoctors();
     }
 
-    // UPDATE of CRUD
+    
     @PutMapping("/putDoctor")
     public DoctorEntity updateDoctor(@RequestParam Long doctorId, @RequestBody DoctorEntity newDoctor) throws NameNotFoundException {
         return doctorService.updateDoctor(doctorId, newDoctor);
     }
 
-    // DELETE of CRUD
+    
     @DeleteMapping("/deleteDoctor/{doctorId}")
     public String deleteDoctor(@PathVariable Long doctorId) {
         return doctorService.deleteDoctor(doctorId);

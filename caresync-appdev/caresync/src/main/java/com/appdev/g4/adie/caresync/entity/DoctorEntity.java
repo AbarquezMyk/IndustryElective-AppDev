@@ -18,7 +18,7 @@ public class DoctorEntity {
     private String contactInformation;
     private String status;
     private String location;
-    private String department; // New department attribute
+    private String department; 
 
     public DoctorEntity() {
     }
@@ -71,11 +71,11 @@ public class DoctorEntity {
         this.location = location;
     }
 
-    public String getDepartment() { // Getter for department
+    public String getDepartment() { 
         return department;
     }
 
-    public void setDepartment(String department) { // Setter for department
+    public void setDepartment(String department) { 
         this.department = department;
     }
 }

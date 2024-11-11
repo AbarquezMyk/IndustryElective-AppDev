@@ -24,11 +24,10 @@ public class DoctorService {
         return doctorRepository.findAll();
     }
 
-    // UPDATE
+    
     public DoctorEntity updateDoctor(Long doctorId, DoctorEntity newDoctor) throws NameNotFoundException {
         DoctorEntity doctor;
         try {
-            // Search for the doctor by ID
             doctor = doctorRepository.findById(doctorId).get();
             
             doctor.setDoctorName(newDoctor.getDoctorName());
@@ -41,7 +40,7 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
-    // DELETE
+    
     public String deleteDoctor(Long doctorId) {
         if (doctorRepository.findById(doctorId).isPresent()) {
             doctorRepository.deleteById(doctorId);
