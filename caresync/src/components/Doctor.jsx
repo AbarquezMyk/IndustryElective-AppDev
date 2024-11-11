@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
+import logo from './img/logo.png';
+import dashboard from './img/dashboard.png';
+import appointment from './img/appointment-icon.png';
+import payment from './img/payment-method.png';
+import setting from './img/setting.png';
 
-// Import department logos
 import neurologyLogo from './img/neurology-logo.svg';
 import cardiacLogo from './img/cardiac-logo.svg';
 import osteoporosisLogo from './img/osteoporosis-logo.svg';
@@ -9,7 +14,6 @@ import eyecareLogo from './img/eyecare-logo.svg';
 import heartcareLogo from './img/heartcare-logo.svg';
 import entLogo from './img/ent-logo.svg';
 
-// Import doctor images
 import doctor1 from './img/doctor1.jpg';
 import doctor2 from './img/doctor2.png';
 import doctor3 from './img/doctor3.png';
@@ -28,7 +32,6 @@ import Doctor15 from './img/Doctor15.png';
 import Doctor16 from './img/Doctor16.png';
 import Doctor17 from './img/Doctor17.png';
 import Doctor18 from './img/Doctor18.png';
-
 
 function App() {
     const [currentStep, setCurrentStep] = useState('departments');
@@ -90,11 +93,33 @@ function App() {
 
     const styles = {
         app: {
-            fontFamily: 'Arial, sans-serif',
-            maxWidth: '1200px',
-            margin: '0 auto',
+            display: 'flex',
+            maxWidth: '100%',
+            margin: '0',
+            padding: '0',
+            fontFamily: 'Arial, sans-serif'
+        },
+        sidebar: {
+            width: '250px',
+            backgroundColor: 'white',
+            padding: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            borderRight: '1px solid #CED4DA',
+            position: 'fixed', // Fixes the sidebar to the left
+            left: '0',
+            top: '0',
+            height: '100vh',
+            zIndex: '10'
+        },
+        mainContent: {
+            flex: 1,
+            marginLeft: '250px', // Offset the main content to the right of the fixed sidebar
             padding: '20px'
         },
+        sidebarLink: { textDecoration: 'none', color: '#023350', fontSize: '18px' },
+        sidebarImage: { width: '20px', height: '20px', marginRight: '10px' },
         textCenter: { textAlign: 'center' },
         departments: {
             display: 'flex',
@@ -138,105 +163,77 @@ function App() {
             transition: 'transform 0.2s',
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)'
         },
-        doctorImage: { width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' },
-        doctorName: { fontSize: '18px', fontWeight: 'bold' },
-        doctorSpecialty: { color: '#777', fontSize: '14px' },
-        rating: { color: '#FFD700', fontSize: '14px' },
-        cardiacCareInfo: {
-            textAlign: 'left',
-            marginTop: '30px'
-        },
-        neurologyInfo: {
-            textAlign: 'left',
-            marginTop: '30px'
-        }
+        doctorImage: { width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' }
     };
 
     return (
         <div style={styles.app}>
-            {currentStep === 'departments' && (
-                <div style={styles.textCenter}>
-                    <h2>Our Departments</h2>
-                    <div style={styles.departments}>
-                        {departments.map(dept => (
-                            <div
-                                key={dept.name}
-                                style={styles.departmentCard}
-                                onClick={() => handleDepartmentSelect(dept.name)}
-                                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
-                                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-                            >
-                                <img src={dept.logo} alt={dept.name} style={styles.logoImage} />
-                                <p>{dept.name}</p>
-                            </div>
-                        ))}
+            <div style={styles.sidebar}>
+                <div style={{ textAlign: 'center' }}>
+                    <img src={logo} alt="CareSync Logo" style={{ width: '200px', height: 'auto', marginTop: '-50px' }} />
+                </div>
+                <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
+                    <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
+                        <img src={dashboard} alt="Dashboard Icon" style={styles.sidebarImage} />
+                        <Link to="/" style={styles.sidebarLink}>Dashboard</Link>
+                    </li>
+                    <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
+                        <img src={appointment} alt="Appointments Icon" style={styles.sidebarImage} />
+                        <Link to="/appointment" style={styles.sidebarLink}>Appointments</Link>
+                    </li>
+                    <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
+                        <img src={payment} alt="Payments Icon" style={styles.sidebarImage} />
+                        <Link to="/payments" style={styles.sidebarLink}>Payments</Link>
+                    </li>
+                    <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
+                        <img src={setting} alt="Settings Icon" style={styles.sidebarImage} />
+                        <Link to="/settings" style={styles.sidebarLink}>Settings</Link>
+                    </li>
+                </ul>
+            </div>
+            <div style={styles.mainContent}>
+                {currentStep === 'departments' && (
+                    <div style={styles.textCenter}>
+                        <h1>Departments</h1>
+                        <div style={styles.departments}>
+                            {departments.map((dept) => (
+                                <div
+                                    key={dept.name}
+                                    style={styles.departmentCard}
+                                    onClick={() => handleDepartmentSelect(dept.name)}
+                                >
+                                    <img src={dept.logo} alt={dept.name} style={styles.logoImage} />
+                                    <h3>{dept.name}</h3>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            )}
-            {currentStep === 'dashboard' && (
-                <div style={styles.textCenter}>
-                    <h2>{selectedDepartment} Department</h2>
-                    <p>Welcome to the {selectedDepartment} Department. Here we specialize in personalized care, focusing on your unique needs and treatment options.</p>
-                    
-                    {/* Understanding Cardiac Care Section */}
-                    {selectedDepartment === 'Cardiac Care' && (
-                        <div style={styles.cardiacCareInfo}>
-                            <h3>Understanding Cardiac Care</h3>
-                            <p>At CareSync, our Cardiac Care Department is committed to diagnosing, treating, and managing a wide range of heart and vascular conditions. Our team of experienced cardiologists uses state-of-the-art technology and personalized treatment approaches to ensure the best outcomes for our patients. From routine check-ups to advanced cardiac procedures, we provide compassionate care tailored to each patient's unique needs.</p>
-                        </div>
-                    )}
-                    
-                    {/* Understanding Neurology Section */}
-                    {selectedDepartment === 'Neurology' && (
-                        <div style={styles.neurologyInfo}>
-                            <h3>Understanding Neurology</h3>
-                            <p>At CareSync, our Neurology Department specializes in diagnosing and treating conditions that affect the brain, spinal cord, and nervous system. Our team of highly qualified neurologists is dedicated to providing comprehensive care using advanced diagnostic tools and personalized treatment plans.</p>
-                        </div>
-                    )}
-         
-                     {/* Understanding Osteo Care Section */}
-                     {selectedDepartment === 'Osteo Care' && (
-                        <div style={styles.OsteoporosisInfo}>
-                            <h3>Understanding Osteoporosis</h3>
-                            <p>At CareSync, our Osteoporosis Department is dedicated to the prevention, diagnosis, and treatment of osteoporosis and other bone health conditions. Our team of specialized doctors utilizes advanced diagnostic tools and personalized treatment plans to help strengthen bones and reduce the risk of fractures. From routine bone density screenings to comprehensive management strategies, we offer compassionate care designed to support each patient's journey toward better bone health.</p>
-                        </div>
-                    )}
-
-
-
-
-
-                    <button
-                        onClick={handleFindDoctor}
-                        style={styles.button}
-                        onMouseEnter={e => e.currentTarget.style.backgroundColor = '#0056b3'}
-                        onMouseLeave={e => e.currentTarget.style.backgroundColor = '#007bff'}
-                    >
-                        Find a Doctor
-                    </button>
-                </div>
-            )}
-            {currentStep === 'doctors' && (
-                <div style={styles.textCenter}>
-                    <h2>Our Doctors in {selectedDepartment}</h2>
-                    <div style={styles.doctorCards}>
-                        {doctors[selectedDepartment].map(doctor => (
-                            <div
-                                key={doctor.name}
-                                style={styles.doctorCard}
-                                onClick={() => handleDoctorSelect(doctor)}
-                                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
-                                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-                            >
-                                <img src={doctor.image} alt={doctor.name} style={styles.doctorImage} />
-                                <p style={styles.doctorName}>{doctor.name}</p>
-                                <p style={styles.doctorSpecialty}>{doctor.specialty}</p>
-                                <p style={styles.rating}>⭐⭐⭐⭐⭐</p>
-                            </div>
-                        ))}
+                )}
+                {currentStep === 'dashboard' && (
+                    <div style={styles.textCenter}>
+                        <h1>{selectedDepartment} Dashboard</h1>
+                        <button onClick={handleFindDoctor} style={styles.button}>Find Doctor</button>
                     </div>
-                </div>
-            )}
+                )}
+                {currentStep === 'doctors' && (
+                    <div>
+                        <h1>Doctors in {selectedDepartment}</h1>
+                        <div style={styles.doctorCards}>
+                            {doctors[selectedDepartment].map((doc) => (
+                                <div
+                                    key={doc.name}
+                                    style={styles.doctorCard}
+                                    onClick={() => handleDoctorSelect(doc)}
+                                >
+                                    <img src={doc.image} alt={doc.name} style={styles.doctorImage} />
+                                    <h3>{doc.name}</h3>
+                                    <p>{doc.specialty}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

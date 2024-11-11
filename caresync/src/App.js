@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Home from './components/Home';
 import PaymentMethods from './components/PaymentMethod';
 import Calendar from './components/Calendar';
@@ -31,7 +31,7 @@ const App = () => {
         <Route path="/patient-profile" element={<PatientProfileForm />} />
         <Route path="/credit-card" element={<CreditCard />} />
         <Route path="/appointment-history" element={<AppointmentHistory />} />
-        <Route path="/doctor" element={<Doctor />} />
+        <Route path="/" element={<Doctor />} />
 
         {/* Redirect any unknown routes to Home */}
         <Route path="*" element={<Navigate to="/" />} />
