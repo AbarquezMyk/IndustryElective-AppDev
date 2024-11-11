@@ -107,7 +107,7 @@ function App() {
             flexDirection: 'column',
             justifyContent: 'space-between',
             borderRight: '1px solid #CED4DA',
-            position: 'fixed', // Fixes the sidebar to the left
+            position: 'fixed',
             left: '0',
             top: '0',
             height: '100vh',
@@ -115,7 +115,7 @@ function App() {
         },
         mainContent: {
             flex: 1,
-            marginLeft: '250px', // Offset the main content to the right of the fixed sidebar
+            marginLeft: '250px',
             padding: '20px'
         },
         sidebarLink: { textDecoration: 'none', color: '#023350', fontSize: '18px' },
@@ -129,15 +129,17 @@ function App() {
         },
         departmentCard: {
             border: '1px solid #ddd',
-            padding: '20px',
+            padding: '30px',
             borderRadius: '10px',
-            width: '150px',
+            width: '200px',
+            height: '220px',
             textAlign: 'center',
             cursor: 'pointer',
             transition: 'transform 0.2s',
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)'
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+            fontSize: '10px' 
         },
-        logoImage: { width: '100px', height: '100px', borderRadius: '50%', marginBottom: '10px' },
+        logoImage: { width: '120px', height: '120px', borderRadius: '50%', marginBottom: '10px' },
         button: {
             backgroundColor: '#007bff',
             color: 'white',
@@ -196,38 +198,57 @@ function App() {
                     <div style={styles.textCenter}>
                         <h1>Departments</h1>
                         <div style={styles.departments}>
-                            {departments.map((dept) => (
+                            {departments.map((department) => (
                                 <div
-                                    key={dept.name}
+                                    key={department.name}
                                     style={styles.departmentCard}
-                                    onClick={() => handleDepartmentSelect(dept.name)}
+                                    onClick={() => handleDepartmentSelect(department.name)}
                                 >
-                                    <img src={dept.logo} alt={dept.name} style={styles.logoImage} />
-                                    <h3>{dept.name}</h3>
+                                    <img src={department.logo} alt={department.name} style={styles.logoImage} />
+                                    <h2>{department.name}</h2>
                                 </div>
                             ))}
                         </div>
                     </div>
                 )}
+
                 {currentStep === 'dashboard' && (
                     <div style={styles.textCenter}>
                         <h1>{selectedDepartment} Dashboard</h1>
+
+                        {/* Display the Neurology description */}
+                        {selectedDepartment === 'Neurology' && (
+                            <div style={{ marginBottom: '20px', fontSize: '16px', textAlign: 'justify', color: '#555' }}>
+                                <h2>Understanding Neurology</h2>
+                                <p>
+                                    At CareSync, our Neurology Department specializes in diagnosing and treating conditions that affect the brain,
+                                    spinal cord, and nervous system. Our team of highly qualified neurologists is dedicated to providing comprehensive
+                                    care using advanced diagnostic tools and personalized treatment plans.
+                                </p>
+                            </div>
+                        )}
+
                         <button onClick={handleFindDoctor} style={styles.button}>Find Doctor</button>
                     </div>
                 )}
+
                 {currentStep === 'doctors' && (
                     <div>
-                        <h1>Doctors in {selectedDepartment}</h1>
+                        <h2>Doctors</h2>
                         <div style={styles.doctorCards}>
-                            {doctors[selectedDepartment].map((doc) => (
+                            {doctors[selectedDepartment].map((doctor) => (
                                 <div
-                                    key={doc.name}
+                                    key={doctor.name}
                                     style={styles.doctorCard}
-                                    onClick={() => handleDoctorSelect(doc)}
+                                    onClick={() => handleDoctorSelect(doctor)}
                                 >
-                                    <img src={doc.image} alt={doc.name} style={styles.doctorImage} />
-                                    <h3>{doc.name}</h3>
-                                    <p>{doc.specialty}</p>
+                                    <img
+                                        src={doctor.image}
+                                        alt={doctor.name}
+                                        style={styles.doctorImage}
+                                    />
+                                    <h3>{doctor.name}</h3>
+                                    <p>{doctor.specialty}</p>
                                 </div>
                             ))}
                         </div>
