@@ -1,160 +1,117 @@
-import React, { useState } from 'react';
+package com.appdev.g4.adie.caresync.entity;
 
-const Calendar = () => {
-    const [appointments, setAppointments] = useState({
-        // Pre-defined sample appointments
-        "2024-11-08": [{ title: "Check-up", details: "Routine health check-up", time: "10:00 AM", doctor: "Dr. Smith", room: "101", location: "Health Clinic" }]
-    });
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedAppointments, setSelectedAppointments] = useState([]);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [role, setRole] = useState("user"); // Set role to "user" or "admin"
-    const [newAppointment, setNewAppointment] = useState({ title: "", details: "", time: "", doctor: "", room: "", location: "" });
+import java.util.Date;
 
-    const handleDateClick = (date) => {
-        setSelectedDate(date);
-        setSelectedAppointments(appointments[date.toDateString()] || []);
-    };
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-    const handleAddAppointment = () => {
-        const dateKey = selectedDate.toDateString();
-        setAppointments({
-            ...appointments,
-            [dateKey]: [...(appointments[dateKey] || []), newAppointment]
-        });
-        setIsModalVisible(false);
-        setNewAppointment({ title: "", details: "", time: "", doctor: "", room: "", location: "" });
-    };
+@Entity
+@Table(name = "calendar_sync")
+public class CalendarSync {
 
-    return (
-        <div>
-            <h1>Calendar</h1>
-            <div>
-                {/* Calendar Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px' }}>
-                    {Array.from({ length: 30 }, (_, i) => {
-                        const date = new Date(2024, 10, i + 1); // November 2024
-                        return (
-                            <div
-                                key={i}
-                                onClick={() => handleDateClick(date)}
-                                style={{
-                                    padding: '10px',
-                                    backgroundColor: appointments[date.toDateString()] ? '#A7C0DA' : '#FFFFFF',
-                                    cursor: 'pointer',
-                                    boxShadow: '0px 2px 4px rgba(0,0,0,0.2)'
-                                }}
-                            >
-                                <span>{date.getDate()}</span>
-                                {appointments[date.toDateString()]?.map((appointment, i) => (
-                                    <div key={i} style={{ fontSize: '10px', color: '#023350' }}>
-                                        {appointment.title}
-                                    </div>
-                                ))}
-                            </div>
-                        );
-                    })}
-                </div>
+    public enum SyncStatus {
+        PENDING, COMPLETED, FAILED
+    }
 
-                {selectedDate && (
-                    <div style={{
-                        padding: '20px',
-                        backgroundColor: '#FFFFFF',
-                        border: '2px solid #023350',
-                        borderRadius: '8px',
-                        marginTop: '20px',
-                    }}>
-                        <h3 style={{ color: '#023350' }}>Appointments on {selectedDate.toDateString()}</h3>
-                        {selectedAppointments.length > 0 ? (
-                            selectedAppointments.map((appointment, i) => (
-                                <div key={i} style={{ marginBottom: '10px' }}>
-                                    <h4>{appointment.title}</h4>
-                                    <p>Details: {appointment.details}</p>
-                                    <p>Time: {appointment.time}</p>
-                                    <p>Doctor: {appointment.doctor}</p>
-                                    <p>Room: {appointment.room}</p>
-                                    <p>Location: {appointment.location}</p>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No appointments for this date.</p>
-                        )}
-                    </div>
-                )}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long calendarId;
 
-                {/* Add Appointment Button for All Roles */}
-                <button
-                    onClick={() => setIsModalVisible(true)}
-                    style={{
-                        backgroundColor: '#023350',
-                        color: '#FFFFFF',
-                        border: 'none',
-                        padding: '10px 15px',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                        marginTop: '20px'
-                    }}
-                >
-                    Add Appointment
-                </button>
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Sync status is required")
+    private SyncStatus syncStatus;
 
-                {isModalVisible && (
-                    <div style={{
-                        position: 'fixed',
-                        top: '0',
-                        left: '0',
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                        <div style={{
-                            width: '400px',
-                            padding: '20px',
-                            backgroundColor: '#FFFFFF',
-                            borderRadius: '8px',
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
-                        }}>
-                            <h2 style={{
-                                fontSize: '24px',
-                                color: '#023350',
-                                marginBottom: '10px'
-                            }}>Add Appointment</h2>
-                            {['title', 'details', 'time', 'doctor', 'room', 'location'].map((field) => (
-                                <input
-                                    key={field}
-                                    type="text"
-                                    value={newAppointment[field]}
-                                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                                    onChange={(e) => setNewAppointment({ ...newAppointment, [field]: e.target.value })}
-                                    style={{
-                                        width: '100%',
-                                        padding: '10px',
-                                        margin: '5px 0',
-                                        borderRadius: '4px',
-                                        border: '1px solid #CED4DA'
-                                    }}
-                                />
-                            ))}
-                            <button onClick={handleAddAppointment} style={{
-                                width: '100%',
-                                backgroundColor: '#023350',
-                                color: '#FFFFFF',
-                                border: 'none',
-                                padding: '10px 15px',
-                                borderRadius: '5px',
-                                cursor: 'pointer'
-                            }}>
-                                Save Appointment
-                            </button>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
+    @Lob
+    @NotBlank(message = "Sync data is required")
+    private String syncData;
 
-export default Calendar;
+    @Lob
+    private String eventDetails;
+
+    @NotNull(message = "Event date is required")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date eventDate;
+
+    // New fields for year and month
+    private int startTimeYear;
+    private int startTimeMonth;
+
+    // Constructors
+    public CalendarSync() {}
+
+    public CalendarSync(SyncStatus syncStatus, String syncData, String eventDetails, Date eventDate, int startTimeYear, int startTimeMonth) {
+        this.syncStatus = syncStatus;
+        this.syncData = syncData;
+        this.eventDetails = eventDetails;
+        this.eventDate = eventDate;
+        this.startTimeYear = startTimeYear;
+        this.startTimeMonth = startTimeMonth;
+    }
+
+    // Getters and setters
+    public Long getCalendarId() {
+        return calendarId;
+    }
+
+    public void setCalendarId(Long calendarId) {
+        this.calendarId = calendarId;
+    }
+
+    public SyncStatus getSyncStatus() {
+        return syncStatus;
+    }
+
+    public void setSyncStatus(SyncStatus syncStatus) {
+        this.syncStatus = syncStatus;
+    }
+
+    public String getSyncData() {
+        return syncData;
+    }
+
+    public void setSyncData(String syncData) {
+        this.syncData = syncData;
+    }
+
+    public String getEventDetails() {
+        return eventDetails;
+    }
+
+    public void setEventDetails(String eventDetails) {
+        this.eventDetails = eventDetails;
+    }
+
+    public Date getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public int getStartTimeYear() {
+        return startTimeYear;
+    }
+
+    public void setStartTimeYear(int startTimeYear) {
+        this.startTimeYear = startTimeYear;
+    }
+
+    public int getStartTimeMonth() {
+        return startTimeMonth;
+    }
+
+    public void setStartTimeMonth(int startTimeMonth) {
+        this.startTimeMonth = startTimeMonth;
+    }
+}

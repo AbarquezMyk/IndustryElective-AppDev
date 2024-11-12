@@ -64,7 +64,7 @@ function Home() {
           {/* Hero Section */}
           <section style={{ padding: '50px 0', backgroundColor: '#fff', height: 'calc(100vh - 80px)' }} id="home">
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', height: '100%' }}>
-              <div style={{ flex: '1', padding: '20px', marginTop: '-500px', marginLeft: '100px' }}>
+              <div style={{ flex: '1', padding: '20px', marginTop: '-200px', marginLeft: '100px' }}>
                 <h1 style={{ fontSize: '30px', marginBottom: '20px', fontFamily: 'Manjari' }}>
                   Find Your Doctor and <br /> make an appointment.
                 </h1>
@@ -82,7 +82,7 @@ function Home() {
                 <img
                   src={hero}
                   alt="hero-header"
-                  style={{ width: '700px', height: 'auto', objectFit: 'contain', marginTop: '-800px' }}
+                  style={{ width: '700px', height: 'auto', objectFit: 'contain', marginTop: '-400px' }}
                 />
               </div>
             </div>
