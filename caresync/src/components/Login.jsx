@@ -10,7 +10,7 @@ const Login = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('Submitting form...'); // Log form submission
+        console.log('Submitting form...');
         setError('');
         try {
             const response = await fetch('http://localhost:8080/api/users/login', {
@@ -25,7 +25,7 @@ const Login = () => {
 
             if (response.ok) {
                 console.log('Login successful:', data);
-                navigate('/profilesetup');
+                navigate('/appointment-history');
             } else {
                 setError(data.message || 'Invalid email or password.');
                 console.log('Login failed:', data);

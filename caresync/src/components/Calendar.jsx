@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from './img/Logo1.png';
+import logo from './img/logo.png';
 import dashboard from './img/dashboard.png';
 import appointment from './img/appointment-icon.png';
 import calendar from './img/calendar_icon.png';
@@ -9,83 +9,39 @@ import setting from './img/setting.png';
 import logout from './img/logout_icon.png';
 
 const Sidebar = () => (
-    <div style={{
-        width: '250px',
-        backgroundColor: '#F0F4F8',
-        padding: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        borderRight: '1px solid #CED4DA',
-        height: '100vh',
-        fontFamily: 'Manjari, sans-serif',
-    }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
-            <img src={logo} alt="Logo1" style={{ width: '60px', height: '60px', marginRight: '20px' }} />
-            <h2 style={{
-                color: '#023350',
-                fontSize: '17px',
-                fontWeight: 'normal',
-                letterSpacing: '0.4em',
-                margin: 0,
-                paddingLeft: '10px',
-            }}>
-                CareSync
-            </h2>
+    <div style={styles.container}>
+      {/* Sidebar */}
+      <div style={styles.sidebar}>
+        <img src={logo} alt="CareSync Logo" style={styles.logo} />
+        <nav style={styles.nav}>
+          <ul style={styles.navList}>
+            <li style={styles.dashboardNavItem}>
+              <img src={dashboard} alt="Dashboard" style={styles.navIcon} />
+              Dashboard
+            </li>
+            <li style={styles.appointmentsNavItem}>
+              <img src={appointment} alt="Appointments" style={styles.navIcon} />
+              <Link to="/appointment-history" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Appointments</Link>
+            </li>
+            <li style={styles.calendarNavItem}>
+              <img src={calendar} alt="Calendar" style={styles.navIcon} />
+              <Link to="/calendar" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Calendar</Link>
+            </li>
+            <li style={styles.paymentsNavItem}>
+              <img src={payment} alt="Payments" style={styles.navIcon} />
+              <Link to="/payment-methods" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Payments</Link>
+            </li>
+            <li style={styles.settingsNavItem}>
+              <img src={setting} alt="Settings" style={styles.navIcon} />
+              <Link to="/settings" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Settings</Link>
+            </li>
+          </ul>
+        </nav>
+        <div style={styles.logout}>
+          <img src={logout} alt="Log Out" style={styles.navIcon} />
+          <Link to="/" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Log Out</Link>
         </div>
-        <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
-            {[{
-                icon: dashboard, label: 'Dashboard', link: '/'
-            }, {
-                icon: appointment, label: 'Appointments', link: '/appointment-history'
-            }, {
-                icon: calendar, label: 'Calendar', link: '/calendar', highlighted: true
-            }, {
-                icon: payment, label: 'Payments', link: '/payment-methods'
-            }, {
-                icon: setting, label: 'Settings', link: '/settings'
-            }].map((item, index) => (
-                <li key={index} style={{
-                    margin: '40px 0',
-                    display: 'flex',
-                    alignItems: 'center',
-                    borderRadius: '8px',
-                    padding: '10px',
-                    border: item.highlighted ? '2px solid #023350' : 'none',
-                }}>
-                    <img src={item.icon} alt={`${item.label} Icon`} style={{ width: '20px', height: '20px', marginRight: '15px', paddingLeft: '20px' }} />
-                    <Link to={item.link} style={{
-                        textDecoration: 'none',
-                        color: '#023350',
-                        fontSize: '16px',
-                        letterSpacing: '0.1em',
-                        paddingLeft: '30px',
-                    }}>
-                        {item.label}
-                    </Link>
-                </li>
-            ))}
-        </ul>
-        <div style={{ textAlign: 'center', marginTop: 'auto', marginBottom: '20px' }}>
-            <button
-                onClick={() => console.log("Logout")}
-                style={{
-                    color: '#E74C3C',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    letterSpacing: '0.1em',
-                    fontSize: '16px',
-                    padding: '10px 20px',
-                    fontFamily: 'Manjari, sans-serif',
-                }}
-            >
-                <img src={logout} alt="Logout Icon" style={{ width: '20px', height: '20px', marginRight: '10px', paddingLeft: '20px' }} />
-                <span style={{ paddingLeft: '30px' }}>Log Out</span>
-            </button>
-        </div>
+      </div>
     </div>
 );
 
@@ -302,5 +258,200 @@ const Calendar = () => {
         </div>
     );
 };
+
+const styles = {
+    container: {
+      display: 'flex',
+      fontFamily: 'Arial',
+      height: 'auto'
+    },
+    sidebar: {
+      width: '240px',
+      backgroundColor: '#FFFFFF',
+      height: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      paddingTop: '20px',
+      borderRight: '1px solid #e6e6e6'
+    },
+    logo: {
+        width: '200px',
+        marginBottom: '-30px',
+        marginTop: '-50px',
+    },
+    navList: {
+      listStyle: 'none',
+      padding: 0,
+      width: '100%'
+    },
+    dashboardNavItem: {
+      padding: '15px 20px',
+      fontSize: '16px',
+      color: '#023350',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      backgroundColor: '#fff',
+      marginBottom: '10px'
+    },
+    appointmentsNavItem: {
+      padding: '15px 20px',
+      fontSize: '16px',
+      color: '#023350',
+      backgroundColor: '#fff',
+      display: 'flex',
+      alignItems: 'center',
+    },
+    calendarNavItem: {
+      padding: '15px 20px',
+      fontSize: '16px',
+      color: '#4F4F4F',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: '10px',
+      borderRadius: '8px',
+      border: '1.5px solid #023350',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+      marginBottom: '10px'
+    },
+    paymentsNavItem: {
+      padding: '15px 20px',
+      fontSize: '16px',
+      color: '#4F4F4F',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: '10px'
+    },
+    settingsNavItem: {
+      padding: '15px 20px',
+      fontSize: '16px',
+      color: '#4F4F4F',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+    },
+    navIcon: {
+      width: '20px',
+      height: '20px',
+      marginRight: '30px'
+    },
+    logout: {
+      marginTop: 'auto',
+      marginBottom: '50px',
+      color: 'red',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center'
+    },
+    mainContent: {
+      flex: 1,
+      padding: '20px',
+      backgroundColor: '#F8F9FA',
+      height: '870px',
+      overflowY: 'auto',
+    },
+    header: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '30px'
+    },
+    headerTitle: {
+      fontSize: '24px',
+      color: '#023350',
+      marginTop: '40px',
+    },
+    profile: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    profileName: {
+      fontSize: '16px',
+      color: '#4F4F4F',
+      marginTop: '40px',
+    },
+    filters: {
+      display: 'flex',
+      gap: '10px',
+      marginBottom: '20px'
+    },
+    searchInput: {
+      padding: '10px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+      width: '400px'
+    },
+    filter: {
+      padding: '10px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+      width: '300px'
+    },
+    dateInput: {
+      padding: '10px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+      width: '300px'
+    },
+    appointmentSection: {
+      marginTop: '45px',
+    },
+    sectionTitle: {
+      fontSize: '20px',
+      color: '#023350',
+      marginBottom: '20px'
+    },
+    appointmentCard: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '15px',
+      height: '90px',
+      backgroundColor: '#FFF',
+      borderRadius: '8px',
+      border: '1px solid #e6e6e6',
+      marginBottom: '10px'
+    },
+    doctorImage: {
+      width: '65px',
+      height: '70px',
+      borderRadius: '50%',
+      marginRight: '15px',
+    },
+    appointmentDetails: {
+      flex: 1
+    },
+    doctorName: {
+      fontSize: '16px',
+      color: '#023350',
+      marginBottom: '5px'
+    },
+    appointmentTime: {
+      fontSize: '14px',
+      color: '#4F4F4F'
+    },
+    appointmentActions: {
+      display: 'flex',
+      gap: '10px'
+    },
+    cancelButton: {
+      padding: '5px 15px',
+      border: '1px solid red',
+      borderRadius: '5px',
+      color: 'red',
+      backgroundColor: 'transparent',
+      cursor: 'pointer'
+    },
+    detailButton: {
+      padding: '5px 15px',
+      border: '1px solid #023350',
+      borderRadius: '5px',
+      color: '#023350',
+      backgroundColor: 'transparent',
+      cursor: 'pointer'
+    }
+  };
 
 export default Calendar;

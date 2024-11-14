@@ -10,6 +10,7 @@ import CreditCard from './components/CreditCard';
 import Login from './components/Login';
 import Register from './components/Register';
 import AppointmentHistory from './components/AppointmentHistory';
+import AppointmentHistoryForm from './components/AppointmentHistoryForm';
 import Doctor from './components/Doctor';
 
 const App = () => {
@@ -31,7 +32,8 @@ const App = () => {
         <Route path="/patient-profile" element={<PatientProfileForm />} />
         <Route path="/credit-card" element={<CreditCard />} />
         <Route path="/appointment-history" element={<AppointmentHistory />} />
-        <Route path="/doctor" element={<Doctor />} /> 
+        <Route path="/doctor" element={<Doctor />} />
+        <Route path="/history-form" element={<AppointmentHistoryForm />} />
 
         {/* Redirect any unknown routes to Home */}
         <Route path="*" element={<Navigate to="/" />} />

@@ -6,6 +6,8 @@ import dashboard from './img/dashboard.png';
 import appointment from './img/appointment-icon.png';
 import payment from './img/payment-method.png';
 import setting from './img/setting.png';
+import logout from './img/logout_icon.png';
+import calendar from './img/calendar_icon.png';
 
 import neurologyLogo from './img/neurology-logo.svg';
 import cardiacLogo from './img/cardiac-logo.svg';
@@ -92,12 +94,204 @@ function App() {
     };
 
     const styles = {
+        container: {
+            display: 'flex',
+            fontFamily: 'Arial',
+            height: 'auto'
+          },
+          sidebar: {
+            width: '240px',
+            backgroundColor: '#FFFFFF',
+            height: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            paddingTop: '20px',
+            borderRight: '1px solid #e6e6e6'
+          },
+          logo: {
+            width: '200px',
+            marginBottom: '-30px',
+            marginTop: '-50px',
+          },
+          navList: {
+            listStyle: 'none',
+            padding: 0,
+            width: '100%'
+          },
+          dashboardNavItem: {
+            padding: '15px 20px',
+            fontSize: '16px',
+            color: '#023350',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: '#fff',
+            marginBottom: '10px'
+          },
+          appointmentsNavItem: {
+            padding: '15px 20px',
+            fontSize: '16px',
+            color: '#023350',
+            backgroundColor: '#fff',
+            border: '1.5px solid #023350',
+            display: 'flex',
+            alignItems: 'center',
+            borderRadius: '8px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+            marginBottom: '10px'
+          },
+          calendarNavItem: {
+            padding: '15px 20px',
+            fontSize: '16px',
+            color: '#4F4F4F',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '10px'
+          },
+          paymentsNavItem: {
+            padding: '15px 20px',
+            fontSize: '16px',
+            color: '#4F4F4F',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '10px'
+          },
+          settingsNavItem: {
+            padding: '15px 20px',
+            fontSize: '16px',
+            color: '#4F4F4F',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+          },
+          navIcon: {
+            width: '20px',
+            height: '20px',
+            marginRight: '30px'
+          },
+          logout: {
+            marginTop: 'auto',
+            marginBottom: '50px',
+            color: 'red',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center'
+          },
+          mainContent: {
+            flex: 1,
+            padding: '20px',
+            backgroundColor: '#F8F9FA',
+            height: '870px',
+            overflowY: 'auto',
+          },
+          header: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '30px'
+          },
+          headerTitle: {
+            fontSize: '24px',
+            color: '#023350',
+            marginTop: '40px',
+          },
+          profile: {
+            display: 'flex',
+            alignItems: 'center'
+          },
+          profileName: {
+            fontSize: '16px',
+            color: '#4F4F4F',
+            marginTop: '40px',
+          },
+          filters: {
+            display: 'flex',
+            gap: '10px',
+            marginBottom: '20px'
+          },
+          searchInput: {
+            padding: '10px',
+            borderRadius: '5px',
+            border: '1px solid #ccc',
+            width: '400px'
+          },
+          filter: {
+            padding: '10px',
+            borderRadius: '5px',
+            border: '1px solid #ccc',
+            width: '300px'
+          },
+          dateInput: {
+            padding: '10px',
+            borderRadius: '5px',
+            border: '1px solid #ccc',
+            width: '300px'
+          },
+          appointmentSection: {
+            marginTop: '45px',
+          },
+          sectionTitle: {
+            fontSize: '20px',
+            color: '#023350',
+            marginBottom: '20px'
+          },
+          appointmentCard: {
+            display: 'flex',
+            alignItems: 'center',
+            padding: '15px',
+            height: '90px',
+            backgroundColor: '#FFF',
+            borderRadius: '8px',
+            border: '1px solid #e6e6e6',
+            marginBottom: '10px'
+          },
+          doctorImage: {
+            width: '65px',
+            height: '70px',
+            borderRadius: '50%',
+            marginRight: '15px',
+          },
+          appointmentDetails: {
+            flex: 1
+          },
+          doctorName: {
+            fontSize: '16px',
+            color: '#023350',
+            marginBottom: '5px'
+          },
+          appointmentTime: {
+            fontSize: '14px',
+            color: '#4F4F4F'
+          },
+          appointmentActions: {
+            display: 'flex',
+            gap: '10px'
+          },
+          cancelButton: {
+            padding: '5px 15px',
+            border: '1px solid red',
+            borderRadius: '5px',
+            color: 'red',
+            backgroundColor: 'transparent',
+            cursor: 'pointer'
+          },
+          detailButton: {
+            padding: '5px 15px',
+            border: '1px solid #023350',
+            borderRadius: '5px',
+            color: '#023350',
+            backgroundColor: 'transparent',
+            cursor: 'pointer'
+        },
         app: {
             display: 'flex',
             maxWidth: '100%',
             margin: '0',
             padding: '0',
-            fontFamily: 'Arial, sans-serif'
+            fontFamily: 'Arial, sans-serif',
         },
         sidebar: {
             width: '250px',
@@ -111,7 +305,7 @@ function App() {
             left: '0',
             top: '0',
             height: '100vh',
-            zIndex: '10'
+            zIndex: '10',
         },
         mainContent: {
             flex: 1,
@@ -169,30 +363,39 @@ function App() {
     };
 
     return (
-        <div style={styles.app}>
-            <div style={styles.sidebar}>
-                <div style={{ textAlign: 'center' }}>
-                    <img src={logo} alt="CareSync Logo" style={{ width: '200px', height: 'auto', marginTop: '-50px' }} />
-                </div>
-                <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
-                    <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
-                        <img src={dashboard} alt="Dashboard Icon" style={styles.sidebarImage} />
-                        <Link to="/" style={styles.sidebarLink}>Dashboard</Link>
-                    </li>
-                    <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
-                        <img src={appointment} alt="Appointments Icon" style={styles.sidebarImage} />
-                        <Link to="/appointment" style={styles.sidebarLink}>Appointments</Link>
-                    </li>
-                    <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
-                        <img src={payment} alt="Payments Icon" style={styles.sidebarImage} />
-                        <Link to="/payments" style={styles.sidebarLink}>Payments</Link>
-                    </li>
-                    <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
-                        <img src={setting} alt="Settings Icon" style={styles.sidebarImage} />
-                        <Link to="/settings" style={styles.sidebarLink}>Settings</Link>
-                    </li>
-                </ul>
-            </div>
+        <div style={styles.container}>
+      {/* Sidebar */}
+      <div style={styles.sidebar}>
+        <img src={logo} alt="CareSync Logo" style={styles.logo} />
+        <nav style={styles.nav}>
+          <ul style={styles.navList}>
+            <li style={styles.dashboardNavItem}>
+              <img src={dashboard} alt="Dashboard" style={styles.navIcon} />
+              Dashboard
+            </li>
+            <li style={styles.appointmentsNavItem}>
+              <img src={appointment} alt="Appointments" style={styles.navIcon} />
+              <Link to="/appointment-history" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Appointments</Link>
+            </li>
+            <li style={styles.calendarNavItem}>
+              <img src={calendar} alt="Calendar" style={styles.navIcon} />
+              <Link to="/calendar" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Calendar</Link>
+            </li>
+            <li style={styles.paymentsNavItem}>
+              <img src={payment} alt="Payments" style={styles.navIcon} />
+              <Link to="/payment-methods" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Payments</Link>
+            </li>
+            <li style={styles.settingsNavItem}>
+              <img src={setting} alt="Settings" style={styles.navIcon} />
+              <Link to="/settings" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Settings</Link>
+            </li>
+          </ul>
+        </nav>
+        <div style={styles.logout}>
+          <img src={logout} alt="Log Out" style={styles.navIcon} />
+          <Link to="/" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Log Out</Link>
+        </div>
+      </div>
             <div style={styles.mainContent}>
                 {currentStep === 'departments' && (
                     <div style={styles.textCenter}>
