@@ -37,11 +37,11 @@ const Sidebar = () => (
             {[{
                 icon: dashboard, label: 'Dashboard', link: '/'
             }, {
-                icon: appointment, label: 'Appointments', link: '/AppointmentHistory'
+                icon: appointment, label: 'Appointments', link: '/appointment-history'
             }, {
                 icon: calendar, label: 'Calendar', link: '/calendar', highlighted: true
             }, {
-                icon: payment, label: 'Payments', link: '/PaymentMethod'
+                icon: payment, label: 'Payments', link: '/payment-methods'
             }, {
                 icon: setting, label: 'Settings', link: '/settings'
             }].map((item, index) => (

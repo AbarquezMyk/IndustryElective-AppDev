@@ -46,7 +46,7 @@ const PaymentMethods = () => {
           </li>
           <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
             <img src={payment} alt="Payments Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
-            <Link to="/payments" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Payments</Link>
+            <Link to="/payment-methods" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Payments</Link>
           </li>
           <li style={{ margin: '15px 0', display: 'flex', alignItems: 'center' }}>
             <img src={setting} alt="Settings Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
@@ -70,7 +70,7 @@ const PaymentMethods = () => {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           {/* Credit Card Button */}
-          <Link to="/credit_card" style={{ textDecoration: 'none' }}>
+          <Link to="/credit-card" style={{ textDecoration: 'none' }}>
             <div style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
               backgroundColor: '#f0f0f0', border: '1px solid #CED4DA', borderRadius: '8px',
