@@ -10,7 +10,7 @@ import payment from './img/payment-method.png';
 import setting from './img/setting.png';
 import logout from './img/logout_icon.png';
 
-const AppointmentHistory = () => {
+const dashboard = () => {
   return (
     <div style={styles.container}>
       {/* Sidebar */}
@@ -195,4 +195,4 @@ const styles = {
   }
 };
 
-export default AppointmentHistory;
+export default dashboard;
