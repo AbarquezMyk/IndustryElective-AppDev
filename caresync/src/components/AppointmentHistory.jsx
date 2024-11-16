@@ -58,38 +58,6 @@ const AppointmentHistory = () => {
 
   return (
     <div style={styles.container}>
-      {/* Sidebar */}
-      <div style={styles.sidebar}>
-        <img src={logo} alt="CareSync Logo" style={styles.logo} />
-        <nav style={styles.nav}>
-          <ul style={styles.navList}>
-            <li style={styles.dashboardNavItem}>
-              <img src={dashboard} alt="Dashboard" style={styles.navIcon} />
-              Dashboard
-            </li>
-            <li style={styles.appointmentsNavItem}>
-              <img src={appointment} alt="Appointments" style={styles.navIcon} />
-              <Link to="/appointment-history" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Appointments</Link>
-            </li>
-            <li style={styles.calendarNavItem}>
-              <img src={calendar} alt="Calendar" style={styles.navIcon} />
-              <Link to="/calendar" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Calendar</Link>
-            </li>
-            <li style={styles.paymentsNavItem}>
-              <img src={payment} alt="Payments" style={styles.navIcon} />
-              <Link to="/payment-methods" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Payments</Link>
-            </li>
-            <li style={styles.settingsNavItem}>
-              <img src={setting} alt="Settings" style={styles.navIcon} />
-              <Link to="/settings" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Settings</Link>
-            </li>
-          </ul>
-        </nav>
-        <div style={styles.logout}>
-          <img src={logout} alt="Log Out" style={styles.navIcon} />
-          <Link to="/" onClick={handleLogout} style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Log Out</Link>
-        </div>
-      </div>
       <main style={styles.mainContent}>
         <div style={styles.header}>
           <h2 style={styles.headerTitle}>My Appointments</h2>
@@ -156,84 +124,6 @@ const styles = {
     display: 'flex',
     fontFamily: 'Arial',
     height: '100vh'
-  },
-  sidebar: {
-    width: '240px',
-    backgroundColor: '#FFFFFF',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: '20px',
-    borderRight: '1px solid #e6e6e6'
-  },
-  logo: {
-    width: '150px',
-    marginBottom: '20px'
-  },
-  navList: {
-    listStyle: 'none',
-    padding: 0,
-    width: '100%'
-  },
-  dashboardNavItem: {
-    padding: '15px 20px',
-    fontSize: '16px',
-    color: '#023350',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    marginBottom: '10px'
-  },
-  appointmentsNavItem: {
-    padding: '15px 20px',
-    fontSize: '16px',
-    color: '#023350',
-    backgroundColor: '#fff',
-    border: '1.5px solid #023350',
-    display: 'flex',
-    alignItems: 'center',
-    borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    marginBottom: '10px'
-  },
-  calendarNavItem: {
-    padding: '15px 20px',
-    fontSize: '16px',
-    color: '#4F4F4F',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '10px'
-  },
-  paymentsNavItem: {
-    padding: '15px 20px',
-    fontSize: '16px',
-    color: '#4F4F4F',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '10px'
-  },
-  settingsNavItem: {
-    padding: '15px 20px',
-    fontSize: '16px',
-    color: '#4F4F4F',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  navIcon: {
-    width: '20px',
-    height: '20px',
-    marginRight: '30px'
-  },
-  logout: {
-    marginTop: 'auto',
-    marginBottom: '50px',
-    color: 'red',
-    cursor: 'pointer',
-    fontWeight: 'bold'
   },
   mainContent: {
     flex: 1,

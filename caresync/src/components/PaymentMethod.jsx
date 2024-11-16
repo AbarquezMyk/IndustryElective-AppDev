@@ -22,40 +22,7 @@ const PaymentMethods = () => {
   }, []); // The empty array means this effect runs only once, after the initial render.
 
   return (
-    <div style={styles.container}>
-      {/* Sidebar */}
-      <div style={styles.sidebar}>
-        <img src={logo} alt="CareSync Logo" style={styles.logo} />
-        <nav style={styles.nav}>
-          <ul style={styles.navList}>
-            <li style={styles.dashboardNavItem}>
-              <img src={dashboard} alt="Dashboard" style={styles.navIcon} />
-              Dashboard
-            </li>
-            <li style={styles.appointmentsNavItem}>
-              <img src={appointment} alt="Appointments" style={styles.navIcon} />
-              <Link to="/appointment-history" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Appointments</Link>
-            </li>
-            <li style={styles.calendarNavItem}>
-              <img src={calendar} alt="Calendar" style={styles.navIcon} />
-              <Link to="/calendar" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Calendar</Link>
-            </li>
-            <li style={styles.paymentsNavItem}>
-              <img src={payment} alt="Payments" style={styles.navIcon} />
-              <Link to="/payment-methods" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Payments</Link>
-            </li>
-            <li style={styles.settingsNavItem}>
-              <img src={setting} alt="Settings" style={styles.navIcon} />
-              <Link to="/settings" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Settings</Link>
-            </li>
-          </ul>
-        </nav>
-        <div style={styles.logout}>
-          <img src={logout} alt="Log Out" style={styles.navIcon} />
-          <Link to="/" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Log Out</Link>
-        </div>
-      </div>
-
+    <div>
       {/* Main Content */}
       <div style={{ maxWidth: '400px', margin: 'auto' }}>
         <h2 style={{ textAlign: 'center', color: '#023350', fontFamily: "'Manjari'" }}>Payment Methods</h2>
