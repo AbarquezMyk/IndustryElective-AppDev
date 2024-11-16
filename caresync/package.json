@@ -7,8 +7,8 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.5",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
+    "@stripe/react-stripe-js": "^2.9.0",
+    "@stripe/stripe-js": "^4.10.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
@@ -56,5 +56,12 @@
       "postcss": "8.4.47"
     }
   },
-  "proxy": "http://localhost:8080"
+  "proxy": "http://localhost:8080",
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "axios-mock-adapter": "^2.1.0",
+    "jest": "^27.5.1",
+    "msw": "^2.6.5"
+  }
 }
