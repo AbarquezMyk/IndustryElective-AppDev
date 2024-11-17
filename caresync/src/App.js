@@ -13,6 +13,8 @@ import AppointmentHistory from './components/AppointmentHistory';
 import AppointmentHistoryForm from './components/AppointmentHistoryForm';
 import Doctor from './components/Doctor';
 import Sidebar from './components/Sidebar';
+import AddPayment from './components/AddPayment';
+import PaymentHistory from './components/PaymentHistory';
 
 const App = () => {
   const location = useLocation();
@@ -41,6 +43,8 @@ const App = () => {
           <Route path="/online-form" element={<OnlineForm />} />
           <Route path="/patient" element={<Patient />} />
           <Route path="/patient-profile" element={<PatientProfileForm />} />
+          <Route path="/add-payment" element={<AddPayment />} />
+          <Route path="/payment-history" element={<PaymentHistory />} />
           <Route path="/credit-card" element={<CreditCard />} />
           <Route path="/appointment-history" element={<AppointmentHistory />} />
           <Route path="/doctor" element={<Doctor />} />

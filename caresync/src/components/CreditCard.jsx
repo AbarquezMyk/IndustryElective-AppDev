@@ -15,13 +15,13 @@ const CreditCard = () => {
     });
 
     useEffect(() => {
-        axios.get('/api/cards')
+        axios.get('/api/cards/getAllCards')
             .then(response => setCards(response.data))
             .catch(error => console.error("There was an error fetching the cards!", error));
     }, []);
 
     const handleDeleteCard = (cardId) => {
-        axios.delete(`/api/delete_card/${cardId}`)
+        axios.delete(`/api/cards/delete_card/${cardId}`)
             .then(response => {
                 if (response.status === 204) {
                     setCards(cards.filter(card => card.id !== cardId));
@@ -51,7 +51,7 @@ const CreditCard = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const url = cardToEdit ? `/api/edit_card/${cardToEdit.id}` : '/api/add_card';
+        const url = cardToEdit ? `/api/cards/edit_card/${cardToEdit.id}` : '/api/cards/add_card';
 
         const data = {
             cardholderName: formData.cardholderName,

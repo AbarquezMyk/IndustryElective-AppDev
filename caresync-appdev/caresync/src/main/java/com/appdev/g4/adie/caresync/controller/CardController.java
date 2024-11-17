@@ -17,19 +17,19 @@ import com.appdev.g4.adie.caresync.entity.Card;
 import com.appdev.g4.adie.caresync.service.CardService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/cards")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CardController {
 
     @Autowired
     private CardService cardService;
 
-    @GetMapping("/cards")
+    @GetMapping("/getAllCards")
     public List<Card> getAllCards() {
         return cardService.getAllCards();
     }
 
-    @GetMapping("/cards/{id}")
+    @GetMapping("/getAllCards/{id}")
     public ResponseEntity<Card> getCardById(@PathVariable Long id) {
         return cardService.getCardById(id)
                 .map(ResponseEntity::ok)
