@@ -44,7 +44,7 @@ const Sidebar = ({ handleLogout }) => {
           </li>
           <li>
             <NavLink
-              to="/payment-methods"
+              to="/credit-card"
               style={({ isActive }) => isActive ? { ...styles.navItem, ...styles.activeNavItem } : styles.navItem}
             >
               <img src={payment} alt="Payments" style={styles.navIcon} />

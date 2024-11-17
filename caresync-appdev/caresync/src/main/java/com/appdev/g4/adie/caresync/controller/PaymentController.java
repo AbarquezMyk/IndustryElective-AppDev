@@ -3,10 +3,13 @@ package com.appdev.g4.adie.caresync.controller;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.appdev.g4.adie.caresync.dto.PaymentDTO;
 import com.appdev.g4.adie.caresync.dto.PaymentRequest;
 import com.appdev.g4.adie.caresync.entity.Card;
 import com.appdev.g4.adie.caresync.entity.Payment;
@@ -25,6 +29,7 @@ import com.appdev.g4.adie.caresync.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/payments")
+@CrossOrigin(origins = "http://localhost:3000") // Allow requests from React frontend
 public class PaymentController {
 
     @Autowired
@@ -40,8 +45,8 @@ public class PaymentController {
     public ResponseEntity<String> processPayment(@RequestBody PaymentRequest paymentRequest) {
         System.out.println("[INFO] Received payment request: " + paymentRequest);
 
-        // Validate user ID
-        Optional<User> optionalUser = userRepository.findById(paymentRequest.getUserId());
+        // Validate user by email
+        Optional<User> optionalUser = Optional.ofNullable(userRepository.findByEmail(paymentRequest.getEmail()));
         if (optionalUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
@@ -73,22 +78,31 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/user/{userId}/history")
-    public ResponseEntity<?> getPaymentHistoryByUserId(@PathVariable Long userId) {
+    @GetMapping("/user/{email}/history")
+    public ResponseEntity<?> getPaymentHistoryByEmail(@PathVariable String email) {
         try {
-            Optional<User> userOptional = userRepository.findById(userId);
-            if (userOptional.isEmpty()) {
+            // Validate user by email
+            User user = userRepository.findByEmail(email);
+            if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             }
 
-            List<Payment> payments = paymentRepository.findByUser(userOptional.get());
+            // Fetch payments by user
+            List<Payment> payments = paymentRepository.findByUser(user);
             if (payments.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No payment history found for user ID: " + userId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No payment history found for email: " + email);
             }
 
-            return ResponseEntity.ok(payments);
+            // Initialize lazy-loaded properties
+            payments.forEach(payment -> Hibernate.initialize(payment.getUser()));  // Initialize user or any other lazy property
+
+            // Convert Payments to DTOs
+            List<PaymentDTO> paymentDTOs = payments.stream()
+                    .map(PaymentDTO::new)  // Convert to DTOs
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(paymentDTOs);
         } catch (Exception e) {
-            System.out.println("[ERROR] Failed to fetch payment history: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to load payment history.");
         }
     }

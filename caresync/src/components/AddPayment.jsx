@@ -38,9 +38,9 @@ const AddPayment = () => {
       return;
     }
 
-    const userId = localStorage.getItem("userId"); // Fetch logged-in user ID
-    if (!userId) {
-      setMessage("User ID not found. Please log in.");
+    const email = localStorage.getItem("userEmail"); // Fetch logged-in user email
+    if (!email) {
+      setMessage("User email not found. Please log in.");
       return;
     }
 
@@ -48,7 +48,7 @@ const AddPayment = () => {
       cardId: selectedCard,
       totalAmount,
       status: "COMPLETED",
-      userId, // Ensure userId is passed correctly
+      email, // Use email instead of userId
     };
 
     console.log("Payment data being sent:", paymentData); // Debugging

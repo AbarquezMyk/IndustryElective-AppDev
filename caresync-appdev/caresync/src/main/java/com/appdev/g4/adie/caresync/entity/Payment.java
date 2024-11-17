@@ -25,13 +25,14 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
+    // Use FetchType.EAGER to load the associated entities eagerly.
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false) // Eager loading to avoid lazy loading issues
     @JoinColumn(name = "card_id", nullable = false) // Foreign key to Card entity
     private Card card;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false) // Eager loading to avoid lazy loading issues
     @JoinColumn(name = "user_id", nullable = false) // Foreign key to User entity
     private User user;
 

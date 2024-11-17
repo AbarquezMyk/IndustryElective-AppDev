@@ -18,13 +18,19 @@ const Login = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email: email, password }),
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 console.log('Login successful:', data);
+
+                // Save email and userId in localStorage for later use
+                localStorage.setItem('userEmail', email);  // Storing email
+                localStorage.setItem('userId', data.id);   // Storing userId (make sure 'id' is in the response)
+
+                // Navigate to the next page
                 navigate('/appointment-history');
             } else {
                 setError(data.message || 'Invalid email or password.');

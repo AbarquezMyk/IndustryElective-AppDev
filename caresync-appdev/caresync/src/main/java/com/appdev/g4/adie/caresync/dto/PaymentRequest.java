@@ -1,5 +1,6 @@
 package com.appdev.g4.adie.caresync.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
@@ -8,8 +9,9 @@ public class PaymentRequest {
     @NotNull(message = "Card ID is required.")
     private Long cardId;
 
-    @NotNull(message = "User ID is required.")
-    private Long userId; // Changed from 'id' to 'userId'
+    @NotNull(message = "Email is required.")
+    @Email(message = "Invalid email format.")
+    private String email; // Replacing userId with email
 
     @Min(value = 1, message = "Total amount must be greater than zero.")
     private double totalAmount;
@@ -23,12 +25,12 @@ public class PaymentRequest {
         this.cardId = cardId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public double getTotalAmount() {
