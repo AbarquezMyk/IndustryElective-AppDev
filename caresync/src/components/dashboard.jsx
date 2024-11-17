@@ -31,6 +31,14 @@ const Dashboard = () => {
     <div style={styles.container}>
       {/* Main Content */}
       <div style={styles.mainContent}>
+        
+        {/* Message at the top right */}
+        <div style={styles.topRightMessage}>
+          <p style={styles.messageText}>
+            Feeling unwell? <Link to="/history-form" style={styles.link}>Book your appointment now!</Link>
+          </p>
+        </div>
+
         <div style={styles.header}>
           <div style={styles.headerTitle}>
             <p style={styles.profileName}>Hello, {first_name}</p>
@@ -89,19 +97,19 @@ const styles = {
   container: {
     display: 'flex',
     fontFamily: 'Arial',
-    height: '100vh'
+    height: '100vh',
   },
   mainContent: {
     flex: 1,
     padding: '20px',
     backgroundColor: '#F8F9FA',
-    overflowY: 'auto'
+    overflowY: 'auto',
   },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '20px'
+    marginBottom: '20px',
   },
   headerTitle: {
     fontSize: '24px',
@@ -110,6 +118,25 @@ const styles = {
   profileName: {
     fontSize: '16px',
     color: '#4F4F4F',
+  },
+  topRightMessage: {
+    position: 'absolute',
+    top: '20px',
+    right: '20px',
+    backgroundColor: '#F1F1F1',
+    padding: '10px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+  },
+  messageText: {
+    fontSize: '16px',
+    color: '#023350',
+    margin: 0,
+  },
+  link: {
+    color: '#007BFF',
+    textDecoration: 'none',
+    fontWeight: 'bold',
   },
   doctorSection: {
     marginTop: '30px',
