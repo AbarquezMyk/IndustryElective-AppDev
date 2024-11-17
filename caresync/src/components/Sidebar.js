@@ -17,7 +17,7 @@ const Sidebar = ({ handleLogout }) => {
         <ul style={styles.navList}>
           <li>
             <NavLink
-              to="/"
+              to="/dashboard"
               style={({ isActive }) => isActive ? { ...styles.navItem, ...styles.activeNavItem } : styles.navItem}
             >
               <img src={dashboard} alt="Dashboard" style={styles.navIcon} />

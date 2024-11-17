@@ -15,6 +15,7 @@ import Doctor from './components/Doctor';
 import Sidebar from './components/Sidebar';
 import AddPayment from './components/AddPayment';
 import PaymentHistory from './components/PaymentHistory';
+import Dashboard from './components/dashboard';
 
 const App = () => {
   const location = useLocation();
@@ -37,6 +38,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/register" element={<Register />} />
           <Route path="/payment-methods" element={<PaymentMethods />} />
           <Route path="/calendar" element={<Calendar />} />
