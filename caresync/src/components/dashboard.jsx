@@ -1,48 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from "react-router-dom";
-import AppointmentHistoryForm from './AppointmentHistoryForm';
-import logo from './img/logo.png';
-import dashboard from './img/dashboard.png';
-import appointment from './img/appointment-icon.png';
-import calendar from './img/calendar_icon.png';
-import payment from './img/payment-method.png';
-import setting from './img/setting.png';
-import logout from './img/logout_icon.png';
+import { Link } from 'react-router-dom';
 
-const dashboard = () => {
+const Dashboard = () => {
+  const [first_name, setFirst_name] = useState('');
+  const [upcomingAppointmentsCount, setUpcomingAppointmentsCount] = useState(0);
+  const [latestAppointments, setLatestAppointments] = useState([]);
+
+  useEffect(() => {
+    axios.get('/api/users')
+      .then(response => {
+        setFirst_name(response.data.first_name);
+      })
+      .catch(error => console.error("Error fetching user profile:", error));
+
+    axios.get('/api/upcoming-appointments-count')
+      .then(response => {
+        setUpcomingAppointmentsCount(response.data.count);
+      })
+      .catch(error => console.error("Error fetching upcoming appointments:", error));
+
+    axios.get('/api/latest-appointments') 
+      .then(response => {
+        setLatestAppointments(response.data);
+      })
+      .catch(error => console.error("Error fetching latest appointments:", error));
+  }, []);
+
   return (
     <div style={styles.container}>
-      {/* Sidebar */}
-      <div style={styles.sidebar}>
-        <img src={logo} alt="CareSync Logo" style={styles.logo} />
-        <nav style={styles.nav}>
-          <ul style={styles.navList}>
-            <li style={styles.dashboardNavItem}>
-              <img src={dashboard} alt="Dashboard" style={styles.navIcon} />
-              Dashboard
-            </li>
-            <li style={styles.appointmentsNavItem}>
-              <img src={appointment} alt="Appointments" style={styles.navIcon} />
-              <Link to="/appointment-history" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Appointments</Link>
-            </li>
-            <li style={styles.calendarNavItem}>
-              <img src={calendar} alt="Calendar" style={styles.navIcon} />
-              <Link to="/calendar" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Calendar</Link>
-            </li>
-            <li style={styles.paymentsNavItem}>
-              <img src={payment} alt="Payments" style={styles.navIcon} />
-              <Link to="/payment-methods" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Payments</Link>
-            </li>
-            <li style={styles.settingsNavItem}>
-              <img src={setting} alt="Settings" style={styles.navIcon} />
-              <Link to="/settings" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Settings</Link>
-            </li>
-          </ul>
-        </nav>
-        <div style={styles.logout}>
-          <img src={logout} alt="Log Out" style={styles.navIcon} />
-          <Link to="/" style={{ textDecoration: 'none', color: '#023350', fontSize: '18px' }}>Log Out</Link>
+      {/* Main Content */}
+      <div style={styles.mainContent}>
+        <div style={styles.header}>
+          <div style={styles.headerTitle}>
+            <p style={styles.profileName}>Hello, {first_name}</p>
+            <p style={styles.profileName}>You have {upcomingAppointmentsCount} upcoming appointments</p>
+          </div>
+        </div>
+
+        {/* Your Doctor Section - Grid Layout */}
+        <div style={styles.doctorSection}>
+          <p style={styles.sectionTitle}>Your Doctor</p>
+          <div style={styles.doctorGrid}>
+            <Link to="/doctor" style={styles.doctorCard}>
+              <p style={styles.doctorName}>Neurology</p>
+            </Link>
+            <Link to="/doctor" style={styles.doctorCard}>
+              <p style={styles.doctorName}>Cardiac Care</p>
+            </Link>
+            <Link to="/doctor" style={styles.doctorCard}>
+              <p style={styles.doctorName}>Osteoporosis</p>
+            </Link>
+            <Link to="/doctor" style={styles.doctorCard}>
+              <p style={styles.doctorName}>Eye Care</p>
+            </Link>
+            <Link to="/doctor" style={styles.doctorCard}>
+              <p style={styles.doctorName}>Heart Care</p>
+            </Link>
+            <Link to="/doctor" style={styles.doctorCard}>
+              <p style={styles.doctorName}>ENT</p>
+            </Link>
+          </div>
+        </div>
+
+        {/* Latest Appointments Section */}
+        <div style={styles.appointmentSection}>
+          <p style={styles.sectionTitle}>Latest Appointments</p>
+          <div style={styles.appointmentContainer}>
+            {latestAppointments.length > 0 ? (
+              latestAppointments.map((appointment, index) => (
+                <div key={index} style={styles.appointmentCard}>
+                  <p style={styles.appointmentDate}>{appointment.date}</p>
+                  <p style={styles.appointmentDoctor}>Doctor: {appointment.doctorName}</p>
+                  <p style={styles.appointmentStatus}>Status: {appointment.status}</p>
+                </div>
+              ))
+            ) : (
+              <p>No past appointments available</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -54,84 +90,6 @@ const styles = {
     display: 'flex',
     fontFamily: 'Arial',
     height: '100vh'
-  },
-  sidebar: {
-    width: '240px',
-    backgroundColor: '#FFFFFF',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: '20px',
-    borderRight: '1px solid #e6e6e6'
-  },
-  logo: {
-    width: '150px',
-    marginBottom: '20px'
-  },
-  navList: {
-    listStyle: 'none',
-    padding: 0,
-    width: '100%'
-  },
-  dashboardNavItem: {
-    padding: '15px 20px',
-    fontSize: '16px',
-    color: '#023350',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    marginBottom: '10px'
-  },
-  appointmentsNavItem: {
-    padding: '15px 20px',
-    fontSize: '16px',
-    color: '#023350',
-    backgroundColor: '#fff',
-    border: '1.5px solid #023350',
-    display: 'flex',
-    alignItems: 'center',
-    borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    marginBottom: '10px'
-  },
-  calendarNavItem: {
-    padding: '15px 20px',
-    fontSize: '16px',
-    color: '#4F4F4F',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '10px'
-  },
-  paymentsNavItem: {
-    padding: '15px 20px',
-    fontSize: '16px',
-    color: '#4F4F4F',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '10px'
-  },
-  settingsNavItem: {
-    padding: '15px 20px',
-    fontSize: '16px',
-    color: '#4F4F4F',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  navIcon: {
-    width: '20px',
-    height: '20px',
-    marginRight: '30px'
-  },
-  logout: {
-    marginTop: 'auto',
-    marginBottom: '50px',
-    color: 'red',
-    cursor: 'pointer',
-    fontWeight: 'bold'
   },
   mainContent: {
     flex: 1,
@@ -153,46 +111,60 @@ const styles = {
     fontSize: '16px',
     color: '#4F4F4F',
   },
-  appointmentSection: {
-    marginTop: '30px'
+  doctorSection: {
+    marginTop: '30px',
   },
-  appointmentList: {
+  sectionTitle: {
+    fontSize: '20px',
+    color: '#023350',
+    marginBottom: '10px',
+  },
+  doctorGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gap: '20px',
+  },
+  doctorCard: {
+    padding: '20px',
+    border: '1px solid #023350',
+    borderRadius: '8px',
+    textDecoration: 'none',
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    textAlign: 'center',
+  },
+  doctorName: {
+    fontSize: '18px',
+    color: '#023350',
+  },
+  appointmentSection: {
+    marginTop: '30px',
+  },
+  appointmentContainer: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px'
+    gap: '10px',
+    marginTop: '10px',
   },
   appointmentCard: {
-    display: 'flex',
-    justifyContent: 'space-between',
     padding: '15px',
-    backgroundColor: '#FFFFFF',
+    border: '1px solid #023350',
     borderRadius: '8px',
-    border: '1px solid #e6e6e6',
-    alignItems: 'center'
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
   },
-  appointmentInfo: {
-    flex: 1
+  appointmentDate: {
+    fontSize: '16px',
+    color: '#023350',
   },
-  appointmentActions: {
-    display: 'flex',
-    gap: '10px'
+  appointmentDoctor: {
+    fontSize: '16px',
+    color: '#023350',
   },
-  cancelButton: {
-    padding: '5px 10px',
-    borderRadius: '5px',
-    backgroundColor: '#FFCCCC',
-    color: '#FF0000',
-    border: 'none',
-    cursor: 'pointer'
+  appointmentStatus: {
+    fontSize: '14px',
+    color: '#4F4F4F',
   },
-  detailButton: {
-    padding: '5px 10px',
-    borderRadius: '5px',
-    backgroundColor: '#023350',
-    color: '#FFFFFF',
-    border: 'none',
-    cursor: 'pointer'
-  }
 };
 
-export default dashboard;
+export default Dashboard;
