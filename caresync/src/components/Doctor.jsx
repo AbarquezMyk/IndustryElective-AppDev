@@ -323,10 +323,10 @@ function App() {
         },
         departmentCard: {
             border: '1px solid #ddd',
-            padding: '30px',
+            padding: '25px',
             borderRadius: '10px',
-            width: '200px',
-            height: '220px',
+            width: '275px',
+            height: '300px',
             textAlign: 'center',
             cursor: 'pointer',
             transition: 'transform 0.2s',
@@ -398,6 +398,72 @@ function App() {
                                 </p>
                             </div>
                         )}
+
+                        {/* Display the Cardiac Care description */}
+                        {selectedDepartment === 'Cardiac Care' && (
+                            <div style={{ marginBottom: '20px', fontSize: '16px', textAlign: 'justify', color: '#555' }}>
+                                <h2>Understanding Cardiac Care</h2>
+                                <p>
+                                At CareSync, our Cardiac Care Department is committed to diagnosing, treating, and managing a wide range of heart and vascular conditions. 
+                                Our team of experienced cardiologists uses state-of-the-art technology and personalized treatment approaches to ensure the best outcomes for our patients.
+                                 From routine check-ups to advanced cardiac procedures, we provide compassionate care tailored to each patient's unique needs.
+                                </p>
+                            </div>
+                        )}
+
+                         {/* Display the Osteoporosis description */}
+                         {selectedDepartment === 'Osteoporosis' && (
+                            <div style={{ marginBottom: '20px', fontSize: '16px', textAlign: 'justify', color: '#555' }}>
+                                <h2>Understanding Osteoporosis</h2>
+                                <p>
+                                At CareSync, our Osteoporosis Department is dedicated to the prevention, diagnosis, and treatment of osteoporosis and other bone health conditions.
+                                Our team of specialized doctors utilizes advanced diagnostic tools and personalized treatment plans to help strengthen bones and reduce the risk of fractures. 
+                                From routine bone density screenings to comprehensive management strategies, we offer compassionate care designed to support each patient's journey toward better bone health.
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Display the Osteoporosis description */}
+                        {selectedDepartment === 'Eye Care' && (
+                            <div style={{ marginBottom: '20px', fontSize: '16px', textAlign: 'justify', color: '#555' }}>
+                                <h2>Understanding Eye Care</h2>
+                                <p>
+                                At CareSync, our Eye Care Department is committed to the prevention, diagnosis, and treatment of a wide range of vision and eye health conditions. 
+                                Our team of specialized ophthalmologists uses advanced diagnostic technology and customized treatment plans to preserve and improve our patients' vision. 
+                                From routine eye exams to complex eye surgeries, we provide compassionate care tailored to meet each patient's unique needs, helping them maintain their best possible vision and eye health.
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Display the Heart Care description */}
+                        {selectedDepartment === 'Heart Care' && (
+                            <div style={{ marginBottom: '20px', fontSize: '16px', textAlign: 'justify', color: '#555' }}>
+                                <h2>Understanding Heart Care</h2>
+                                <p>
+                                At CareSync, our Heart Care Department is dedicated to the prevention, diagnosis, and treatment of various heart and vascular conditions. 
+                                Our team of specialized cardiologists employs state-of-the-art diagnostic tools and individualized treatment plans to ensure optimal heart health for our patients.
+                                From routine check-ups to advanced cardiac interventions, we provide compassionate care tailored to each patient's unique needs, helping them lead healthier and more active lives.
+                                </p>
+                            </div>
+                        )}
+
+                          {/* Display the ENT description */}
+                          {selectedDepartment === 'ENT' && (
+                            <div style={{ marginBottom: '20px', fontSize: '16px', textAlign: 'justify', color: '#555' }}>
+                                <h2>Understanding Heart ENT</h2>
+                                <p>
+                                At CareSync, our ENT Department is committed to the prevention, diagnosis, and treatment of a wide range of conditions affecting the ears, nose, throat, and related structures of the head and neck. 
+                                Our team of specialized otolaryngologists utilizes advanced diagnostic technology and personalized treatment plans to address our patients' unique needs. 
+                                From routine exams to complex surgeries, we provide compassionate care that aims to improve our patients' overall quality of life and restore their health.
+                                </p>
+                            </div>
+                        )}
+
+
+
+                        
+
+
 
                         <button onClick={handleFindDoctor} style={styles.button}>Find Doctor</button>
                     </div>
