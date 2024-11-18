@@ -15,7 +15,8 @@ import Doctor from './components/Doctor';
 import Sidebar from './components/Sidebar';
 import AddPayment from './components/AddPayment';
 import PaymentHistory from './components/PaymentHistory';
-import Dashboard from './components/dashboard';
+import Dashboard from './components/dashboard'
+import DoctorDetails from './components/DoctorDetails';
 
 const App = () => {
   const location = useLocation();
@@ -52,6 +53,7 @@ const App = () => {
           <Route path="/doctor" element={<Doctor />} />
           <Route path="/history-form" element={<AppointmentHistoryForm />} />
           <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/doctor-details" element={<DoctorDetails />} />
         </Routes>
       </div>
     </div>

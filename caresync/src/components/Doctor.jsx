@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import DoctorDetails from './DoctorDetails';
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 import logo from './img/logo.png';
 import dashboard from './img/dashboard.png';
@@ -38,6 +43,9 @@ import Doctor18 from './img/Doctor18.png';
 function App() {
     const [currentStep, setCurrentStep] = useState('departments');
     const [selectedDepartment, setSelectedDepartment] = useState(null);
+    const [selectedDoctor, setSelectedDoctor] = useState(null); // <-- Add this line
+    const navigate = useNavigate();
+
 
     const departments = [
         { name: 'Neurology', logo: neurologyLogo },
@@ -89,8 +97,7 @@ function App() {
     const handleFindDoctor = () => setCurrentStep('doctors');
 
     const handleDoctorSelect = (doctor) => {
-        alert(`You selected ${doctor.name}`);
-        setCurrentStep('departments');
+      navigate('/doctor-details', { state: { doctor } });
     };
 
     const styles = {
@@ -249,8 +256,8 @@ function App() {
             marginBottom: '10px'
           },
           doctorImage: {
-            width: '65px',
-            height: '70px',
+            width: '50px',
+            height: '60px',
             borderRadius: '50%',
             marginRight: '15px',
           },
@@ -325,15 +332,15 @@ function App() {
             border: '1px solid #ddd',
             padding: '25px',
             borderRadius: '10px',
-            width: '275px',
-            height: '300px',
+            width: '300px',
+            height: '275px',
             textAlign: 'center',
             cursor: 'pointer',
             transition: 'transform 0.2s',
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
             fontSize: '10px' 
         },
-        logoImage: { width: '120px', height: '120px', borderRadius: '50%', marginBottom: '10px' },
+        logoImage: { width: '100px', height: '100px', borderRadius: '50%', marginBottom: '10px' },
         button: {
             backgroundColor: '#007bff',
             color: 'white',
@@ -352,14 +359,14 @@ function App() {
         },
         doctorCard: {
             border: '1px solid #ddd',
-            padding: '20px',
+            padding: '10px',
             borderRadius: '10px',
             textAlign: 'center',
             cursor: 'pointer',
             transition: 'transform 0.2s',
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)'
         },
-        doctorImage: { width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' }
+        doctorImage: { width: '75%', height: '150px', objectFit: 'cover', borderRadius: '10px' }
     };
 
     return (
@@ -461,10 +468,6 @@ function App() {
 
 
 
-                        
-
-
-
                         <button onClick={handleFindDoctor} style={styles.button}>Find Doctor</button>
                     </div>
                 )}
@@ -491,6 +494,8 @@ function App() {
                         </div>
                     </div>
                 )}
+
+              
             </div>
         </div>
     );
