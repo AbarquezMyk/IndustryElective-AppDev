@@ -36,6 +36,7 @@ const Calendar = () => {
     const [appointments, setAppointments] = useState({});
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedAppointments, setSelectedAppointments] = useState([]);
+    const [viewingAppointment, setViewingAppointment] = useState(null);
     const [newAppointment, setNewAppointment] = useState({
         title: "",
         details: "",
@@ -211,61 +212,184 @@ const Calendar = () => {
                     </div>
                 ))}
 
-                    {monthDays.map((date, index) => {
-                        const dateKey = date ? date.toDateString() : null;
-                        const hasAppointments =
-                            dateKey && appointments[dateKey] && appointments[dateKey].length > 0;
+{monthDays.map((date, index) => {
+    const dateKey = date ? date.toDateString() : null;
+    const hasAppointments =
+        dateKey && appointments[dateKey] && appointments[dateKey].length > 0;
 
-                        const isCurrentDate = date && date.toDateString() === today.toDateString();
+    const isCurrentDate = date && date.toDateString() === today.toDateString();
 
-                        return (
+    return (
+        <div
+            key={index}
+            onClick={() => date && handleDateClick(date)}
+            style={{
+                position: "relative", // Added for positioning the badge
+                padding: "15px",
+                textAlign: "center",
+                cursor: date ? "pointer" : "default",
+                backgroundColor:
+                    selectedDate && date && date.toDateString() === selectedDate.toDateString()
+                        ? "#023350"
+                        : isCurrentDate
+                        ? "#B5D2E1" // Updated to fit overall motifs
+                        : "transparent",
+                color:
+                    selectedDate && date && date.toDateString() === selectedDate.toDateString()
+                        ? "#FFFFFF"
+                        : isCurrentDate
+                        ? "#023350"
+                        : "#023350",
+                borderRadius: "8px",
+                transition: "background-color 0.3s ease",
+                pointerEvents: date ? "auto" : "none",
+            }}
+        >
+                {date ? (
+                    <>
+                        <div>{date.getDate()}</div>
+
+                        {hasAppointments && (
                             <div
-                                key={index}
-                                onClick={() => date && handleDateClick(date)}
                                 style={{
-                                    padding: "15px",
+                                    position: "absolute", // Positioning the badge on the side
+                                    top: "5px",
+                                    right: "-10px", // Adjust the position to the right of the cell
+                                    backgroundColor: "#FF6347",
+                                    color: "#FFFFFF",
+                                    borderRadius: "50%",
+                                    width: "20px",
+                                    height: "20px",
+                                    fontSize: "12px",
+                                    lineHeight: "20px",
                                     textAlign: "center",
-                                    cursor: date ? "pointer" : "default",
-                                    backgroundColor:
-                                        selectedDate && date && date.toDateString() === selectedDate.toDateString()
-                                            ? "#023350"
-                                            : isCurrentDate
-                                            ? "#B5D2E1" // Updated to fit overall motifs
-                                            : "transparent",
-                                    color:
-                                        selectedDate && date && date.toDateString() === selectedDate.toDateString()
-                                            ? "#FFFFFF"
-                                            : isCurrentDate
-                                            ? "#023350"
-                                            : "#023350",
-                                    borderRadius: "8px",
-                                    transition: "background-color 0.3s ease",
-                                    pointerEvents: date ? "auto" : "none",
+                                    cursor: "pointer",
                                 }}
+                                onClick={(e) => {
+                                    e.stopPropagation();  // Prevent the date click from firing
+                                    setViewingAppointment(appointments[dateKey][0]); // Display first appointment
+                                }}
+                                title={`${appointments[dateKey].length} appointments`} // Tooltip
                             >
-                                {date ? (
-                                    <>
-                                        {date.getDate()}
-                                        {hasAppointments && (
-                                            <div
-                                                style={{
-                                                    fontSize: "12px",
-                                                    color: "#FF6347",
-                                                    marginTop: "5px",
-                                                    cursor: "pointer",
-                                                }}
-                                            >
-                                                Appointments
-                                            </div>
-                                        )}
-                                    </>
-                                ) : (
-                                    ""
-                                )}
+                                {appointments[dateKey].length}
                             </div>
-                        );
-                    })}
+                        )}
+                    </>
+                ) : (
+                    ""
+                )}
+            </div>
+        );
+    })}
                 </div>
+                {viewingAppointment && (
+    <div
+        style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: "9999",
+            background: "#FFFFFF",
+            padding: "20px",
+            borderRadius: "12px", // Consistent with other rounded corners
+            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)", // More prominent shadow
+            width: "600px",
+            display: "flex",
+            flexDirection: "column",
+            maxHeight: "80vh",
+            overflowY: "auto", // Makes the modal scrollable if content exceeds the view
+        }}
+    >
+        <h3
+            style={{
+                color: "#023350",
+                fontSize: "22px", // Slightly larger for emphasis
+                marginBottom: "20px", // More breathing space
+                textAlign: "center",
+                fontWeight: "bold",
+            }}
+        >
+            Appointment Details
+        </h3>
+
+        <div
+            style={{
+                marginBottom: "10px",
+                fontSize: "16px", // Consistent text size with other content
+                color: "#023350",
+            }}
+        >
+            <strong>Title:</strong> {viewingAppointment.title}
+        </div>
+
+        <div
+            style={{
+                marginBottom: "10px",
+                fontSize: "16px",
+                color: "#023350",
+            }}
+        >
+            <strong>Time:</strong> {viewingAppointment.time}
+        </div>
+
+        <div
+            style={{
+                marginBottom: "10px",
+                fontSize: "16px",
+                color: "#023350",
+            }}
+        >
+            <strong>Doctor:</strong> {viewingAppointment.doctor}
+        </div>
+
+        <div
+            style={{
+                marginBottom: "10px",
+                fontSize: "16px",
+                color: "#023350",
+            }}
+        >
+            <strong>Room:</strong> {viewingAppointment.room}
+        </div>
+
+        <div
+            style={{
+                marginBottom: "10px",
+                fontSize: "16px",
+                color: "#023350",
+            }}
+        >
+            <strong>Location:</strong> {viewingAppointment.location}
+        </div>
+
+        <div
+            style={{
+                marginBottom: "20px",
+                fontSize: "16px",
+                color: "#023350",
+            }}
+        >
+            <strong>Details:</strong> {viewingAppointment.details}
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+            <HoverButton
+                style={{
+                    ...buttonStyle,
+                    padding: "12px 24px",
+                    fontSize: "16px",
+                    marginRight: "10px",
+                }}
+                onClick={() => setViewingAppointment(null)}
+            >
+                Close
+            </HoverButton>
+        </div>
+    </div>
+)}
+
+
 
                 <div style={{ marginTop: "20px", width: "100%" }}>
                     {selectedDate ? (
@@ -314,7 +438,7 @@ const Calendar = () => {
                     </div>
                 )}
 
-{isModalVisible && (
+                {isModalVisible && (
     <div
         style={{
             position: "fixed",
