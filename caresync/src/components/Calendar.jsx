@@ -14,7 +14,6 @@ const getDaysInMonth = (month, year) => {
     return days;
 };
 
-// Button Component with hover effect
 const HoverButton = ({ style, children, onClick }) => {
     const [isHovered, setIsHovered] = useState(false);
     const hoverStyle = {
@@ -46,8 +45,6 @@ const Calendar = () => {
         location: "",
     });
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isAppointmentDetailsVisible, setIsAppointmentDetailsVisible] = useState(false);
-    const [selectedAppointmentDetails, setSelectedAppointmentDetails] = useState(null);
     const [validationMessage, setValidationMessage] = useState("");
 
     const today = new Date();
@@ -63,11 +60,6 @@ const Calendar = () => {
             const dateKey = date.toDateString();
             setSelectedAppointments(appointments[dateKey] || []);
         }
-    };
-
-    const handleAppointmentClick = (appointment) => {
-        setSelectedAppointmentDetails(appointment);
-        setIsAppointmentDetailsVisible(true);
     };
 
     const buttonStyle = {
@@ -133,42 +125,57 @@ const Calendar = () => {
 
     return (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "20px" }}>
-            <div style={{
-                width: "100%",
-                maxWidth: "1200px",
-                padding: "30px",
-                backgroundColor: "#FFFFFF",
-                borderRadius: "12px",
-                boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-            }}>
-                <h1 style={{
-                    fontSize: "36px",
-                    fontWeight: "bold",
-                    color: "#023350",
-                    textAlign: "center",
-                    marginBottom: "20px",
-                    lineHeight: "1.4",
-                    letterSpacing: "0.4em",
-                }}>CALENDAR</h1>
-
-                <div style={{
-                    display: "flex",
-                    justifyContent: "space-between",
+            <div
+                style={{
                     width: "100%",
+                    maxWidth: "1200px",
+                    padding: "30px",
+                    backgroundColor: "#FFFFFF",
+                    borderRadius: "12px",
+                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
+                    display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
-                    marginBottom: "20px",
-                }}>
+                }}
+            >
+                <h1
+                    style={{
+                        fontSize: "36px",
+                        fontWeight: "bold",
+                        color: "#023350",
+                        textAlign: "center",
+                        marginBottom: "20px",
+                        lineHeight: "1.4",
+                        letterSpacing: "0.4em",
+                    }}
+                >
+                    CALENDAR
+                </h1>
+
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        alignItems: "center",
+                        marginBottom: "20px",
+                    }}
+                >
                     <HoverButton style={buttonStyle} onClick={goToPreviousMonth}>
                         ← Previous
                     </HoverButton>
-                    <h2 style={{
-                        color: "#023350",
-                        fontSize: "20px",
-                        fontWeight: "600",
-                    }}>{new Date(today.getFullYear(), currentMonth).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</h2>
+                    <h2
+                        style={{
+                            color: "#023350",
+                            fontSize: "20px",
+                            fontWeight: "600",
+                        }}
+                    >
+                        {new Date(today.getFullYear(), currentMonth).toLocaleDateString("en-US", {
+                            month: "long",
+                            year: "numeric",
+                        })}
+                    </h2>
                     <HoverButton style={buttonStyle} onClick={goToNextMonth}>
                         Next →
                     </HoverButton>
@@ -188,27 +195,28 @@ const Calendar = () => {
                         width: "100%",
                     }}
                 >
-                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                        <div
-                            key={day}
-                            style={{
-                                textAlign: "center",
-                                fontWeight: "bold",
-                                color: "#023350",
-                                padding: "10px",
-                                backgroundColor: "#F2F2F2",
-                                borderRadius: "8px",
-                            }}
-                        >
-                            {day}
-                        </div>
-                    ))}
+                    {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
+                    <div
+                        key={day}
+                        style={{
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            color: "#023350",
+                            padding: "10px",
+                            backgroundColor: "#F2F2F2",
+                            borderRadius: "8px",
+                        }}
+                    >
+                        {day}
+                    </div>
+                ))}
+
                     {monthDays.map((date, index) => {
                         const dateKey = date ? date.toDateString() : null;
                         const hasAppointments =
-                            dateKey &&
-                            appointments[dateKey] &&
-                            appointments[dateKey].length > 0;
+                            dateKey && appointments[dateKey] && appointments[dateKey].length > 0;
+
+                        const isCurrentDate = date && date.toDateString() === today.toDateString();
 
                         return (
                             <div
@@ -219,16 +227,16 @@ const Calendar = () => {
                                     textAlign: "center",
                                     cursor: date ? "pointer" : "default",
                                     backgroundColor:
-                                        selectedDate &&
-                                        date &&
-                                        date.toDateString() === selectedDate.toDateString()
+                                        selectedDate && date && date.toDateString() === selectedDate.toDateString()
                                             ? "#023350"
+                                            : isCurrentDate
+                                            ? "#B5D2E1" // Updated to fit overall motifs
                                             : "transparent",
                                     color:
-                                        selectedDate &&
-                                        date &&
-                                        date.toDateString() === selectedDate.toDateString()
+                                        selectedDate && date && date.toDateString() === selectedDate.toDateString()
                                             ? "#FFFFFF"
+                                            : isCurrentDate
+                                            ? "#023350"
                                             : "#023350",
                                     borderRadius: "8px",
                                     transition: "background-color 0.3s ease",
@@ -246,9 +254,6 @@ const Calendar = () => {
                                                     marginTop: "5px",
                                                     cursor: "pointer",
                                                 }}
-                                                onClick={() =>
-                                                    handleAppointmentClick(appointments[dateKey][0])
-                                                }
                                             >
                                                 Appointments
                                             </div>
@@ -262,121 +267,292 @@ const Calendar = () => {
                     })}
                 </div>
 
-                {/* No Appointments or Appointment Details */}
                 <div style={{ marginTop: "20px", width: "100%" }}>
-                    <div style={{
-                        marginBottom: "10px",
-                        padding: "10px",
-                        //border: "1px solid #C5C5C5",
-                        borderRadius: "8px",
-                        backgroundColor: "#F2F2F2",
-                        textAlign: "left", // Updated to left alignment
-                        color: "#023350",
-                    }}>
-                        {selectedDate ? (
-                            selectedAppointments.length > 0 ? (
-                                `Appointments for ${selectedDate.toLocaleDateString('en-US', {
-                                    weekday: 'long',
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                })}`
+                    {selectedDate ? (
+                        selectedAppointments.length > 0 ? (
+                            <>
+                                <h3>
+                                Appointments for{" "}
+                                {selectedDate.toLocaleDateString("en-US", {
+                                    weekday: "long",
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                })}
+                                    </h3>
+                                    {selectedAppointments.map((appointment, idx) => (
+                                        <div key={idx}>
+                                            <p>{appointment.title}</p>
+                                            <p>{appointment.time}</p>
+                                            <p>{appointment.doctor}</p>
+                                            <p>{appointment.room}</p>
+                                            <p>{appointment.location}</p>
+                                        </div>
+                                    ))}
+                                </>
                             ) : (
-                                `No Appointments for ${selectedDate.toLocaleDateString('en-US', {
-                                    weekday: 'long',
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                })}`
-                            )
-                        ) : (
-                            "No Appointments"
-                        )}
-                    </div>
-
-                    <HoverButton style={addButtonStyle} onClick={() => setIsModalVisible(true)}>
-                        Add Appointment
-                    </HoverButton>
+                            <p>
+                            No appointments for{" "}
+                                {selectedDate.toLocaleDateString("en-US", {
+                                weekday: "long", // Full day name
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                        })}
+                    </p>
+                        )
+                    ) : (
+                        <p>Please select a date to view appointments</p>
+                    )}
                 </div>
+
+                {selectedDate && (
+                    <div>
+                        <button onClick={() => setIsModalVisible(true)} style={addButtonStyle}>
+                            Add Appointment
+                        </button>
+                    </div>
+                )}
+
+{isModalVisible && (
+    <div
+        style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: "9999",
+            background: "#FFFFFF",
+            padding: "20px",
+            borderRadius: "10px",
+            boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
+            width: "600px", // Increased width
+            display: "flex",
+            flexDirection: "column",
+        }}
+    >
+        <h3
+            style={{
+                fontSize: "20px", // Adjusted font size
+                fontWeight: "bold",
+                marginBottom: "15px",
+                color: "#023350",
+                textAlign: "center",
+            }}
+        >
+            Add Appointment for{" "}
+            {selectedDate.toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            })}
+        </h3>
+        <div style={{ marginBottom: "10px" }}>
+            {validationMessage && <p style={{ color: "red", fontSize: "14px" }}>{validationMessage}</p>}
+        </div>
+        <div
+            style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "20px", // Space between columns
+                marginBottom: "15px",
+            }}
+        >
+            <div>
+                <label
+                    style={{
+                        display: "block",
+                        marginBottom: "5px",
+                        color: "#023350",
+                        fontSize: "14px",
+                    }}
+                >
+                    Title
+                </label>
+                <input
+                    type="text"
+                    placeholder="Title"
+                    value={newAppointment.title}
+                    onChange={(e) =>
+                        setNewAppointment((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                        }))
+                    }
+                    style={{
+                        ...inputStyle,
+                        fontSize: "14px",
+                        padding: "8px",
+                    }}
+                />
             </div>
+            <div>
+                <label
+                    style={{
+                        display: "block",
+                        marginBottom: "5px",
+                        color: "#023350",
+                        fontSize: "14px",
+                    }}
+                >
+                    Time
+                </label>
+                <input
+                    type="time"
+                    value={newAppointment.time}
+                    onChange={(e) =>
+                        setNewAppointment((prev) => ({
+                            ...prev,
+                            time: e.target.value,
+                        }))
+                    }
+                    style={{
+                        ...inputStyle,
+                        fontSize: "14px",
+                        padding: "8px",
+                    }}
+                />
+            </div>
+            <div>
+                <label
+                    style={{
+                        display: "block",
+                        marginBottom: "5px",
+                        color: "#023350",
+                        fontSize: "14px",
+                    }}
+                >
+                    Doctor
+                </label>
+                <input
+                    type="text"
+                    placeholder="Dr. John Doe"
+                    value={newAppointment.doctor}
+                    onChange={(e) =>
+                        setNewAppointment((prev) => ({
+                            ...prev,
+                            doctor: e.target.value,
+                        }))
+                    }
+                    style={{
+                        ...inputStyle,
+                        fontSize: "14px",
+                        padding: "8px",
+                    }}
+                />
+            </div>
+            <div>
+                <label
+                    style={{
+                        display: "block",
+                        marginBottom: "5px",
+                        color: "#023350",
+                        fontSize: "14px",
+                    }}
+                >
+                    Room
+                </label>
+                <input
+                    type="text"
+                    placeholder="Room 101"
+                    value={newAppointment.room}
+                    onChange={(e) =>
+                        setNewAppointment((prev) => ({
+                            ...prev,
+                            room: e.target.value,
+                        }))
+                    }
+                    style={{
+                        ...inputStyle,
+                        fontSize: "14px",
+                        padding: "8px",
+                    }}
+                />
+            </div>
+            <div>
+                <label
+                    style={{
+                        display: "block",
+                        marginBottom: "5px",
+                        color: "#023350",
+                        fontSize: "14px",
+                    }}
+                >
+                    Details
+                </label>
+                <textarea
+                    placeholder="Details"
+                    value={newAppointment.details}
+                    onChange={(e) =>
+                        setNewAppointment((prev) => ({
+                            ...prev,
+                            details: e.target.value,
+                        }))
+                    }
+                    style={{
+                        ...inputStyle,
+                        fontSize: "14px",
+                        padding: "8px",
+                        height: "60px",
+                    }}
+                />
+            </div>
+            <div>
+                <label
+                    style={{
+                        display: "block",
+                        marginBottom: "5px",
+                        color: "#023350",
+                        fontSize: "14px",
+                    }}
+                >
+                    Location
+                </label>
+                <input
+                    type="text"
+                    placeholder="Building A, Floor 3"
+                    value={newAppointment.location}
+                    onChange={(e) =>
+                        setNewAppointment((prev) => ({
+                            ...prev,
+                            location: e.target.value,
+                        }))
+                    }
+                    style={{
+                        ...inputStyle,
+                        fontSize: "14px",
+                        padding: "8px",
+                    }}
+                />
+            </div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "15px" }}>
+            <HoverButton
+                style={{
+                    ...saveButtonStyle,
+                    padding: "10px 20px",
+                    fontSize: "14px",
+                }}
+                onClick={handleSaveAppointment}
+            >
+                Save
+            </HoverButton>
+            <HoverButton
+                style={{
+                    ...buttonStyle,
+                    padding: "10px 20px",
+                    fontSize: "14px",
+                }}
+                onClick={() => setIsModalVisible(false)}
+            >
+                Cancel
+            </HoverButton>
+        </div>
+    </div>
+)}
 
-            {/* Appointment Modal */}
-             {isModalVisible && (
-                <div className="modal" style={{
-                    position: "fixed",
-                    top: "0",
-                    left: "0",
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}>
-                    <div className="modal-content" style={{
-                        backgroundColor: "#FFFFFF",
-                        padding: "20px",
-                        borderRadius: "8px",
-                        width: "400px",
-                    }}>
-                        <h3>Add Appointment</h3>
-                        <input
-                            type="text"
-                            style={inputStyle}
-                            placeholder="Title"
-                            value={newAppointment.title}
-                            onChange={(e) => setNewAppointment({ ...newAppointment, title: e.target.value })}
-                        />
-                        <input
-                            type="text"
-                            style={inputStyle}
-                            placeholder="Details"
-                            value={newAppointment.details}
-                            onChange={(e) => setNewAppointment({ ...newAppointment, details: e.target.value })}
-                        />
-                        <input
-                            type="time"
-                            style={inputStyle}
-                            value={newAppointment.time}
-                            onChange={(e) => setNewAppointment({ ...newAppointment, time: e.target.value })}
-                        />
-                        <input
-                            type="text"
-                            style={inputStyle}
-                            placeholder="Doctor"
-                            value={newAppointment.doctor}
-                            onChange={(e) => setNewAppointment({ ...newAppointment, doctor: e.target.value })}
-                        />
-                        <input
-                            type="text"
-                            style={inputStyle}
-                            placeholder="Room"
-                            value={newAppointment.room}
-                            onChange={(e) => setNewAppointment({ ...newAppointment, room: e.target.value })}
-                        />
-                        <input
-                            type="text"
-                            style={inputStyle}
-                            placeholder="Location"
-                            value={newAppointment.location}
-                            onChange={(e) => setNewAppointment({ ...newAppointment, location: e.target.value })}
-                        />
-                        {validationMessage && <p style={{ color: "red" }}>{validationMessage}</p>}
-                        <div style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            marginTop: "20px",
-                        }}>
-                            <HoverButton style={saveButtonStyle} onClick={handleSaveAppointment}>
-                                Save
-                            </HoverButton>
-                            <HoverButton style={{ ...buttonStyle, background: "#E0E0E0" }} onClick={() => setIsModalVisible(false)}>
-                                Cancel
-                            </HoverButton>
-                        </div>
-                    </div>
-                </div>
-            )}
+            </div>
         </div>
     );
 };
