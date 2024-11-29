@@ -1,73 +1,85 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import axios from 'axios'; // Import Axios directly
 
 const Dashboard = () => {
-  const [first_name, setFirst_name] = useState('');
+  const [username, setUsername] = useState('');  // Change to username instead of fullName
   const [upcomingAppointmentsCount, setUpcomingAppointmentsCount] = useState(0);
   const [latestAppointments, setLatestAppointments] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/users')
-      .then(response => {
-        setFirst_name(response.data.first_name);
-      })
-      .catch(error => console.error("Error fetching user profile:", error));
+    const fetchData = async () => {
+      const token = localStorage.getItem('jwt'); // Retrieve token from local storage
+    
+      try {
+        // Fetch user details
+        const userResponse = await axios.get('http://localhost:8080/api/users/me', {
+          headers: { Authorization: `Bearer ${token}` }, // Include token in the header
+        });
+    
+        console.log(userResponse); // Log the response to check its structure
+        
+        // Check if the response contains 'username' and set it correctly
+        if (userResponse.data && userResponse.data.username) {
+          setUsername(userResponse.data.username); // Set the username from API
+        } else {
+          console.error('Username not found in the response.');
+        }
+    
+        // Fetch upcoming appointments count
+        const countResponse = await axios.get('http://localhost:8080/api/upcoming-appointments-count', {
+          headers: { Authorization: `Bearer ${token}` }, // Include token in the header
+        });
+        setUpcomingAppointmentsCount(countResponse.data.count);
+    
+        // Fetch latest appointments
+        const appointmentsResponse = await axios.get('http://localhost:8080/api/latest-appointments', {
+          headers: { Authorization: `Bearer ${token}` }, // Include token in the header
+        });
+        setLatestAppointments(appointmentsResponse.data);
+    
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    
 
-    axios.get('/api/upcoming-appointments-count')
-      .then(response => {
-        setUpcomingAppointmentsCount(response.data.count);
-      })
-      .catch(error => console.error("Error fetching upcoming appointments:", error));
-
-    axios.get('/api/latest-appointments') 
-      .then(response => {
-        setLatestAppointments(response.data);
-      })
-      .catch(error => console.error("Error fetching latest appointments:", error));
+    fetchData();
   }, []);
 
   return (
     <div style={styles.container}>
-      {/* Main Content */}
       <div style={styles.mainContent}>
-        
-        {/* Message at the top right */}
-        <div style={styles.topRightMessage}>
-          <p style={styles.messageText}>
-            Feeling unwell? <Link to="/history-form" style={styles.link}>Book your appointment now!</Link>
+        {/* Header Section */}
+        <div style={styles.header}>
+          <div style={styles.headerTitle}>
+            <p style={styles.profileName}>Hello, {username}</p>  {/* Updated to username */}
+            <p style={styles.profileName}>You have {upcomingAppointmentsCount} upcoming appointments</p>
+          </div>
+
+          {/* User Name Button */}
+          <button style={styles.userButton}>{username}</button>  {/* Updated to username */}
+        </div>
+
+        {/* Relocated Message */}
+        <div style={styles.relocatedMessage}>
+          <p>
+            Feeling unwell?{' '}
+            <Link to="/history-form" style={styles.link}>
+              Book your appointment now!
+            </Link>
           </p>
         </div>
 
-        <div style={styles.header}>
-          <div style={styles.headerTitle}>
-            <p style={styles.profileName}>Hello, {first_name}</p>
-            <p style={styles.profileName}>You have {upcomingAppointmentsCount} upcoming appointments</p>
-          </div>
-        </div>
-
-        {/* Your Doctor Section - Grid Layout */}
+        {/* Your Doctor Section */}
         <div style={styles.doctorSection}>
           <p style={styles.sectionTitle}>Your Doctor</p>
           <div style={styles.doctorGrid}>
-            <Link to="/doctor" style={styles.doctorCard}>
-              <p style={styles.doctorName}>Neurology</p>
-            </Link>
-            <Link to="/doctor" style={styles.doctorCard}>
-              <p style={styles.doctorName}>Cardiac Care</p>
-            </Link>
-            <Link to="/doctor" style={styles.doctorCard}>
-              <p style={styles.doctorName}>Osteoporosis</p>
-            </Link>
-            <Link to="/doctor" style={styles.doctorCard}>
-              <p style={styles.doctorName}>Eye Care</p>
-            </Link>
-            <Link to="/doctor" style={styles.doctorCard}>
-              <p style={styles.doctorName}>Heart Care</p>
-            </Link>
-            <Link to="/doctor" style={styles.doctorCard}>
-              <p style={styles.doctorName}>ENT</p>
-            </Link>
+            {['Neurology', 'Cardiac Care', 'Osteoporosis', 'Eye Care', 'Heart Care', 'ENT'].map((specialty) => (
+              <Link to="/department-list" style={styles.doctorCard} key={specialty}>
+                <p style={styles.doctorName}>{specialty}</p>
+              </Link>
+            ))}
           </div>
         </div>
 
@@ -119,19 +131,21 @@ const styles = {
     fontSize: '16px',
     color: '#4F4F4F',
   },
-  topRightMessage: {
-    position: 'absolute',
-    top: '20px',
-    right: '20px',
-    backgroundColor: '#F1F1F1',
+  userButton: {
+    padding: '10px 20px',
+    fontSize: '16px',
+    backgroundColor: '#007BFF',
+    color: '#FFFFFF',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+  },
+  relocatedMessage: {
+    marginBottom: '20px',
     padding: '10px',
+    backgroundColor: '#F1F1F1',
     borderRadius: '8px',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-  },
-  messageText: {
-    fontSize: '16px',
-    color: '#023350',
-    margin: 0,
   },
   link: {
     color: '#007BFF',

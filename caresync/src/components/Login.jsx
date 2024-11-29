@@ -1,61 +1,78 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google'; // Import GoogleLogin component
+import axios from 'axios';
 import logo from './img/logo.png';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    // Handle form login submission
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('Submitting form...');
         setError('');
+
         try {
-            const response = await fetch('http://localhost:8080/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
+            const response = await axios.post('http://localhost:8080/api/users/login', {
+                username,
+                password,
             });
 
-            const data = await response.json();
+            if (response.status === 200) {
+                const data = response.data;
 
-            if (response.ok) {
-                console.log('Login successful:', data);
+                // Store the token and userId in local storage
+                localStorage.setItem('jwt', data.token);
+                localStorage.setItem('userId', data.id);
 
-                // Save email and userId in localStorage for later use
-                localStorage.setItem('userEmail', email);  // Storing email
-                localStorage.setItem('userId', data.id);   // Storing userId (make sure 'id' is in the response)
-
-                // Navigate to the next page
-                navigate('/appointment-history');
+                // Redirect to dashboard
+                navigate('/dashboard');
             } else {
-                setError(data.message || 'Invalid email or password.');
-                console.log('Login failed:', data);
+                setError('Invalid username or password.');
             }
         } catch (err) {
-            setError('Something went wrong. Please try again.');
-            console.error('Error during login:', err);
+            setError(err.response?.data.message || 'Something went wrong. Please try again.');
         }
+    };
+
+    // Handle Google login success
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/users/google-login', {
+                idToken: credentialResponse.credential, // Sending Google ID token to backend
+            });
+
+            if (response.status === 200) {
+                const data = response.data;
+
+                // Store token and userId, then redirect
+                localStorage.setItem('jwt', data.token);
+                localStorage.setItem('userId', data.id);
+                navigate('/dashboard');
+            }
+        } catch (error) {
+            setError(error.response?.data?.message || 'Google login failed. Please try again.');
+        }
+    };
+
+    // Handle Google login failure
+    const handleGoogleFailure = () => {
+        setError('Unable to login with Google. Please try again.');
     };
 
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
                 <div className="container d-flex justify-content-between" style={{ flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
-                        <Link className="navbar-brand" to="/" style={{ marginLeft: '20px', marginTop: "-50px" }}>
-                            <img src={logo} width="230" alt="logo" />
-                        </Link>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginRight: '20px' }}>
-                        <Link to="/register" style={{ color: '#2d3e50', marginLeft: '5px', marginTop: "-140px", marginRight: "30px" }}>
-                            Create an account
-                        </Link>
-                    </div>
+                    <Link className="navbar-brand" to="/" style={{ marginLeft: '20px', marginTop: "-50px" }}>
+                        <img src={logo} width="230" alt="logo" />
+                    </Link>
+                    <Link to="/register" style={{ color: '#2d3e50', marginRight: '20px' }}>
+                        Create an account
+                    </Link>
                 </div>
             </nav>
 
@@ -66,26 +83,27 @@ const Login = () => {
                 </div>
 
                 <div style={styles.loginSection}>
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+
                     <div style={styles.loginOptions}>
-                        <button style={styles.googleButton}>
-                            <img
-                                src="https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png"
-                                alt="Google Logo"
-                                style={styles.googleIcon}
-                            />
-                            Log in with Google
-                        </button>
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={handleGoogleFailure}
+                            useOneTap // Enables One Tap login for Google
+                        />
                     </div>
+
                     <p style={styles.orSeparator}>⸻⸻⸻⸻ or ⸻⸻⸻⸻</p>
+
                     <form onSubmit={handleSubmit} style={styles.form}>
                         <input
                             type="text"
-                            name="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Email"
+                            name="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Username"
                             required
+                            aria-label="Username"
                             style={styles.input}
                         />
                         <input
@@ -95,9 +113,12 @@ const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password"
                             required
+                            aria-label="Password"
                             style={styles.input}
                         />
-                        <button type="submit" style={styles.button}>Log In</button>
+                        <button type="submit" style={styles.button}>
+                            Log In
+                        </button>
                     </form>
                 </div>
             </section>
@@ -105,6 +126,7 @@ const Login = () => {
     );
 };
 
+// Inline styles
 const styles = {
     section: {
         marginTop: '50px',
@@ -116,12 +138,12 @@ const styles = {
         fontSize: '40px',
         marginBottom: '-5px',
         marginTop: '80px',
-        color: '#023350'
+        color: '#023350',
     },
     subtitle: {
         fontSize: '20px',
         marginBottom: '-30px',
-        color: '#023350'
+        color: '#023350',
     },
     loginSection: {
         backgroundColor: 'white',
@@ -132,30 +154,14 @@ const styles = {
     },
     loginOptions: {
         marginBottom: '20px',
-    },
-    googleButton: {
-        backgroundColor: '#fff',
-        border: '1px solid #d9d9d9',
-        padding: '10px 20px',
-        cursor: 'pointer',
-        borderRadius: '5px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        color: 'black',
-        transition: 'background-color 0.3s ease, border-color 0.3s ease',
-    },
-    googleIcon: {
-        width: '20px',
-        marginRight: '10px',
+        textAlign: 'center',
     },
     orSeparator: {
         textAlign: 'center',
         padding: '20px 0',
         color: 'black',
         marginBottom: '5px',
-        marginTop: '-17px'
+        marginTop: '-17px',
     },
     form: {
         textAlign: 'center',

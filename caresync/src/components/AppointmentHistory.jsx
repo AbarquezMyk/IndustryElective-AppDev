@@ -18,7 +18,7 @@ const AppointmentHistory = () => {
 
   const fetchAppointments = async () => {
     try {
-      const response = await axios.get('http://localhost:8082/api/appointment-history/search');
+      const response = await axios.get('http://localhost:8082/api/appointments/getAllAppointments');
       setAppointments(response.data);
     } catch (error) {
       console.error('Error fetching appointments:', error);
@@ -35,7 +35,7 @@ const AppointmentHistory = () => {
 
   const handleCancel = async (id) => {
     try {
-      await axios.delete(`http://localhost:8082/api/appointment-history/${id}`);
+      await axios.delete(`http://localhost:8082/api/appointments/deleteAppointment/${id}`);
       triggerRefresh();
       alert("Appointment canceled successfully.");
     } catch (error) {
@@ -44,7 +44,8 @@ const AppointmentHistory = () => {
   };
 
   const handleDetail = (appointment) => {
-    alert(`Details:\nDate: ${appointment.historyDate}\nReasons: ${appointment.reasons}\nStatus: ${appointment.status}\nResults: ${appointment.results}`);
+    // Here you can either open a modal or redirect to a detailed page
+    alert(`Appointment details:\nDoctor: ${appointment.doctorName}\nDate: ${new Date(appointment.appointmentDateTime).toLocaleString()}\nReason: ${appointment.reason}`);
   };
 
   const handleLogout = () => {
@@ -53,8 +54,8 @@ const AppointmentHistory = () => {
   };
 
   const today = new Date();
-  const upcomingAppointments = appointments.filter((appointment) => new Date(appointment.historyDate) >= today);
-  const pastAppointments = appointments.filter((appointment) => new Date(appointment.historyDate) < today);
+  const upcomingAppointments = appointments.filter(appointment => new Date(appointment.appointmentDateTime) >= today);
+  const pastAppointments = appointments.filter(appointment => new Date(appointment.appointmentDateTime) < today);
 
   return (
     <div style={styles.container}>
@@ -70,24 +71,29 @@ const AppointmentHistory = () => {
         <section style={styles.appointmentSection}>
           <h3>Upcoming</h3>
           <div style={styles.appointmentList}>
-            {upcomingAppointments.length > 0 ? (
-              upcomingAppointments.map((appointment) => (
-                <div key={appointment.id} style={styles.appointmentCard}>
-                  <div style={styles.appointmentInfo}>
-                    <p><strong>{appointment.historyDate}</strong></p>
-                    <p>Reasons: {appointment.reasons}</p>
-                    <p>Status: {appointment.status}</p>
-                    <p>Results: {appointment.results}</p>
-                  </div>
-                  <div style={styles.appointmentActions}>
-                    <button style={styles.cancelButton} onClick={() => handleCancel(appointment.id)}>Cancel</button>
-                    <button style={styles.detailButton} onClick={() => handleDetail(appointment)}>Detail</button>
-                  </div>
+            {upcomingAppointments.map((appointment) => (
+              <div key={appointment.id} style={styles.appointmentCard}>
+                <div style={styles.appointmentInfo}>
+                  <p><strong>Doctor:</strong> {appointment.doctorName}</p>
+                  <p><strong>Reason:</strong> {appointment.reason}</p>
+                  <p><strong>Date & Time:</strong> {new Date(appointment.appointmentDateTime).toLocaleString()}</p>
                 </div>
-              ))
-            ) : (
-              <p>No upcoming appointments.</p>
-            )}
+                <div style={styles.appointmentActions}>
+                  <button
+                    onClick={() => handleDetail(appointment)}
+                    style={styles.detailButton}
+                  >
+                    View Details
+                  </button>
+                  <button
+                    onClick={() => handleCancel(appointment.id)}
+                    style={styles.cancelButton}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -95,23 +101,23 @@ const AppointmentHistory = () => {
         <section style={styles.appointmentSection}>
           <h3>Past</h3>
           <div style={styles.appointmentList}>
-            {pastAppointments.length > 0 ? (
-              pastAppointments.map((appointment) => (
-                <div key={appointment.id} style={styles.appointmentCard}>
-                  <div style={styles.appointmentInfo}>
-                    <p><strong>{appointment.historyDate}</strong></p>
-                    <p>Reasons: {appointment.reasons}</p>
-                    <p>Status: {appointment.status}</p>
-                    <p>Results: {appointment.results}</p>
-                  </div>
-                  <div style={styles.appointmentActions}>
-                    <button style={styles.detailButton} onClick={() => handleDetail(appointment)}>Detail</button>
-                  </div>
+            {pastAppointments.map((appointment) => (
+              <div key={appointment.id} style={styles.appointmentCard}>
+                <div style={styles.appointmentInfo}>
+                  <p><strong>Doctor:</strong> {appointment.doctorName}</p>
+                  <p><strong>Reason:</strong> {appointment.reason}</p>
+                  <p><strong>Date & Time:</strong> {new Date(appointment.appointmentDateTime).toLocaleString()}</p>
                 </div>
-              ))
-            ) : (
-              <p>No past appointments.</p>
-            )}
+                <div style={styles.appointmentActions}>
+                  <button
+                    onClick={() => handleDetail(appointment)}
+                    style={styles.detailButton}
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </main>

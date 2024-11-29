@@ -41,15 +41,20 @@ public class PaymentController {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Process a payment.
+     */
     @PostMapping
     public ResponseEntity<String> processPayment(@RequestBody PaymentRequest paymentRequest) {
         System.out.println("[INFO] Received payment request: " + paymentRequest);
 
-        // Validate user by email
-        Optional<User> optionalUser = Optional.ofNullable(userRepository.findByEmail(paymentRequest.getEmail()));
+        // Validate user by username
+        Optional<User> optionalUser = userRepository.findByUsername(paymentRequest.getUsername());
         if (optionalUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
+
+        User user = optionalUser.get();
 
         // Validate card existence
         Optional<Card> optionalCard = cardRepository.findById(paymentRequest.getCardId());
@@ -58,7 +63,6 @@ public class PaymentController {
         }
 
         Card card = optionalCard.get();
-        User user = optionalUser.get();
 
         // Create and save the payment
         Payment payment = new Payment();
@@ -73,19 +77,24 @@ public class PaymentController {
             System.out.println("[INFO] Payment saved successfully with receipt number: " + payment.getReceiptNumber());
             return ResponseEntity.ok("Payment completed successfully with receipt number: " + payment.getReceiptNumber());
         } catch (Exception e) {
-            System.out.println("[ERROR] Failed to save payment: " + e.getMessage());
+            System.err.println("[ERROR] Failed to save payment: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save payment.");
         }
     }
 
+    /**
+     * Fetch payment history by user email.
+     */
     @GetMapping("/user/{email}/history")
     public ResponseEntity<?> getPaymentHistoryByEmail(@PathVariable String email) {
         try {
             // Validate user by email
-            User user = userRepository.findByEmail(email);
-            if (user == null) {
+            Optional<User> optionalUser = userRepository.findByEmail(email);
+            if (optionalUser.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             }
+
+            User user = optionalUser.get();
 
             // Fetch payments by user
             List<Payment> payments = paymentRepository.findByUser(user);
@@ -93,8 +102,11 @@ public class PaymentController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No payment history found for email: " + email);
             }
 
-            // Initialize lazy-loaded properties
-            payments.forEach(payment -> Hibernate.initialize(payment.getUser()));  // Initialize user or any other lazy property
+            // Initialize lazy-loaded properties (e.g., user or card information)
+            payments.forEach(payment -> {
+                Hibernate.initialize(payment.getUser());
+                Hibernate.initialize(payment.getCard());
+            });
 
             // Convert Payments to DTOs
             List<PaymentDTO> paymentDTOs = payments.stream()
@@ -103,6 +115,7 @@ public class PaymentController {
 
             return ResponseEntity.ok(paymentDTOs);
         } catch (Exception e) {
+            System.err.println("[ERROR] Failed to load payment history: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to load payment history.");
         }
     }

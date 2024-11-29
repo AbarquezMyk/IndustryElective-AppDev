@@ -36,6 +36,10 @@ public class Payment {
     @JoinColumn(name = "user_id", nullable = false) // Foreign key to User entity
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)  // Lazy loading for PaymentMethod association
+    @JoinColumn(name = "payment_method_id")  // Foreign key to PaymentMethod entity
+    private PaymentMethod paymentMethod;
+
     @Column(nullable = false)
     private Double totalAmount;
 
@@ -86,6 +90,14 @@ public class Payment {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public Double getTotalAmount() {

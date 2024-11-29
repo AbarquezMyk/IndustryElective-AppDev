@@ -1,8 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google'; // Import GoogleOAuthProvider
+
+// Components for Users
 import Home from './components/Home';
 import PaymentMethods from './components/PaymentMethod';
-import Calendar from './components/Calendar';
+import Calendar from './components/CalendarComponent';
 import OnlineForm from './components/OnlineForm';
 import Patient from './components/Patient';
 import PatientProfileForm from './components/PatientProfileForm';
@@ -11,57 +14,99 @@ import Login from './components/Login';
 import Register from './components/Register';
 import AppointmentHistory from './components/AppointmentHistory';
 import AppointmentHistoryForm from './components/AppointmentHistoryForm';
-import Doctor from './components/Doctor';
+import Doctor from './components/DoctorList';
 import Sidebar from './components/Sidebar';
 import AddPayment from './components/AddPayment';
 import PaymentHistory from './components/PaymentHistory';
 import Dashboard from './components/dashboard';
 
+// Components for Admins
+import AdminHome from './components/AdminHome';
+import AdminLogin from './components/AdminLogin';
+import AdminRegister from './components/AdminRegister';
+import ManageUsers from './components/ManageUsers';
+import AdminLayout from './components/AdminLayout';
+import ManageDepartment from './components/ManageDepartment';
+import Admin from './components/Admin';
+import ManageDoctors from './components/ManageDoctors';
+import DepartmentList from './components/DepartmentList';
+import DoctorDetails from './components/DoctorDetails';
+
+const GOOGLE_CLIENT_ID = '950088130276-qalr5m3p1bk65ujjb33jsd0c05t3a8r8.apps.googleusercontent.com'; // Your Google Client ID
+
 const App = () => {
   const location = useLocation();
+  const isAuthenticated = !!localStorage.getItem('jwt'); // Check if JWT exists to determine if user is logged in
 
+  // Handle logout (executes upon button click)
   const handleLogout = () => {
-    localStorage.removeItem("userName"); // Clear user's name on logout
-    alert("You have been logged out.");
+    localStorage.removeItem('jwt'); // Remove token from local storage
+    alert('You have been logged out.'); // Show logout message
   };
 
   // List of routes where the sidebar should not be displayed
-  const noSidebarRoutes = ['/', '/login', '/register'];
+  const noSidebarRoutes = ['/', '/home', '/login', '/register'];
+
+  // Dynamically hide sidebar for admin routes
+  const shouldHideSidebar =
+    noSidebarRoutes.includes(location.pathname) || location.pathname.startsWith('/admin'); // All admin routes
 
   return (
     <div style={{ display: 'flex' }}>
       {/* Conditionally render Sidebar */}
-      {!noSidebarRoutes.includes(location.pathname) && (
-        <Sidebar handleLogout={handleLogout} />
-      )}
+      {!shouldHideSidebar && <Sidebar handleLogout={handleLogout} />}
       <div style={{ flex: 1 }}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          {/* Admin Routes */}
+          <Route path="/adminIndex" element={<Admin />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin-register" element={<AdminRegister />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminHome />} />
+            <Route path="manage-users" element={<ManageUsers />} />
+            <Route path="manage-departments" element={<ManageDepartment />} />
+            <Route path="manage-doctors" element={<ManageDoctors />} />
+          </Route>
+
+          {/* User Routes */}
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/payment-methods" element={<PaymentMethods />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/online-form" element={<OnlineForm />} />
-          <Route path="/patient" element={<Patient />} />
-          <Route path="/patient-profile" element={<PatientProfileForm />} />
-          <Route path="/add-payment" element={<AddPayment />} />
-          <Route path="/payment-history" element={<PaymentHistory />} />
-          <Route path="/credit-card" element={<CreditCard />} />
-          <Route path="/appointment-history" element={<AppointmentHistory />} />
-          <Route path="/doctor" element={<Doctor />} />
-          <Route path="/history-form" element={<AppointmentHistoryForm />} />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+          <Route path="/payment-methods" element={isAuthenticated ? <PaymentMethods /> : <Navigate to="/login" />} />
+          <Route path="/calendar" element={isAuthenticated ? <Calendar /> : <Navigate to="/login" />} />
+          <Route path="/online-form" element={isAuthenticated ? <OnlineForm /> : <Navigate to="/login" />} />
+          <Route path="/patient" element={isAuthenticated ? <Patient /> : <Navigate to="/login" />} />
+          <Route path="/patient-profile" element={isAuthenticated ? <PatientProfileForm /> : <Navigate to="/login" />} />
+          <Route path="/add-payment" element={isAuthenticated ? <AddPayment /> : <Navigate to="/login" />} />
+          <Route path="/payment-history" element={isAuthenticated ? <PaymentHistory /> : <Navigate to="/login" />} />
+          
+          {/* Protected Route for Credit Card with userId */}
+          <Route path="/credit-card" element={isAuthenticated ? <CreditCard userId={localStorage.getItem('userId')} /> : <Navigate to="/login" />} />
+          
+          <Route path="/appointment-history" element={isAuthenticated ? <AppointmentHistory /> : <Navigate to="/login" />} />
+          <Route path="/history-form" element={isAuthenticated ? <AppointmentHistoryForm /> : <Navigate to="/login" />} />
+          <Route path="/doctors/:departmentId" element={isAuthenticated ? <Doctor /> : <Navigate to="/login" />} />
+          <Route path="/department-list" element={isAuthenticated ? <DepartmentList /> : <Navigate to="/login" />} />
+          <Route path="/doctor/:doctorId/details" element={isAuthenticated ? <DoctorDetails /> : <Navigate to="/login" />} />
+
+          
+          {/* Catch-All Route */}
+          <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </div>
     </div>
   );
 };
 
+// Wrap the App component with Router and GoogleOAuthProvider
 const AppWrapper = () => (
-  <Router>
-    <App />
-  </Router>
+  <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+    <Router>
+      <App />
+    </Router>
+  </GoogleOAuthProvider>
 );
 
 export default AppWrapper;

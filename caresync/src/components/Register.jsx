@@ -9,11 +9,37 @@ const Register = () => {
         e.preventDefault();
 
         const formData = new FormData(e.target);
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirmpassword');
+        const email = formData.get('email');
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+
+        // Validate password complexity
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            alert('Password must be at least 8 characters long and include a number, an uppercase, and a lowercase letter.');
+            return;
+        }
+
+        // Check if password and confirm password match
+        if (password !== confirmPassword) {
+            alert('Passwords do not match');
+            return;
+        }
+
         const data = {
-            first_name: formData.get('first_name'),
-            last_name: formData.get('last_name'),
-            email: formData.get('email'),
-            password: formData.get('password1'),
+            username: formData.get('username'),
+            name: formData.get('name'),
+            email: email,
+            phoneNumber: formData.get('phoneNumber'),
+            password: password,
+            confirmPassword: confirmPassword, // Include confirmPassword
         };
 
         try {
@@ -25,11 +51,23 @@ const Register = () => {
                 body: JSON.stringify(data),
             });
 
+            // Handle response
             if (response.ok) {
+                const result = await response.json();
+                const token = result.token;
+                if (token) {
+                    localStorage.setItem('authToken', token);
+                    alert('Registration successful! Redirecting to login page.');
+                }
                 navigate('/login');
             } else {
-                const errorData = await response.json();
-                console.error('Registration failed:', errorData.message);
+                // Handle error response
+                let errorData;
+                try {
+                    errorData = await response.json();
+                } catch {
+                    errorData = { message: 'Registration failed. Please try again.' };
+                }
                 alert('Registration failed: ' + errorData.message);
             }
         } catch (error) {
@@ -41,28 +79,23 @@ const Register = () => {
     const styles = {
         registerSection: {
             backgroundColor: 'white',
-            padding: '40px',
+            padding: '20px',
             borderRadius: '8px',
-            maxWidth: '600px',
+            maxWidth: '500px',
             margin: '20px auto',
         },
         h2: {
-            marginBottom: '10px',
+            marginBottom: '15px',
             color: '#2d3e50',
             textAlign: 'center',
         },
-        formRow: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '100%',
-            gap: '10px',
-        },
         input: {
             padding: '10px',
-            marginBottom: '20px',
+            marginBottom: '15px',
             borderRadius: '5px',
             border: '1px solid #d9d9d9',
-            width: '85%',
+            width: '100%',
+            fontSize: '14px',
         },
         button: {
             backgroundColor: '#2d3e50',
@@ -71,99 +104,85 @@ const Register = () => {
             border: 'none',
             borderRadius: '5px',
             cursor: 'pointer',
-            width: '80%',
-            margin: '0 auto',
+            fontSize: '14px',
+            width: '100%',
         },
         googleButton: {
-            backgroundColor: '#fff',
+            backgroundColor: 'white',
             border: '1px solid #d9d9d9',
-            padding: '10px 20px',
-            cursor: 'pointer',
+            color: '#2d3e50',
+            padding: '8px',
             borderRadius: '5px',
+            cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             width: '100%',
-            color: 'black',
-            transition: 'background-color 0.3s ease, border-color 0.3s ease',
+            fontSize: '14px',
+            marginBottom: '15px',
+        },
+        googleIcon: {
+            marginRight: '8px',
         },
         checkboxContainer: {
             display: 'flex',
             alignItems: 'center',
-            marginTop: '-20px',
-            marginBottom: '5px',
-            marginLeft: '28px',
+            marginBottom: '15px',
         },
         checkbox: {
-            width: '20px',
-            height: '15px',
-            marginTop: '20px',
             marginRight: '10px',
             cursor: 'pointer',
-            accentColor: '#2d3e50',
         },
         link: {
             color: '#2d3e50',
             textDecoration: 'underline',
         },
-        titleContainer: {
-            textAlign: 'center',
-            margin: '10px 0',
-        },
     };
 
     return (
-        <main className="main" id="top">
-            <nav className="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
-                <div className="container d-flex justify-content-between" style={{ flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
-                        <Link className="navbar-brand" to="/" style={{ marginLeft: '20px', marginTop: "-50px" }}>
-                        <img src={logo} width="230" alt="logo" />
-                        </Link>
-                    </div>
-                    
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginRight: '20px' }}>
-                        <span style={{ color: '#2d3e50', marginTop: "-140px" }}>Already have an account? </span>
-                        <Link to="/login" style={{ color: '#2d3e50', marginLeft: '5px', marginTop: "-140px", marginRight: "30px" }}>
-                        Log In
-                        </Link>
+        <main>
+            <nav className="navbar navbar-expand-lg navbar-light fixed-top py-3">
+                <div className="container" style={{ marginTop: '-35px' }}>
+                    <Link className="navbar-brand" to="/">
+                        <img src={logo} width="200" alt="logo" />
+                    </Link>
+                    <div>
+                        <span style={{ color: '#2d3e50' }}>Already have an account?</span>
+                        <Link to="/login" style={{ color: '#2d3e50', marginLeft: '5px' }}>Log In</Link>
                     </div>
                 </div>
             </nav>
 
-            <section className="py-xxl-10 pb-0" id="home" style={{ marginTop: '50px' }}>
+            <section className="py-4" style={{ marginTop: '50px' }}>
                 <div className="container">
-                    <div className="row min-vh-xl-100 min-vh-xxl-25 align-items-center justify-content-center">
-                        <div style={styles.titleContainer}>
-                            <h1 style={{ color: '#023350', fontSize: '40px', marginBottom: "-10px", marginTop: "-50px"}}>C R E A T E&ensp;A N&ensp;A C C O U N T</h1>
-                            <p style={{ color: '#023350', fontSize: '20px', marginBottom: "-27px"}}>Join our community and start booking appointments with ease.</p>
-                        </div>
-
+                    <div className="row align-items-center justify-content-center">
                         <div style={styles.registerSection}>
-                            <div style={{ marginBottom: '20px' }}>
-                                <button style={styles.googleButton} type="button">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png" alt="Google Logo" style={{ width: '20px' }} />
-                                    Sign up with Google
-                                </button>
-                            </div>
-                            <p style={{ color: 'black', textAlign: 'center', paddingBottom: '20px' }}>⸻⸻⸻⸻⸻⸻⸻ or ⸻⸻⸻⸻⸻⸻⸻</p>
-
-                            <form onSubmit={handleSubmit} style={{ marginTop: '-20px', textAlign: 'center' }}>
-                                <div style={styles.formRow}>
-                                    <input type="text" name="first_name" placeholder="First Name" required style={styles.input} />
-                                    <input type="text" name="last_name" placeholder="Last Name" required style={styles.input} />
-                                </div>
+                            <h2 style={styles.h2}>Create an Account</h2>
+                            <p style={{ color: '#2d3e50', textAlign: 'center', marginBottom: '15px' }}>
+                                Join our community and start booking appointments with ease.
+                            </p>
+                            <button style={styles.googleButton} type="button">
+                                <img
+                                    src="https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png"
+                                    alt="Google Logo"
+                                    style={{ width: '18px', ...styles.googleIcon }}
+                                />
+                                Sign up with Google
+                            </button>
+                            <p style={{ color: 'black', textAlign: 'center', margin: '15px 0' }}>⸻⸻⸻ or ⸻⸻⸻</p>
+                            <form onSubmit={handleSubmit}>
+                                <input type="text" name="username" placeholder="Username" required style={styles.input} />
+                                <input type="text" name="name" placeholder="Full Name" required style={styles.input} />
                                 <input type="email" name="email" placeholder="Email" required style={styles.input} />
-                                <input type="password" name="password1" placeholder="Password" required style={styles.input} />
-                                <input type="password" name="password2" placeholder="Confirm Password" required style={styles.input} />
-
+                                <input type="text" name="phoneNumber" placeholder="Phone Number" required style={styles.input} />
+                                <input type="password" name="password" placeholder="Password" required style={styles.input} />
+                                <input type="password" name="confirmpassword" placeholder="Confirm Password" required style={styles.input} />
                                 <div style={styles.checkboxContainer}>
                                     <input type="checkbox" id="terms" name="terms" required style={styles.checkbox} />
                                     <label htmlFor="terms">
-                                        I agree to the <button type="button" onClick={() => alert('Terms and Conditions')} style={styles.link}>Terms and Conditions</button>
+                                        I agree to the <Link to="/terms" style={styles.link}>Terms and Conditions</Link>
                                     </label>
                                 </div>
-
                                 <button type="submit" style={styles.button}>Sign Up</button>
                             </form>
                         </div>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.appdev.g4.adie.caresync.entity.Card;
+import com.appdev.g4.adie.caresync.entity.User;
 import com.appdev.g4.adie.caresync.repository.CardRepository;
 
 @Service
@@ -23,7 +24,8 @@ public class CardService {
         return cardRepository.findById(id);
     }
 
-    public Card addCard(Card card) {
+    public Card addCard(Card card, User user) {
+        card.setUser(user); // Associate card with user
         return cardRepository.save(card);
     }
 
@@ -39,5 +41,9 @@ public class CardService {
 
     public void deleteCard(Long id) {
         cardRepository.deleteById(id);
+    }
+
+    public List<Card> getCardsByUser(User user) {
+        return cardRepository.findByUser(user); // Method to fetch cards by user
     }
 }

@@ -2,10 +2,14 @@ package com.appdev.g4.adie.caresync.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -34,6 +38,11 @@ public class Card {
     private String cvc;
 
     private String maskedCardNumber;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference // Prevents serialization of the user object when serializing a card
+    private User user;
 
     // Getters and Setters
     public Long getId() {
@@ -84,6 +93,14 @@ public class Card {
 
     public void setMaskedCardNumber(String maskedCardNumber) {
         this.maskedCardNumber = maskedCardNumber;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     // Private helper method to mask the card number

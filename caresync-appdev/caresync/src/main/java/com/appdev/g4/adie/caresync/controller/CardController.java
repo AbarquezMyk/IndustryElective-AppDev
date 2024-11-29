@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.appdev.g4.adie.caresync.entity.Card;
+import com.appdev.g4.adie.caresync.entity.User;
 import com.appdev.g4.adie.caresync.service.CardService;
+import com.appdev.g4.adie.caresync.service.UserService;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -23,6 +25,9 @@ public class CardController {
 
     @Autowired
     private CardService cardService;
+
+    @Autowired
+    private UserService userService; // To handle User context
 
     @GetMapping("/getAllCards")
     public List<Card> getAllCards() {
@@ -36,9 +41,12 @@ public class CardController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/add_card")
-    public Card addCard(@RequestBody Card card) {
-        return cardService.addCard(card);
+    @PostMapping("/add_card/{userId}")
+    public ResponseEntity<Card> addCard(@PathVariable Long userId, @RequestBody Card card) {
+        User user = userService.findUserById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Card addedCard = cardService.addCard(card, user); // Associate card with user
+        return ResponseEntity.ok(addedCard);
     }
 
     @PostMapping("/edit_card/{id}")
