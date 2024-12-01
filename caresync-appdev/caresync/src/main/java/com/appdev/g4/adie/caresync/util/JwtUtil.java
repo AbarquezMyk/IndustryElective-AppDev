@@ -1,23 +1,26 @@
 package com.appdev.g4.adie.caresync.util;
 
+import java.security.Key;
+import java.util.Date;
+
+import org.springframework.stereotype.Component;
+
+import com.appdev.g4.adie.caresync.entity.User;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
-import java.security.Key;
-import java.util.Date;
-
-import com.appdev.g4.adie.caresync.entity.User;
-
-import org.springframework.stereotype.Component;
-
 @Component
 public class JwtUtil {
 
-    // Generate a secure signing key
-    private static final Key SIGNING_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    private final Key SIGNING_KEY;
 
     private static final long EXPIRATION_TIME = 86400000; // 24 hours
+
+    public JwtUtil() {
+        this.SIGNING_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    }
 
     // Generate JWT Token
     public String generateToken(User user) {

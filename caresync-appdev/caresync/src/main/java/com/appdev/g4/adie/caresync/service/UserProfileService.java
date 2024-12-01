@@ -33,4 +33,9 @@ public class UserProfileService {
     public void deleteUserProfile(Long id) {
         userProfileRepository.deleteById(id);
     }
+
+    // Updated method to find UserProfile by username (from User entity)
+    public Optional<UserProfile> findByUsername(String username) {
+        return userProfileRepository.findByUsername(username);
+    }
 }

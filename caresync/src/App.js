@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { GoogleOAuthProvider } from '@react-oauth/google'; // Import GoogleOAuthProvider
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Components for Users
 import Home from './components/Home';
@@ -19,6 +19,7 @@ import Sidebar from './components/Sidebar';
 import AddPayment from './components/AddPayment';
 import PaymentHistory from './components/PaymentHistory';
 import Dashboard from './components/dashboard';
+import MedicalHistoryForm from './components/MedicalHistoryForm'; // Import MedicalHistoryForm
 
 // Components for Admins
 import AdminHome from './components/AdminHome';
@@ -32,24 +33,21 @@ import ManageDoctors from './components/ManageDoctors';
 import DepartmentList from './components/DepartmentList';
 import DoctorDetails from './components/DoctorDetails';
 
-const GOOGLE_CLIENT_ID = '950088130276-qalr5m3p1bk65ujjb33jsd0c05t3a8r8.apps.googleusercontent.com'; // Your Google Client ID
+const GOOGLE_CLIENT_ID = '950088130276-qalr5m3p1bk65ujjb33jsd0c05t3a8r8.apps.googleusercontent.com';
 
 const App = () => {
   const location = useLocation();
-  const isAuthenticated = !!localStorage.getItem('jwt'); // Check if JWT exists to determine if user is logged in
+  const isAuthenticated = !!localStorage.getItem('jwt');
 
-  // Handle logout (executes upon button click)
   const handleLogout = () => {
-    localStorage.removeItem('jwt'); // Remove token from local storage
-    alert('You have been logged out.'); // Show logout message
+    localStorage.removeItem('jwt');
+    alert('You have been logged out.');
   };
 
-  // List of routes where the sidebar should not be displayed
-  const noSidebarRoutes = ['/', '/home', '/login', '/register'];
+  const noSidebarRoutes = ['/', '/home', '/login', '/register', '/medical-history']; // Exclude '/medical-history' from sidebar
 
-  // Dynamically hide sidebar for admin routes
   const shouldHideSidebar =
-    noSidebarRoutes.includes(location.pathname) || location.pathname.startsWith('/admin'); // All admin routes
+    noSidebarRoutes.includes(location.pathname) || location.pathname.startsWith('/admin');
 
   return (
     <div style={{ display: 'flex' }}>
@@ -81,17 +79,19 @@ const App = () => {
           <Route path="/patient-profile" element={isAuthenticated ? <PatientProfileForm /> : <Navigate to="/login" />} />
           <Route path="/add-payment" element={isAuthenticated ? <AddPayment /> : <Navigate to="/login" />} />
           <Route path="/payment-history" element={isAuthenticated ? <PaymentHistory /> : <Navigate to="/login" />} />
-          
+
           {/* Protected Route for Credit Card with userId */}
           <Route path="/credit-card" element={isAuthenticated ? <CreditCard userId={localStorage.getItem('userId')} /> : <Navigate to="/login" />} />
-          
+
           <Route path="/appointment-history" element={isAuthenticated ? <AppointmentHistory /> : <Navigate to="/login" />} />
           <Route path="/history-form" element={isAuthenticated ? <AppointmentHistoryForm /> : <Navigate to="/login" />} />
           <Route path="/doctors/:departmentId" element={isAuthenticated ? <Doctor /> : <Navigate to="/login" />} />
           <Route path="/department-list" element={isAuthenticated ? <DepartmentList /> : <Navigate to="/login" />} />
           <Route path="/doctor/:doctorId/details" element={isAuthenticated ? <DoctorDetails /> : <Navigate to="/login" />} />
 
-          
+          {/* New Route for Medical History Form */}
+          <Route path="/medical-history" element={isAuthenticated ? <MedicalHistoryForm /> : <Navigate to="/login" />} />
+
           {/* Catch-All Route */}
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
@@ -100,7 +100,6 @@ const App = () => {
   );
 };
 
-// Wrap the App component with Router and GoogleOAuthProvider
 const AppWrapper = () => (
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <Router>
