@@ -33,18 +33,34 @@ import ManageDoctors from './components/ManageDoctors';
 import DepartmentList from './components/DepartmentList';
 import DoctorDetails from './components/DoctorDetails';
 
+// Google OAuth Client ID
 const GOOGLE_CLIENT_ID = '950088130276-qalr5m3p1bk65ujjb33jsd0c05t3a8r8.apps.googleusercontent.com';
+
+// PrivateRoute component for protected routes
+const PrivateRoute = ({ element, ...rest }) => {
+  const isAuthenticated = !!localStorage.getItem('jwt');
+  return isAuthenticated ? element : <Navigate to="/login" />;
+};
 
 const App = () => {
   const location = useLocation();
   const isAuthenticated = !!localStorage.getItem('jwt');
 
+  // Handle Logout and redirect
   const handleLogout = () => {
+    // Clear all user-related data from localStorage
     localStorage.removeItem('jwt');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+
     alert('You have been logged out.');
+    window.location.href = '/login'; // Redirect to login
   };
 
-  const noSidebarRoutes = ['/', '/home', '/login', '/register', '/medical-history']; // Exclude '/medical-history' from sidebar
+  // Exclude routes from sidebar
+  const noSidebarRoutes = ['/', '/home', '/login', '/register', '/medical-history'];
 
   const shouldHideSidebar =
     noSidebarRoutes.includes(location.pathname) || location.pathname.startsWith('/admin');
@@ -71,26 +87,26 @@ const App = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-          <Route path="/payment-methods" element={isAuthenticated ? <PaymentMethods /> : <Navigate to="/login" />} />
-          <Route path="/calendar" element={isAuthenticated ? <Calendar /> : <Navigate to="/login" />} />
-          <Route path="/online-form" element={isAuthenticated ? <OnlineForm /> : <Navigate to="/login" />} />
-          <Route path="/patient" element={isAuthenticated ? <Patient /> : <Navigate to="/login" />} />
-          <Route path="/patient-profile" element={isAuthenticated ? <PatientProfileForm /> : <Navigate to="/login" />} />
-          <Route path="/add-payment" element={isAuthenticated ? <AddPayment /> : <Navigate to="/login" />} />
-          <Route path="/payment-history" element={isAuthenticated ? <PaymentHistory /> : <Navigate to="/login" />} />
+          <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
+          <Route path="/payment-methods" element={<PrivateRoute element={<PaymentMethods />} />} />
+          <Route path="/calendar" element={<PrivateRoute element={<Calendar />} />} />
+          <Route path="/online-form" element={<PrivateRoute element={<OnlineForm />} />} />
+          <Route path="/patient" element={<PrivateRoute element={<Patient />} />} />
+          <Route path="/patient-profile" element={<PrivateRoute element={<PatientProfileForm />} />} />
+          <Route path="/add-payment" element={<PrivateRoute element={<AddPayment />} />} />
+          <Route path="/payment-history" element={<PrivateRoute element={<PaymentHistory />} />} />
 
           {/* Protected Route for Credit Card with userId */}
-          <Route path="/credit-card" element={isAuthenticated ? <CreditCard userId={localStorage.getItem('userId')} /> : <Navigate to="/login" />} />
+          <Route path="/credit-card" element={<PrivateRoute element={<CreditCard userId={localStorage.getItem('userId')} />} />} />
 
-          <Route path="/appointment-history" element={isAuthenticated ? <AppointmentHistory /> : <Navigate to="/login" />} />
-          <Route path="/history-form" element={isAuthenticated ? <AppointmentHistoryForm /> : <Navigate to="/login" />} />
-          <Route path="/doctors/:departmentId" element={isAuthenticated ? <Doctor /> : <Navigate to="/login" />} />
-          <Route path="/department-list" element={isAuthenticated ? <DepartmentList /> : <Navigate to="/login" />} />
-          <Route path="/doctor/:doctorId/details" element={isAuthenticated ? <DoctorDetails /> : <Navigate to="/login" />} />
+          <Route path="/appointment-history" element={<PrivateRoute element={<AppointmentHistory />} />} />
+          <Route path="/history-form" element={<PrivateRoute element={<AppointmentHistoryForm />} />} />
+          <Route path="/doctors/:departmentId" element={<PrivateRoute element={<Doctor />} />} />
+          <Route path="/department-list" element={<PrivateRoute element={<DepartmentList />} />} />
+          <Route path="/doctor/:doctorId/details" element={<PrivateRoute element={<DoctorDetails />} />} />
 
           {/* New Route for Medical History Form */}
-          <Route path="/medical-history" element={isAuthenticated ? <MedicalHistoryForm /> : <Navigate to="/login" />} />
+          <Route path="/medical-history" element={<PrivateRoute element={<MedicalHistoryForm />} />} />
 
           {/* Catch-All Route */}
           <Route path="*" element={<Navigate to="/home" />} />
@@ -100,6 +116,7 @@ const App = () => {
   );
 };
 
+// Wrap App in Google OAuth and Router
 const AppWrapper = () => (
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <Router>

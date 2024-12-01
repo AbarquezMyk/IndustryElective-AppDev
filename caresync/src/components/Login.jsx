@@ -24,9 +24,11 @@ const Login = () => {
             if (response.status === 200) {
                 const data = response.data;
 
-                // Store the token and userId in local storage
+                // Store the token, userId, userEmail, and username in local storage
                 localStorage.setItem('jwt', data.token);
+                localStorage.setItem('userEmail', data.email);  // Ensure your backend returns 'email'
                 localStorage.setItem('userId', data.id);
+                localStorage.setItem('username', data.username);
 
                 // Redirect to dashboard
                 navigate('/dashboard');
@@ -48,9 +50,12 @@ const Login = () => {
             if (response.status === 200) {
                 const data = response.data;
 
-                // Store token and userId, then redirect
+                // Store token, userId, userEmail, and username in local storage
                 localStorage.setItem('jwt', data.token);
                 localStorage.setItem('userId', data.id);
+                localStorage.setItem('username', data.username);
+
+                // Redirect to dashboard
                 navigate('/dashboard');
             }
         } catch (error) {
