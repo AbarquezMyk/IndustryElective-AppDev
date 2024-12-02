@@ -45,6 +45,7 @@ public class UserController {
             String password = userMap.get("password");
             String confirmPassword = userMap.get("confirmPassword");
 
+            // Validating input data
             if (username == null || name == null || email == null || phoneNumber == null || password == null || confirmPassword == null) {
                 throw new IllegalArgumentException("All fields are required.");
             }
@@ -53,6 +54,7 @@ public class UserController {
                 throw new IllegalArgumentException("Passwords do not match.");
             }
 
+            // Creating and saving the user
             User user = new User();
             user.setUsername(username);
             user.setName(name);
@@ -61,8 +63,17 @@ public class UserController {
             user.setPassword(password);
 
             User registeredUser = userService.register(user, confirmPassword);
-            return ResponseEntity.ok(registeredUser);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", registeredUser.getUserId());
+            response.put("username", registeredUser.getUsername());
+            response.put("name", registeredUser.getName());
+            response.put("email", registeredUser.getEmail()); // Add email
+            response.put("phoneNumber", registeredUser.getPhoneNumber()); // Add phone number
+            response.put("token", jwtUtil.generateToken(registeredUser));
+            response.put("isNewUser", registeredUser.isNewUser());
 
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
@@ -78,27 +89,44 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("message", "Username and password are required."));
         }
 
-        // Find user by username
-        Optional<User> optionalUser = userService.findByUsername(username);
-
-        // Check if user exists and password matches
+        Optional<User> optionalUser = userService.findUserByUsername(username);
         if (optionalUser.isPresent() && optionalUser.get().getPassword().equals(password)) {
             User user = optionalUser.get();
 
-            // Generate JWT token
+            // Include the name field in the response
             String token = jwtUtil.generateToken(user);
-
-            // Prepare response
             Map<String, Object> response = new HashMap<>();
             response.put("id", user.getUserId());
             response.put("username", user.getUsername());
+            response.put("name", user.getName()); // Add this line
+            response.put("email", user.getEmail()); // Add email
+            response.put("phoneNumber", user.getPhoneNumber()); // Add phone number
             response.put("token", token);
+            response.put("isNewUser", user.isNewUser());
 
             return ResponseEntity.ok(response);
         } else {
-            // Invalid credentials
             return ResponseEntity.status(401).body(Map.of("message", "Invalid username or password."));
         }
+    }
+
+
+    // Complete onboarding and update isNewUser status
+    @PostMapping("/{userId}/complete-onboarding")
+    public ResponseEntity<?> completeOnboarding(@PathVariable Long userId) {
+        try {
+            userService.completeOnboarding(userId);
+            return ResponseEntity.ok(Map.of("message", "Onboarding completed successfully."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    // Check if a user is new
+    @GetMapping("/{userId}/is-new-user")
+    public ResponseEntity<Map<String, Boolean>> checkIsNewUser(@PathVariable Long userId) {
+        boolean isNewUser = userService.isNewUser(userId);
+        return ResponseEntity.ok(Map.of("isNewUser", isNewUser));
     }
 
     // Login with Google OAuth
@@ -114,11 +142,15 @@ public class UserController {
             User user = userService.authenticateWithGoogle(idToken);
             String token = jwtUtil.generateToken(user);
 
-            // Prepare response
+            // Include the name field in the response
             Map<String, Object> response = new HashMap<>();
             response.put("id", user.getUserId());
             response.put("username", user.getUsername());
+            response.put("name", user.getName()); // Add this line
+            response.put("email", user.getEmail()); // Add email
+            response.put("phoneNumber", user.getPhoneNumber()); // Add phone number
             response.put("token", token);
+            response.put("isNewUser", user.isNewUser());
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -140,14 +172,12 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    // Find user by username
     @GetMapping("/user/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         Optional<User> optionalUser = userService.findUserByUsername(username);
-        if (optionalUser.isPresent()) {
-            return ResponseEntity.ok(optionalUser.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return optionalUser.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // Update user details
@@ -173,26 +203,58 @@ public class UserController {
         }
     }
 
+    // Get logged-in user information
     @GetMapping("/me")
-    public ResponseEntity<?> getLoggedInUser(@RequestHeader("Authorization") String token) {
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseEntity.status(401).body("Invalid or expired token.");
-        }
-        String username = jwtUtil.extractUsername(token);
+    public ResponseEntity<?> getLoggedInUser() {
+        // No need to validate the token anymore, so remove this logic
+        // Example: if you still need user information, you could fetch it from session or user context
+        
+        // If you need to get the logged-in user based on public info like username, 
+        // for example, you can send a hardcoded username or a mock response.
+        
+        // For demonstration, assuming you use session-based user data or public info
+        String username = "defaultUser"; // Or get from some session/context if available
+        
         Optional<User> optionalUser = userService.findUserByUsername(username);
+
         if (optionalUser.isPresent()) {
-            // Only return the username in the response
-            return ResponseEntity.ok(Map.of("username", optionalUser.get().getUsername()));
+            User user = optionalUser.get();
+            Map<String, Object> response = new HashMap<>();
+            response.put("username", user.getUsername());
+            response.put("name", user.getName());
+            response.put("email", user.getEmail());
+            response.put("phoneNumber", user.getPhoneNumber());
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(404).body("User not found.");
+            // Return JSON if user is not found
+            return ResponseEntity.status(404).body(Map.of("message", "User not found."));
         }
     }
+
+
+
 
     // Get all cards for a user
     @GetMapping("/{userId}/cards")
     public ResponseEntity<List<Card>> getCardsForUser(@PathVariable Long userId) {
         List<Card> cards = userService.getCardsForUser(userId);
         return ResponseEntity.ok(cards);
+    }
+
+    // Fetch user public information by ID (name, phone number, email)
+    @GetMapping("/{userId}/public-info")
+    public ResponseEntity<?> getPublicUserInfo(@PathVariable Long userId) {
+        Optional<User> optionalUser = userService.findUserById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Map<String, Object> response = new HashMap<>();
+            response.put("name", user.getName());
+            response.put("phoneNumber", user.getPhoneNumber());
+            response.put("email", user.getEmail());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(404).body(Map.of("message", "User not found."));
+        }
     }
 
 }

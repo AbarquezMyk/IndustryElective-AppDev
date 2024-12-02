@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google'; // Import GoogleLogin component
+import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import logo from './img/logo.png';
 
@@ -24,19 +24,23 @@ const Login = () => {
             if (response.status === 200) {
                 const data = response.data;
 
-                // Store the token, userId, userEmail, and username in local storage
-                localStorage.setItem('jwt', data.token);
-                localStorage.setItem('userEmail', data.email);  // Ensure your backend returns 'email'
+                // Store the token and user details in local storage
+                localStorage.setItem('token', data.token);
                 localStorage.setItem('userId', data.id);
                 localStorage.setItem('username', data.username);
+                localStorage.setItem('name', data.name);
+                localStorage.setItem('email', data.email); // Store email
+                localStorage.setItem('phoneNumber', data.phoneNumber); // Store phone number
 
-                // Redirect to dashboard
-                navigate('/dashboard');
-            } else {
-                setError('Invalid username or password.');
+                // Redirect based on the new user status
+                if (data.isNewUser) {
+                    navigate('/medical-history');
+                } else {
+                    navigate('/dashboard');
+                }
             }
         } catch (err) {
-            setError(err.response?.data.message || 'Something went wrong. Please try again.');
+            setError(err.response?.data.message || 'Invalid username or password.');
         }
     };
 
@@ -44,19 +48,24 @@ const Login = () => {
     const handleGoogleSuccess = async (credentialResponse) => {
         try {
             const response = await axios.post('http://localhost:8080/api/users/google-login', {
-                idToken: credentialResponse.credential, // Sending Google ID token to backend
+                idToken: credentialResponse.credential,
             });
 
             if (response.status === 200) {
                 const data = response.data;
 
-                // Store token, userId, userEmail, and username in local storage
+                // Store token and user details in local storage
                 localStorage.setItem('jwt', data.token);
                 localStorage.setItem('userId', data.id);
                 localStorage.setItem('username', data.username);
+                localStorage.setItem('name', data.name);
 
-                // Redirect to dashboard
-                navigate('/dashboard');
+                // Redirect based on the new user status
+                if (data.isNewUser) {
+                    navigate('/medical-history');
+                } else {
+                    navigate('/dashboard');
+                }
             }
         } catch (error) {
             setError(error.response?.data?.message || 'Google login failed. Please try again.');
@@ -94,7 +103,7 @@ const Login = () => {
                         <GoogleLogin
                             onSuccess={handleGoogleSuccess}
                             onError={handleGoogleFailure}
-                            useOneTap // Enables One Tap login for Google
+                            useOneTap
                         />
                     </div>
 

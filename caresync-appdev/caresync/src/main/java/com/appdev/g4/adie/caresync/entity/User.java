@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient; // Import this annotation
 
 @Entity
 public class User {
@@ -19,10 +20,13 @@ public class User {
     private String name;
     private String email;
     private String phoneNumber;
-    
     private String password; // Can be nullable for Google login
     private String googleId; // Optional: to store Google-specific user identifier
+    
+    @Transient  // Add this annotation to indicate this field is not persisted in the database
     private String confirmPassword;
+
+    private boolean isNewUser = true; // Default to true for new users
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Card> cards;
@@ -90,6 +94,14 @@ public class User {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public boolean isNewUser() {
+        return isNewUser;
+    }
+
+    public void setNewUser(boolean isNewUser) {
+        this.isNewUser = isNewUser;
     }
 
     public List<Card> getCards() {

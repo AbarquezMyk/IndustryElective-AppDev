@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const MedicalHistoryForm = () => {
   const [formData, setFormData] = useState({
@@ -22,8 +23,46 @@ const MedicalHistoryForm = () => {
     alcoholConsumption: '',
   });
 
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const fetchUserData = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        throw new Error('User ID not found in local storage');
+      }
+
+      const response = await fetch(`http://localhost:8080/api/users/${userId}/public-info`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFormData((prevState) => ({
+          ...prevState,
+          fullName: data.name || '',
+          contactNumber: data.phoneNumber || '',
+          email: data.email || '',
+        }));
+      } else {
+        console.error(`Failed to fetch user data. Status: ${response.status}`);
+        const errorData = await response.json();
+        console.error('Error details:', errorData);
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+  
     if (type === 'checkbox') {
       setFormData((prevState) => ({
         ...prevState,
@@ -34,7 +73,7 @@ const MedicalHistoryForm = () => {
     } else if (type === 'radio') {
       setFormData((prevState) => ({
         ...prevState,
-        [name]: value,
+        [name]: value === 'Yes' ? true : value === 'No' ? false : value,
       }));
     } else {
       setFormData((prevState) => ({
@@ -43,11 +82,50 @@ const MedicalHistoryForm = () => {
       }));
     }
   };
+  
+  
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // Here you would typically make an API call
+    const cleanedFormData = {
+      ...formData,
+      conditions: formData.conditions.filter((condition) => condition !== ''),
+      symptoms: formData.symptoms.filter((symptom) => symptom !== ''),
+      // Optionally remove fields that are empty or null
+    };
+  
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        throw new Error('User ID not found in local storage');
+      }
+  
+      const response = await fetch(`http://localhost:8080/api/medical-history/user/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cleanedFormData),
+      });
+  
+      if (response.ok) {
+        const savedData = await response.json();
+        console.log('Medical history saved successfully:', savedData);
+        alert('Your medical history has been saved successfully!');
+        navigate('/dashboard'); // Redirect to /dashboard
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to save medical history. Error:', errorData);
+        alert('Failed to save your medical history. Please try again.');
+      }
+    } catch (error) {
+      console.error('An error occurred while saving medical history:', error);
+      alert('An unexpected error occurred. Please try again.');
+    }
   };
+  
+
 
   return (
     <form onSubmit={handleSubmit} className="medical-history-form">
@@ -63,35 +141,6 @@ const MedicalHistoryForm = () => {
           required
           placeholder="Enter your full name"
         />
-      </div>
-
-      <div className="form-group inline-fields">
-        <div className="inline-field">
-          <label>Age:</label>
-          <input
-            type="number"
-            name="age"
-            value={formData.age}
-            onChange={handleInputChange}
-            required
-            placeholder="Enter your age"
-          />
-        </div>
-
-        <div className="inline-field">
-          <label>Gender:</label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Select</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
       </div>
 
       <div className="form-group">
@@ -193,20 +242,28 @@ const MedicalHistoryForm = () => {
       <fieldset className="form-fieldset">
         <legend>Are you currently taking any medication?</legend>
         <div className="radio-group">
-          {['Yes', 'No'].map((answer) => (
-            <label key={answer}>
-              <input
-                type="radio"
-                name="takingMedication"
-                value={answer}
-                checked={formData.takingMedication === answer}
-                onChange={handleInputChange}
-              />
-              {answer}
-            </label>
-          ))}
+          <label>
+            <input
+              type="radio"
+              name="takingMedication"
+              value="Yes"
+              checked={formData.takingMedication === true}
+              onChange={handleInputChange}
+            />
+            Yes
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="takingMedication"
+              value="No"
+              checked={formData.takingMedication === false}
+              onChange={handleInputChange}
+            />
+            No
+          </label>
         </div>
-        {formData.takingMedication === 'Yes' && (
+        {formData.takingMedication && (
           <div className="form-group">
             <label>Please list them:</label>
             <textarea
@@ -222,20 +279,28 @@ const MedicalHistoryForm = () => {
       <fieldset className="form-fieldset">
         <legend>Do you have any medication allergies?</legend>
         <div className="radio-group">
-          {['Yes', 'No', 'Not sure'].map((answer) => (
-            <label key={answer}>
-              <input
-                type="radio"
-                name="medicationAllergies"
-                value={answer}
-                checked={formData.medicationAllergies === answer}
-                onChange={handleInputChange}
-              />
-              {answer}
-            </label>
-          ))}
+          <label>
+            <input
+              type="radio"
+              name="medicationAllergies"
+              value="Yes"
+              checked={formData.medicationAllergies === true}
+              onChange={handleInputChange}
+            />
+            Yes
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="medicationAllergies"
+              value="No"
+              checked={formData.medicationAllergies === false}
+              onChange={handleInputChange}
+            />
+            No
+          </label>
         </div>
-        {formData.medicationAllergies === 'Yes' && (
+        {formData.medicationAllergies && (
           <div className="form-group">
             <label>Please list them:</label>
             <textarea
@@ -251,27 +316,40 @@ const MedicalHistoryForm = () => {
       <fieldset className="form-fieldset">
         <legend>Do you use any kind of tobacco or have you ever used them?</legend>
         <div className="radio-group">
-          {['Yes', 'No'].map((answer) => (
-            <label key={answer}>
-              <input
-                type="radio"
-                name="tobaccoUse"
-                value={answer}
-                checked={formData.tobaccoUse === answer}
-                onChange={handleInputChange}
-              />
-              {answer}
-            </label>
-          ))}
+          <label>
+            <input
+              type="radio"
+              name="tobaccoUse"
+              value="Yes"
+              checked={formData.tobaccoUse === true}
+              onChange={handleInputChange}
+            />
+            Yes
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="tobaccoUse"
+              value="No"
+              checked={formData.tobaccoUse === false}
+              onChange={handleInputChange}
+            />
+            No
+          </label>
         </div>
-        {formData.tobaccoUse === 'Yes' && (
+        {formData.tobaccoUse === true && (
           <div className="form-group">
-            <label>What kind of tobacco products? How long have you used/been using them?</label>
+            <label htmlFor="tobaccoDetails">
+              What kind of tobacco products? How long have you used/been using them?
+            </label>
             <textarea
+              id="tobaccoDetails"
               name="tobaccoDetails"
               value={formData.tobaccoDetails}
               onChange={handleInputChange}
               placeholder="Provide details"
+              rows="4"
+              style={{ resize: 'vertical' }}
             />
           </div>
         )}
@@ -280,31 +358,46 @@ const MedicalHistoryForm = () => {
       <fieldset className="form-fieldset">
         <legend>Do you use any kind of illegal drugs or have you ever used them?</legend>
         <div className="radio-group">
-          {['Yes', 'No'].map((answer) => (
-            <label key={answer}>
-              <input
-                type="radio"
-                name="drugUse"
-                value={answer}
-                checked={formData.drugUse === answer}
-                onChange={handleInputChange}
-              />
-              {answer}
-            </label>
-          ))}
+          <label>
+            <input
+              type="radio"
+              name="drugUse"
+              value="Yes"
+              checked={formData.drugUse === true}
+              onChange={handleInputChange}
+            />
+            Yes
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="drugUse"
+              value="No"
+              checked={formData.drugUse === false}
+              onChange={handleInputChange}
+            />
+            No
+          </label>
         </div>
-        {formData.drugUse === 'Yes' && (
+        {formData.drugUse === true && (
           <div className="form-group">
-            <label>What kind of drugs? How long have you used/been using them?</label>
+            <label htmlFor="drugDetails">
+              What kind of drugs? How long have you used/been using them?
+            </label>
             <textarea
+              id="drugDetails"
               name="drugDetails"
               value={formData.drugDetails}
               onChange={handleInputChange}
               placeholder="Provide details"
+              rows="4"
+              style={{ resize: 'vertical' }}
             />
           </div>
         )}
       </fieldset>
+
+
 
       <fieldset className="form-fieldset">
         <legend>How often do you consume alcohol?</legend>
@@ -326,7 +419,7 @@ const MedicalHistoryForm = () => {
 
       <button type="submit" className="submit-btn">Submit</button>
 
-      <style jsx>{`
+      <style>{`
         .medical-history-form {
           font-family: Arial, sans-serif;
           max-width: 800px;

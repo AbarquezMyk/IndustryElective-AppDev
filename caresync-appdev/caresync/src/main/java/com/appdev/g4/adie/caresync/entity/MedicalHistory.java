@@ -25,7 +25,7 @@ public class MedicalHistory {
 
     @ElementCollection
     @CollectionTable(name = "medical_conditions", joinColumns = @JoinColumn(name = "medical_history_id"))
-    @Column(name = "condition")
+    @Column(name = "`condition`")  // Escape the reserved keyword with backticks
     private List<String> conditions;
 
     private String otherCondition;

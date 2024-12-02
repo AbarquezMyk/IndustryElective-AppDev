@@ -33,6 +33,7 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
+    // Find user by username
     public Optional<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -41,28 +42,44 @@ public class UserService {
     public User register(User user, String confirmPassword) {
         // Validate that the password and confirm password match
         if (!user.getPassword().equals(confirmPassword)) {
-            throw new IllegalArgumentException("Passwords do not match");
+            throw new IllegalArgumentException("Passwords do not match.");
         }
+
+        // Set isNewUser to true for all new users
+        user.setNewUser(true);
+
         // Additional logic for registration (e.g., password encoding) can go here
         return userRepository.save(user);
     }
 
     // Login logic
     public Optional<User> login(String username, String password) {
-        // Use Optional to avoid potential null pointer issues
         return userRepository.findByUsername(username)
                 .filter(user -> user.getPassword().equals(password));
+    }
+
+    // Mark user as no longer new after onboarding
+    public void completeOnboarding(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setNewUser(false);
+        userRepository.save(user);
     }
 
     // Update user details
     public User updateUser(Long id, User updatedUser) {
         return userRepository.findById(id)
                 .map(existingUser -> {
-                    // Update fields
-                    existingUser.setName(updatedUser.getName());
-                    existingUser.setEmail(updatedUser.getEmail());
-                    existingUser.setPassword(updatedUser.getPassword());
-                    // Save updated user
+                    // Only update fields that are non-null
+                    if (updatedUser.getName() != null) {
+                        existingUser.setName(updatedUser.getName());
+                    }
+                    if (updatedUser.getEmail() != null) {
+                        existingUser.setEmail(updatedUser.getEmail());
+                    }
+                    if (updatedUser.getPassword() != null) {
+                        existingUser.setPassword(updatedUser.getPassword());
+                    }
                     return userRepository.save(existingUser);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -76,56 +93,47 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    // Find user by username
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
     // Get all cards for the user
     public List<Card> getCardsForUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return cardService.getCardsByUser(user); // Retrieve cards using CardService
+        return cardService.getCardsByUser(user);
     }
 
     // Google Authentication logic
     public User authenticateWithGoogle(String idToken) throws Exception {
-        // Step 1: Verify the Google ID token
         GoogleIdToken.Payload payload = googleAuthService.verifyToken(idToken);
-    
-        // Step 2: Check if the email and Google ID are valid
-        if (payload.getEmail() != null && !payload.getEmail().isEmpty() && 
+
+        if (payload.getEmail() != null && !payload.getEmail().isEmpty() &&
             payload.getSubject() != null && !payload.getSubject().isEmpty()) {
-    
-            // Step 3: Check if the user already exists (based on email or Google ID)
+
             Optional<User> existingUser = userRepository.findByEmailOrGoogleId(payload.getEmail(), payload.getSubject());
-    
-            // Step 4: If the user exists, update their details (name, email, etc.), else create a new user
+
             User user = existingUser.orElseGet(() -> {
-                // If the user doesn't exist, create a new one
                 User newUser = new User();
                 newUser.setEmail(payload.getEmail());
-                newUser.setGoogleId(payload.getSubject()); // Store the Google ID
-    
-                // Retrieve the name from the token payload (if present)
+                newUser.setGoogleId(payload.getSubject());
                 String name = (String) payload.get("name");
-                newUser.setName(name != null ? name : "Default Name"); // If name is missing, set a default name
-    
+                newUser.setName(name != null ? name : "Default Name");
+                newUser.setNewUser(true); // Mark as a new user
                 return newUser;
             });
-    
-            // Update the name if it's available in the payload (for existing users)
+
+            // Ensure name is updated if present in the payload
             String name = (String) payload.get("name");
             if (name != null && !name.isEmpty()) {
                 user.setName(name);
             }
-    
-            // Save the updated or new user
+
             return userRepository.save(user);
-    
+
         } else {
-            // Step 5: If email or Google ID is missing, throw an exception
             throw new IllegalArgumentException("Invalid Google token: email or Google ID is missing");
         }
+    }
+
+    // Check if a user is new
+    public boolean isNewUser(Long userId) {
+        return userRepository.findByUserIdAndIsNewUserTrue(userId).isPresent();
     }
 }

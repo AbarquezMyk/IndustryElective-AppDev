@@ -9,8 +9,14 @@ const Register = () => {
         e.preventDefault();
 
         const formData = new FormData(e.target);
+
+        // Log the form data to inspect what is being captured
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
         const password = formData.get('password');
-        const confirmPassword = formData.get('confirmpassword');
+        const confirmPassword = formData.get('confirmPassword');  // Change here from confirmpassword to confirmPassword
         const email = formData.get('email');
 
         // Validate email format
@@ -39,7 +45,9 @@ const Register = () => {
             email: email,
             phoneNumber: formData.get('phoneNumber'),
             password: password,
-            confirmPassword: confirmPassword, // Include confirmPassword
+            confirmPassword: confirmPassword,  // Make sure to send the confirmPassword field as well
+            googleId: null, // If the user registers without Google, send null for google_id
+            isNewUser: true, // Assuming this is a new user
         };
 
         try {
@@ -55,11 +63,21 @@ const Register = () => {
             if (response.ok) {
                 const result = await response.json();
                 const token = result.token;
-                if (token) {
+                const userId = result.id;
+
+                if (token && userId) {
+                    // Store the required keys in local storage
                     localStorage.setItem('authToken', token);
+                    localStorage.setItem('userId', userId);
+                    localStorage.setItem('username', data.username);
+                    localStorage.setItem('name', data.name);
+                    localStorage.setItem('email', data.email); // Add email to localStorage
+                    localStorage.setItem('phoneNumber', data.phoneNumber); // Add phone number to localStorage
+                
                     alert('Registration successful! Redirecting to login page.');
+                    navigate('/login');
                 }
-                navigate('/login');
+                
             } else {
                 // Handle error response
                 let errorData;
@@ -176,7 +194,7 @@ const Register = () => {
                                 <input type="email" name="email" placeholder="Email" required style={styles.input} />
                                 <input type="text" name="phoneNumber" placeholder="Phone Number" required style={styles.input} />
                                 <input type="password" name="password" placeholder="Password" required style={styles.input} />
-                                <input type="password" name="confirmpassword" placeholder="Confirm Password" required style={styles.input} />
+                                <input type="password" name="confirmPassword" placeholder="Confirm Password" required style={styles.input} />
                                 <div style={styles.checkboxContainer}>
                                     <input type="checkbox" id="terms" name="terms" required style={styles.checkbox} />
                                     <label htmlFor="terms">
