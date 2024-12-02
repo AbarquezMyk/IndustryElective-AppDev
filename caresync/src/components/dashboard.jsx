@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios'; // Import Axios directly
+import axios from 'axios';
 
 const Dashboard = () => {
   const [username, setUsername] = useState('');
@@ -9,182 +9,144 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const userId = localStorage.getItem('userId');  // Retrieve userId from localStorage
-    
+      const userId = localStorage.getItem('userId');
       if (!userId) {
         console.error('User is not authenticated.');
-        return;  // Exit if no userId is found
+        return;
       }
-  
+
       try {
-        // Fetch user details
         const userResponse = await axios.get('http://localhost:8080/api/users/me', {
-          headers: { 
-            'userId': userId  // Pass the userId instead of JWT
-          },
+          headers: { 'userId': userId },
         });
-  
-        console.log(userResponse); // Log the response to check its structure
-        
-        if (userResponse.data && userResponse.data.username) {
-          setUsername(userResponse.data.username); // Set the username from API
-        } else {
-          console.error('Username not found in the response.');
-        }
-    
-        // Fetch upcoming appointments count
-        const countResponse = await axios.get('http://localhost:8080/api/upcoming-appointments-count', {
-          headers: { 
-            'userId': userId  // Pass the userId here too
-          },
-        });
+        setUsername(userResponse.data.username || 'Guest');
+
+        const countResponse = await axios.get(
+          'http://localhost:8080/api/upcoming-appointments-count',
+          { headers: { 'userId': userId } }
+        );
         setUpcomingAppointmentsCount(countResponse.data.count);
-    
-        // Fetch latest appointments
-        const appointmentsResponse = await axios.get('http://localhost:8080/api/latest-appointments', {
-          headers: { 
-            'userId': userId  // Pass the userId here too
-          },
-        });
+
+        const appointmentsResponse = await axios.get(
+          'http://localhost:8080/api/latest-appointments',
+          { headers: { 'userId': userId } }
+        );
         setLatestAppointments(appointmentsResponse.data);
-    
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-    
+
     fetchData();
   }, []);
-  
 
   return (
-    <div style={styles.container}>
-      <div style={styles.mainContent}>
-        {/* Header Section */}
-        <div style={styles.header}>
-          <div style={styles.headerTitle}>
-            <p style={styles.profileName}>Hello, {username}</p>
-            <p style={styles.profileName}>You have {upcomingAppointmentsCount} upcoming appointments</p>
-          </div>
+    <div style={styles.mainContent}>
+      {/* Header Section */}
+      <div style={styles.header}>
+        <h1 style={styles.welcomeMessage}>Hi, {username}</h1>
+        <button style={styles.userButton}>{username}</button>
+      </div>
 
-          {/* User Name Button */}
-          <button style={styles.userButton}>{username}</button>
-        </div>
+      {/* Feeling Unwell Section */}
+      <div style={styles.bookingCard}>
+        <h2 style={styles.bookingTitle}>Feeling Unwell?</h2>
+        <p style={styles.bookingDescription}>
+          Don't wait! Book an appointment with a specialist now and take the first step toward recovery.
+        </p>
+        <Link to="/department-list" style={styles.bookingButton}>
+          Book Appointment
+        </Link>
+      </div>
 
-        {/* Relocated Message */}
-        <div style={styles.relocatedMessage}>
-          <p>
-            Feeling unwell?{' '}
-            <Link to="/department-list" style={styles.link}>
-              Book your appointment now!
-            </Link>
-          </p>
-        </div>
+      {/* Latest Appointments Section */}
+      <div style={styles.section}>
+        <h2 style={styles.sectionTitle}>Upcoming Appointments</h2>
+        {latestAppointments.length ? (
+          latestAppointments.map((appointment) => (
+            <div key={appointment.id} style={styles.appointmentCard}>
+              <p style={styles.appointmentDate}>
+                {new Date(appointment.date).toLocaleDateString()}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p style={styles.infoText}>No upcoming appointments.</p>
+        )}
       </div>
     </div>
   );
 };
 
 const styles = {
-  container: {
-    display: 'flex',
-    fontFamily: 'Arial',
-    height: '100vh',
-  },
   mainContent: {
-    flex: 1,
     padding: '20px',
-    backgroundColor: '#F8F9FA',
-    overflowY: 'auto',
+    backgroundColor: '#fff',
+    height: '100%',
+    fontFamily: 'Arial, sans-serif',
   },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '20px',
+    marginBottom: '30px',
   },
-  headerTitle: {
+  welcomeMessage: {
     fontSize: '24px',
-    color: '#023350',
-  },
-  profileName: {
-    fontSize: '16px',
-    color: '#4F4F4F',
+    color: '#333',
+    margin: 0,
   },
   userButton: {
-    padding: '10px 20px',
+    padding: '8px 16px',
     fontSize: '16px',
     backgroundColor: '#007BFF',
-    color: '#FFFFFF',
+    color: '#fff',
     border: 'none',
     borderRadius: '8px',
     cursor: 'pointer',
   },
-  relocatedMessage: {
-    marginBottom: '20px',
-    padding: '10px',
-    backgroundColor: '#F1F1F1',
-    borderRadius: '8px',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+  bookingCard: {
+    textAlign: 'center',
+    marginBottom: '30px',
   },
-  link: {
-    color: '#007BFF',
+  bookingTitle: {
+    fontSize: '22px',
+    color: '#333',
+    marginBottom: '10px',
+  },
+  bookingDescription: {
+    fontSize: '16px',
+    color: '#555',
+    marginBottom: '15px',
+  },
+  bookingButton: {
+    display: 'inline-block',
+    padding: '12px 24px',
+    fontSize: '16px',
+    backgroundColor: '#007BFF',
+    color: '#fff',
     textDecoration: 'none',
+    borderRadius: '6px',
     fontWeight: 'bold',
   },
-  doctorSection: {
+  section: {
     marginTop: '30px',
   },
   sectionTitle: {
     fontSize: '20px',
-    color: '#023350',
+    color: '#333',
     marginBottom: '10px',
   },
-  doctorGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-    gap: '20px',
-  },
-  doctorCard: {
-    padding: '20px',
-    border: '1px solid #023350',
-    borderRadius: '8px',
-    textDecoration: 'none',
-    backgroundColor: '#fff',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    textAlign: 'center',
-  },
-  doctorName: {
-    fontSize: '18px',
-    color: '#023350',
-  },
-  appointmentSection: {
-    marginTop: '30px',
-  },
-  appointmentContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-    marginTop: '10px',
-  },
   appointmentCard: {
-    padding: '15px',
-    border: '1px solid #023350',
-    borderRadius: '8px',
-    backgroundColor: '#fff',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-  },
-  appointmentDate: {
+    padding: '10px',
+    marginBottom: '10px',
+    textAlign: 'center',
     fontSize: '16px',
-    color: '#023350',
+    color: '#555',
   },
-  appointmentDoctor: {
+  infoText: {
     fontSize: '16px',
-    color: '#023350',
-  },
-  appointmentStatus: {
-    fontSize: '14px',
-    color: '#4F4F4F',
+    color: '#555',
   },
 };
 
