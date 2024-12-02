@@ -62,7 +62,7 @@ const MedicalHistoryForm = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-  
+
     if (type === 'checkbox') {
       setFormData((prevState) => ({
         ...prevState,
@@ -82,9 +82,6 @@ const MedicalHistoryForm = () => {
       }));
     }
   };
-  
-  
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,15 +89,14 @@ const MedicalHistoryForm = () => {
       ...formData,
       conditions: formData.conditions.filter((condition) => condition !== ''),
       symptoms: formData.symptoms.filter((symptom) => symptom !== ''),
-      // Optionally remove fields that are empty or null
     };
-  
+
     try {
       const userId = localStorage.getItem('userId');
       if (!userId) {
         throw new Error('User ID not found in local storage');
       }
-  
+
       const response = await fetch(`http://localhost:8080/api/medical-history/user/${userId}`, {
         method: 'POST',
         headers: {
@@ -108,7 +104,7 @@ const MedicalHistoryForm = () => {
         },
         body: JSON.stringify(cleanedFormData),
       });
-  
+
       if (response.ok) {
         const savedData = await response.json();
         console.log('Medical history saved successfully:', savedData);
@@ -124,8 +120,6 @@ const MedicalHistoryForm = () => {
       alert('An unexpected error occurred. Please try again.');
     }
   };
-  
-
 
   return (
     <form onSubmit={handleSubmit} className="medical-history-form">
@@ -141,6 +135,33 @@ const MedicalHistoryForm = () => {
           required
           placeholder="Enter your full name"
         />
+      </div>
+
+      <div className="form-group">
+        <label>Age:</label>
+        <input
+          type="number"
+          name="age"
+          value={formData.age}
+          onChange={handleInputChange}
+          required
+          placeholder="Enter your age"
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Gender:</label>
+        <select
+          name="gender"
+          value={formData.gender}
+          onChange={handleInputChange}
+          required
+        >
+          <option value="">Select your gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
 
       <div className="form-group">
