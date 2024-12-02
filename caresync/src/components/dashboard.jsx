@@ -3,23 +3,29 @@ import { Link } from 'react-router-dom';
 import axios from 'axios'; // Import Axios directly
 
 const Dashboard = () => {
-  const [username, setUsername] = useState('');  // Change to username instead of fullName
+  const [username, setUsername] = useState('');
   const [upcomingAppointmentsCount, setUpcomingAppointmentsCount] = useState(0);
   const [latestAppointments, setLatestAppointments] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('jwt'); // Retrieve token from local storage
+      const userId = localStorage.getItem('userId');  // Retrieve userId from localStorage
     
+      if (!userId) {
+        console.error('User is not authenticated.');
+        return;  // Exit if no userId is found
+      }
+  
       try {
         // Fetch user details
         const userResponse = await axios.get('http://localhost:8080/api/users/me', {
-          headers: { Authorization: `Bearer ${token}` }, // Include token in the header
+          headers: { 
+            'userId': userId  // Pass the userId instead of JWT
+          },
         });
-    
+  
         console.log(userResponse); // Log the response to check its structure
         
-        // Check if the response contains 'username' and set it correctly
         if (userResponse.data && userResponse.data.username) {
           setUsername(userResponse.data.username); // Set the username from API
         } else {
@@ -28,13 +34,17 @@ const Dashboard = () => {
     
         // Fetch upcoming appointments count
         const countResponse = await axios.get('http://localhost:8080/api/upcoming-appointments-count', {
-          headers: { Authorization: `Bearer ${token}` }, // Include token in the header
+          headers: { 
+            'userId': userId  // Pass the userId here too
+          },
         });
         setUpcomingAppointmentsCount(countResponse.data.count);
     
         // Fetch latest appointments
         const appointmentsResponse = await axios.get('http://localhost:8080/api/latest-appointments', {
-          headers: { Authorization: `Bearer ${token}` }, // Include token in the header
+          headers: { 
+            'userId': userId  // Pass the userId here too
+          },
         });
         setLatestAppointments(appointmentsResponse.data);
     
@@ -43,9 +53,9 @@ const Dashboard = () => {
       }
     };
     
-
     fetchData();
   }, []);
+  
 
   return (
     <div style={styles.container}>
@@ -53,52 +63,22 @@ const Dashboard = () => {
         {/* Header Section */}
         <div style={styles.header}>
           <div style={styles.headerTitle}>
-            <p style={styles.profileName}>Hello, {username}</p>  {/* Updated to username */}
+            <p style={styles.profileName}>Hello, {username}</p>
             <p style={styles.profileName}>You have {upcomingAppointmentsCount} upcoming appointments</p>
           </div>
 
           {/* User Name Button */}
-          <button style={styles.userButton}>{username}</button>  {/* Updated to username */}
+          <button style={styles.userButton}>{username}</button>
         </div>
 
         {/* Relocated Message */}
         <div style={styles.relocatedMessage}>
           <p>
             Feeling unwell?{' '}
-            <Link to="/history-form" style={styles.link}>
+            <Link to="/department-list" style={styles.link}>
               Book your appointment now!
             </Link>
           </p>
-        </div>
-
-        {/* Your Doctor Section */}
-        <div style={styles.doctorSection}>
-          <p style={styles.sectionTitle}>Your Doctor</p>
-          <div style={styles.doctorGrid}>
-            {['Neurology', 'Cardiac Care', 'Osteoporosis', 'Eye Care', 'Heart Care', 'ENT'].map((specialty) => (
-              <Link to="/department-list" style={styles.doctorCard} key={specialty}>
-                <p style={styles.doctorName}>{specialty}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Latest Appointments Section */}
-        <div style={styles.appointmentSection}>
-          <p style={styles.sectionTitle}>Latest Appointments</p>
-          <div style={styles.appointmentContainer}>
-            {latestAppointments.length > 0 ? (
-              latestAppointments.map((appointment, index) => (
-                <div key={index} style={styles.appointmentCard}>
-                  <p style={styles.appointmentDate}>{appointment.date}</p>
-                  <p style={styles.appointmentDoctor}>Doctor: {appointment.doctorName}</p>
-                  <p style={styles.appointmentStatus}>Status: {appointment.status}</p>
-                </div>
-              ))
-            ) : (
-              <p>No past appointments available</p>
-            )}
-          </div>
         </div>
       </div>
     </div>

@@ -205,17 +205,9 @@ public class UserController {
 
     // Get logged-in user information
     @GetMapping("/me")
-    public ResponseEntity<?> getLoggedInUser() {
-        // No need to validate the token anymore, so remove this logic
-        // Example: if you still need user information, you could fetch it from session or user context
-        
-        // If you need to get the logged-in user based on public info like username, 
-        // for example, you can send a hardcoded username or a mock response.
-        
-        // For demonstration, assuming you use session-based user data or public info
-        String username = "defaultUser"; // Or get from some session/context if available
-        
-        Optional<User> optionalUser = userService.findUserByUsername(username);
+    public ResponseEntity<?> getLoggedInUser(@RequestHeader("userId") Long userId) {
+        // Check if userId is valid and return user details
+        Optional<User> optionalUser = userService.findUserById(userId);  // Find user by userId
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -226,10 +218,12 @@ public class UserController {
             response.put("phoneNumber", user.getPhoneNumber());
             return ResponseEntity.ok(response);
         } else {
-            // Return JSON if user is not found
+            // User not found
             return ResponseEntity.status(404).body(Map.of("message", "User not found."));
         }
     }
+
+
 
 
 
