@@ -118,20 +118,20 @@ const styles = {
   },
   departmentName: {
     fontSize: "1.3rem",
-    color: "#E2E8F0", // Light color for department names
+    color: "#E2E8F0", 
     fontWeight: "bold",
     marginTop: "10px",
   },
   departmentDescription: {
     fontSize: "1rem",
-    color: "#CBD5E0", // Light gray color for the description text
+    color: "#CBD5E0", 
     marginTop: "10px",
     fontStyle: "italic",
     padding: "0 10px",
   },
   findDoctorButton: {
-    backgroundColor: "#63B3ED", // Light blue for the button
-    color: "#2D3748", // Darker text color for contrast
+    backgroundColor: "#63B3ED",
+    color: "#2D3748", 
     fontSize: "1.2rem",
     fontWeight: "bold",
     padding: "10px 20px",
