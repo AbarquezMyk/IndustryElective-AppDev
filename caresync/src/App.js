@@ -20,6 +20,7 @@ import AddPayment from './components/AddPayment';
 import PaymentHistory from './components/PaymentHistory';
 import Dashboard from './components/dashboard';
 import MedicalHistoryForm from './components/MedicalHistoryForm'; // Import MedicalHistoryForm
+import Settings from './components/Settings';
 
 // Components for Admins
 import AdminHome from './components/AdminHome';
@@ -107,6 +108,11 @@ const App = () => {
 
           {/* New Route for Medical History Form */}
           <Route path="/medical-history" element={<PrivateRoute element={<MedicalHistoryForm />} />} />
+
+           {/* New Route for Settings */}
+           <Route path="/settings" element={<Settings />} />
+
+
 
           {/* Catch-All Route */}
           <Route path="*" element={<Navigate to="/home" />} />
