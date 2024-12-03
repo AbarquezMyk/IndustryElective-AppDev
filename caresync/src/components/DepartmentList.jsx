@@ -92,19 +92,19 @@ const styles = {
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)", // 3 columns on desktop
+    gridTemplateColumns: "repeat(3, 1fr)", 
     gap: "40px",
     justifyContent: "center",
     '@media (max-width: 768px)': {
-      gridTemplateColumns: "repeat(2, 1fr)", // 2 columns on tablets
+      gridTemplateColumns: "repeat(2, 1fr)",
     },
     '@media (max-width: 480px)': {
-      gridTemplateColumns: "1fr", // 1 column on mobile
+      gridTemplateColumns: "1fr", 
     },
   },
   card: {
     padding: "20px",
-    backgroundColor: "#4A5568", // Darker background for the card
+    backgroundColor: "#4A5568", 
     borderRadius: "8px",
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
     cursor: "pointer",
@@ -112,8 +112,8 @@ const styles = {
     textAlign: "center",
   },
   icon: {
-    fontSize: "50px", // Adjust the size of the icon
-    color: "#63B3ED", // Light blue color for the icon
+    fontSize: "50px", 
+    color: "#63B3ED", 
     marginBottom: "10px",
   },
   departmentName: {

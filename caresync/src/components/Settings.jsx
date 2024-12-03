@@ -145,7 +145,7 @@ const styles = {
     backgroundColor: "#f5f5f5",
     borderRadius: "8px",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    minHeight: "100vh",  // Ensures the content fills the entire screen
+    minHeight: "100vh",  
   },
   header: {
     fontSize: "2rem",
@@ -156,7 +156,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center", // Aligns form vertically in the center
+    justifyContent: "center", 
   },
   formGroup: {
     marginBottom: "15px",
