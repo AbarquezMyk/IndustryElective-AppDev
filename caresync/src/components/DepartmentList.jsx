@@ -65,14 +65,14 @@ const styles = {
     padding: "20px",
     fontFamily: "'Arial', sans-serif",
     textAlign: "center",
-    color: "#E2E8F0", // Light text color for better contrast
+    color: "#E2E8F0", 
     maxWidth: "1200px",
     margin: "0 auto",
   },
   header: {
     fontSize: "2.5rem",
     fontWeight: "bold",
-    color: "#1A1A2E", // Steel blue for the header
+    color: "#1A1A2E",
     marginBottom: "30px",
     textTransform: "uppercase",
   },
@@ -81,7 +81,7 @@ const styles = {
     color: "#718096", 
   },
   errorText: {
-    color: "#F56565", // Red color for errors
+    color: "#F56565", 
     fontSize: "1.5rem",
     textAlign: "center",
   },
