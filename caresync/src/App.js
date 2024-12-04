@@ -35,12 +35,12 @@ import DepartmentList from './components/DepartmentList';
 import DoctorDetails from './components/DoctorDetails';
 
 // Google OAuth Client ID
-const GOOGLE_CLIENT_ID = '950088130276-qalr5m3p1bk65ujjb33jsd0c05t3a8r8.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '950088130276-fprv2rh8ttithd4ces16e33i4ivp1n01.apps.googleusercontent.com';
 
 // PrivateRoute component for protected routes
 const PrivateRoute = ({ element, ...rest }) => {
-  const isAuthenticated = !!localStorage.getItem('jwt');
-  return isAuthenticated ? element : <Navigate to="/login" />;
+  const userId = localStorage.getItem('userId');
+  return userId ? element : <Navigate to="/login" />;
 };
 
 const App = () => {
@@ -109,10 +109,8 @@ const App = () => {
           {/* New Route for Medical History Form */}
           <Route path="/medical-history" element={<PrivateRoute element={<MedicalHistoryForm />} />} />
 
-           {/* New Route for Settings */}
-           <Route path="/settings" element={<Settings />} />
-
-
+          {/* New Route for Settings */}
+          <Route path="/settings" element={<PrivateRoute element={<Settings />} />} />
 
           {/* Catch-All Route */}
           <Route path="*" element={<Navigate to="/home" />} />
