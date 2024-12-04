@@ -7,9 +7,9 @@ const Settings = () => {
     notifications: false,
     timeZone: "PST",
     phoneNumber: "", 
-    language: "English", // Added preferred language field
-    emergencyContact: "", // Added emergency contact field
-    medicalPreferences: "", // Added medical preferences field
+    language: "English", 
+    emergencyContact: "", 
+    medicalPreferences: "",
   });
 
   const handleInputChange = (e) => {
