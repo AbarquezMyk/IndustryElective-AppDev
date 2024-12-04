@@ -80,8 +80,8 @@ const Login = () => {
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
-                <div className="container d-flex justify-content-between" style={{ flexDirection: 'column' }}>
-                    <Link className="navbar-brand" to="/" style={{ marginLeft: '20px', marginTop: "-50px" }}>
+                <div className="container d-flex justify-content-between">
+                    <Link className="navbar-brand" to="/" style={{ marginLeft: '20px' }}>
                         <img src={logo} width="230" alt="logo" />
                     </Link>
                     <Link to="/register" style={{ color: '#2d3e50', marginRight: '20px' }}>
@@ -143,20 +143,19 @@ const Login = () => {
 // Inline styles
 const styles = {
     section: {
-        marginTop: '50px',
+        marginTop: '100px', // Adjusted for navbar height
+        paddingBottom: '50px', // Spacing below login section
     },
     textCenter: {
         textAlign: 'center',
+        marginBottom: '20px',
     },
     title: {
         fontSize: '40px',
-        marginBottom: '-5px',
-        marginTop: '80px',
         color: '#023350',
     },
     subtitle: {
         fontSize: '20px',
-        marginBottom: '-30px',
         color: '#023350',
     },
     loginSection: {
@@ -165,6 +164,7 @@ const styles = {
         borderRadius: '8px',
         maxWidth: '600px',
         margin: '20px auto',
+        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
     },
     loginOptions: {
         marginBottom: '20px',
@@ -174,8 +174,7 @@ const styles = {
         textAlign: 'center',
         padding: '20px 0',
         color: 'black',
-        marginBottom: '5px',
-        marginTop: '-17px',
+        marginBottom: '10px',
     },
     form: {
         textAlign: 'center',
@@ -186,6 +185,8 @@ const styles = {
         borderRadius: '5px',
         border: '1px solid #d9d9d9',
         width: '85%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     button: {
         backgroundColor: '#2d3e50',
@@ -195,7 +196,7 @@ const styles = {
         borderRadius: '5px',
         cursor: 'pointer',
         width: '80%',
-        margin: '0 auto',
+        margin: '10px auto',
     },
 };
 

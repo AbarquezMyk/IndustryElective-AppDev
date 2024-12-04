@@ -69,22 +69,24 @@ public class UserService {
     // Update user details
     public User updateUser(Long id, User updatedUser) {
         return userRepository.findById(id)
-                .map(existingUser -> {
-                    // Only update fields that are non-null
-                    if (updatedUser.getName() != null) {
-                        existingUser.setName(updatedUser.getName());
-                    }
-                    if (updatedUser.getEmail() != null) {
-                        existingUser.setEmail(updatedUser.getEmail());
-                    }
-                    if (updatedUser.getPassword() != null) {
-                        existingUser.setPassword(updatedUser.getPassword());
-                    }
-                    return userRepository.save(existingUser);
-                })
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            .map(existingUser -> {
+                if (updatedUser.getName() != null) {
+                    existingUser.setName(updatedUser.getName());
+                }
+                if (updatedUser.getEmail() != null) {
+                    existingUser.setEmail(updatedUser.getEmail());
+                }
+                if (updatedUser.getPhoneNumber() != null) { // Add this
+                    existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
+                }
+                if (updatedUser.getPassword() != null) {
+                    existingUser.setPassword(updatedUser.getPassword());
+                }
+                return userRepository.save(existingUser);
+            })
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
-
+    
     // Delete user by ID
     public void deleteById(Long userId) {
         if (!userRepository.existsById(userId)) {
@@ -136,4 +138,7 @@ public class UserService {
     public boolean isNewUser(Long userId) {
         return userRepository.findByUserIdAndIsNewUserTrue(userId).isPresent();
     }
+
+    
+    
 }

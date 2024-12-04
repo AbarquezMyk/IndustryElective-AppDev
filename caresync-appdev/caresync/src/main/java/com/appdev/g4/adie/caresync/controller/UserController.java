@@ -183,8 +183,10 @@ public class UserController {
     // Update user details
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        System.out.println("Received update request for user: " + updatedUser);
         return ResponseEntity.ok(userService.updateUser(id, updatedUser));
     }
+
 
     // Delete user by ID
     @DeleteMapping("/{id}")
