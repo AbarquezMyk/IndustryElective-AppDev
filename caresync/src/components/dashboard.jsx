@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Avatar,
+} from '@mui/material';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 
 const Dashboard = () => {
   const [username, setUsername] = useState('');
@@ -41,113 +52,71 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div style={styles.mainContent}>
+    <Box sx={{ padding: 3, backgroundColor: '#f7f9fc', minHeight: '100vh' }}>
       {/* Header Section */}
-      <div style={styles.header}>
-        <h1 style={styles.welcomeMessage}>Hi, {username}</h1>
-        <button style={styles.userButton}>{username}</button>
-      </div>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={3}
+      >
+        <Typography variant="h4" fontWeight="bold" color="primary">
+          Welcome, {username}
+        </Typography>
+        <Avatar sx={{ bgcolor: 'primary.main', width: 50, height: 50 }}>
+          {username.charAt(0).toUpperCase()}
+        </Avatar>
+      </Box>
 
       {/* Feeling Unwell Section */}
-      <div style={styles.bookingCard}>
-        <h2 style={styles.bookingTitle}>Feeling Unwell?</h2>
-        <p style={styles.bookingDescription}>
-          Don't wait! Book an appointment with a specialist now and take the first step toward recovery.
-        </p>
-        <Link to="/department-list" style={styles.bookingButton}>
+      <Card sx={{ mb: 4, p: 3, textAlign: 'center' }}>
+        <LocalHospitalIcon sx={{ fontSize: 40, color: 'secondary.main', mb: 2 }} />
+        <Typography variant="h5" gutterBottom>
+          Feeling Unwell?
+        </Typography>
+        <Typography color="text.secondary" mb={2}>
+          Don&apos;t wait! Book an appointment with a specialist now and take
+          the first step toward recovery.
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to="/department-list"
+        >
           Book Appointment
-        </Link>
-      </div>
+        </Button>
+      </Card>
 
       {/* Latest Appointments Section */}
-      <div style={styles.section}>
-        <h2 style={styles.sectionTitle}>Upcoming Appointments</h2>
-        {latestAppointments.length ? (
-          latestAppointments.map((appointment) => (
-            <div key={appointment.id} style={styles.appointmentCard}>
-              <p style={styles.appointmentDate}>
-                {new Date(appointment.date).toLocaleDateString()}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p style={styles.infoText}>No upcoming appointments.</p>
-        )}
-      </div>
-    </div>
+      <Typography variant="h5" fontWeight="bold" mb={2}>
+        Upcoming Appointments ({upcomingAppointmentsCount})
+      </Typography>
+      {latestAppointments.length > 0 ? (
+        <Grid container spacing={2}>
+          {latestAppointments.map((appointment) => (
+            <Grid item xs={12} sm={6} md={4} key={appointment.id}>
+              <Card>
+                <CardContent>
+                  <CalendarTodayIcon color="primary" sx={{ fontSize: 30 }} />
+                  <Typography variant="body1" mt={2}>
+                    {new Date(appointment.date).toLocaleDateString()}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {appointment.details || 'No details provided'}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Typography color="text.secondary">
+          No upcoming appointments.
+        </Typography>
+      )}
+    </Box>
   );
-};
-
-const styles = {
-  mainContent: {
-    padding: '20px',
-    backgroundColor: '#fff',
-    height: '100%',
-    fontFamily: 'Arial, sans-serif',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '30px',
-  },
-  welcomeMessage: {
-    fontSize: '24px',
-    color: '#333',
-    margin: 0,
-  },
-  userButton: {
-    padding: '8px 16px',
-    fontSize: '16px',
-    backgroundColor: '#007BFF',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-  },
-  bookingCard: {
-    textAlign: 'center',
-    marginBottom: '30px',
-  },
-  bookingTitle: {
-    fontSize: '22px',
-    color: '#333',
-    marginBottom: '10px',
-  },
-  bookingDescription: {
-    fontSize: '16px',
-    color: '#555',
-    marginBottom: '15px',
-  },
-  bookingButton: {
-    display: 'inline-block',
-    padding: '12px 24px',
-    fontSize: '16px',
-    backgroundColor: '#007BFF',
-    color: '#fff',
-    textDecoration: 'none',
-    borderRadius: '6px',
-    fontWeight: 'bold',
-  },
-  section: {
-    marginTop: '30px',
-  },
-  sectionTitle: {
-    fontSize: '20px',
-    color: '#333',
-    marginBottom: '10px',
-  },
-  appointmentCard: {
-    padding: '10px',
-    marginBottom: '10px',
-    textAlign: 'center',
-    fontSize: '16px',
-    color: '#555',
-  },
-  infoText: {
-    fontSize: '16px',
-    color: '#555',
-  },
 };
 
 export default Dashboard;
