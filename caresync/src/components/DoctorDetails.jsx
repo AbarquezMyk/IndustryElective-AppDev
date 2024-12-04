@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const DoctorDetails = () => {
-  const { doctorId } = useParams(); // Get doctorId from URL
+  const { doctorId } = useParams();
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [newFeedback, setNewFeedback] = useState(""); // For new feedback input
-  const [feedbacks, setFeedbacks] = useState([]); // To manage all feedbacks
-  const navigate = useNavigate(); // To navigate to AppointmentForm
+  const [newFeedback, setNewFeedback] = useState({ comment: "", rating: 0 }); 
+  const [feedbacks, setFeedbacks] = useState([]);
+  const navigate = useNavigate();
+
+  // Retrieve user's name, fallback to "Anonymous" if not found
+  const userName = localStorage.getItem("userName") || "Anonymous"; // Or use your app's logic to get the user name
 
   useEffect(() => {
     const fetchDoctorDetails = async () => {
@@ -20,7 +23,7 @@ const DoctorDetails = () => {
         }
         const data = await response.json();
         setDoctor(data);
-        setFeedbacks(data.feedbacks || []); // Initialize feedbacks from the server
+        setFeedbacks(data.feedbacks || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -42,24 +45,32 @@ const DoctorDetails = () => {
   };
 
   const handleAddFeedback = () => {
-    if (!newFeedback.trim()) return; // Prevent adding empty feedback
+    const { comment, rating } = newFeedback;
+    if (!comment.trim() || rating <= 0) return;
 
     const newEntry = {
-      comment: newFeedback,
-      reviewerName: "Anonymous", // Replace with dynamic user name if available
+      comment,
+      rating,
+      dateOfReview: new Date().toISOString().split("T")[0],
+      reviewerName: userName, // Ensure the user's name is added
     };
 
-    setFeedbacks([...feedbacks, newEntry]); // Update feedback list locally
-    setNewFeedback(""); // Clear input field
+    setFeedbacks([...feedbacks, newEntry]);
+    setNewFeedback({ comment: "", rating: 0 });
 
-    // Optionally, send feedback to the server
     fetch(`http://localhost:8080/api/doctors/${doctorId}/feedbacks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newEntry),
-    }).catch((err) => console.error("Failed to save feedback:", err));
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to save feedback");
+        }
+      })
+      .catch((err) => console.error("Failed to save feedback:", err));
   };
 
   if (error) {
@@ -101,7 +112,6 @@ const DoctorDetails = () => {
         Make an Appointment
       </button>
 
-      {/* Feedbacks Section */}
       <div
         style={{
           marginTop: "30px",
@@ -123,18 +133,21 @@ const DoctorDetails = () => {
             >
               <p style={{ margin: "0", fontStyle: "italic" }}>"{feedback.comment}"</p>
               <p style={{ margin: "5px 0 0", fontWeight: "bold", color: "#555" }}>
-                - {feedback.reviewerName}
+                - {feedback.reviewerName}, Rating: {feedback.rating} ⭐
+              </p>
+              <p style={{ margin: "0", fontSize: "small", color: "#888" }}>
+                Date: {feedback.dateOfReview}
               </p>
             </div>
           ))
         ) : (
           <p>No feedbacks available for this doctor.</p>
         )}
-        {/* Add Feedback Input */}
+
         <div style={{ marginTop: "20px" }}>
           <textarea
-            value={newFeedback}
-            onChange={(e) => setNewFeedback(e.target.value)}
+            value={newFeedback.comment}
+            onChange={(e) => setNewFeedback({ ...newFeedback, comment: e.target.value })}
             placeholder="Write your feedback..."
             style={{
               width: "100%",
@@ -145,6 +158,27 @@ const DoctorDetails = () => {
             }}
             rows="4"
           />
+          <div style={{ margin: "10px 0" }}>
+            <label>
+              Rating:{" "}
+              <select
+                value={newFeedback.rating}
+                onChange={(e) => setNewFeedback({ ...newFeedback, rating: parseInt(e.target.value) })}
+                style={{
+                  padding: "5px",
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                }}
+              >
+                <option value="0">Select</option>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <option key={star} value={star}>
+                    {star}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
           <button
             onClick={handleAddFeedback}
             style={{

@@ -35,20 +35,16 @@ const DepartmentList = () => {
   }
 
   return (
-    <div style={styles.container}>
+    <div style={styles.main}>
       <h1 style={styles.header}>OUR DEPARTMENTS</h1>
       {loading ? (
         <p style={styles.loadingText}>Loading departments...</p>
       ) : (
         <div style={styles.grid}>
           {departments.map((department) => (
-            <div
-              key={department.departmentId}
-              style={styles.card}
-            >
+            <div key={department.departmentId} style={styles.card}>
               <div style={styles.icon}>{department.icon}</div> {/* Icon here */}
               <strong style={styles.departmentName}>{department.departmentName}</strong>
-              {/* Department Description */}
               <p style={styles.departmentDescription}>{department.description}</p>
               <button
                 onClick={() => handleDepartmentClick(department.departmentId)}
@@ -65,25 +61,24 @@ const DepartmentList = () => {
 };
 
 const styles = {
-  container: {
+  main: {
     padding: "20px",
-    maxWidth: "1200px",
-    margin: "0 auto",
     fontFamily: "'Arial', sans-serif",
     textAlign: "center",
-    backgroundColor: "#2D3748", // Darker background for the container
     color: "#E2E8F0", // Light text color for better contrast
+    maxWidth: "1200px",
+    margin: "0 auto",
   },
   header: {
     fontSize: "2.5rem",
     fontWeight: "bold",
-    color: "#CBD5E0", // Lighter gray for the header
+    color: "#1A1A2E", // Steel blue for the header
     marginBottom: "30px",
     textTransform: "uppercase",
   },
   loadingText: {
     fontSize: "1.2rem",
-    color: "#A0AEC0", // Lighter gray-blue for loading text
+    color: "#718096", 
   },
   errorText: {
     color: "#F56565", // Red color for errors
@@ -92,46 +87,52 @@ const styles = {
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)", 
+    gridTemplateColumns: "repeat(3, 1fr)",
     gap: "40px",
     justifyContent: "center",
+    marginTop: "20px",
     '@media (max-width: 768px)': {
       gridTemplateColumns: "repeat(2, 1fr)",
     },
     '@media (max-width: 480px)': {
-      gridTemplateColumns: "1fr", 
+      gridTemplateColumns: "1fr",
     },
   },
   card: {
     padding: "20px",
-    backgroundColor: "#4A5568", 
+    backgroundColor: "#FFF",
     borderRadius: "8px",
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
     cursor: "pointer",
     transition: "transform 0.3s ease, box-shadow 0.3s ease",
     textAlign: "center",
+    height: "auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   icon: {
-    fontSize: "50px", 
-    color: "#63B3ED", 
+    fontSize: "50px",
+    color: "#63B3ED",
     marginBottom: "10px",
   },
   departmentName: {
     fontSize: "1.3rem",
-    color: "#E2E8F0", 
+    color: "#2B6CB0",
     fontWeight: "bold",
     marginTop: "10px",
   },
   departmentDescription: {
     fontSize: "1rem",
-    color: "#CBD5E0", 
+    color: "#2B6CB0",
     marginTop: "10px",
     fontStyle: "italic",
     padding: "0 10px",
+    textAlign: "center",
   },
   findDoctorButton: {
-    backgroundColor: "#63B3ED",
-    color: "#2D3748", 
+    backgroundColor: "#007BFF",
+    color: "#FFF",
     fontSize: "1.2rem",
     fontWeight: "bold",
     padding: "10px 20px",
@@ -140,6 +141,9 @@ const styles = {
     cursor: "pointer",
     marginTop: "15px",
     transition: "background-color 0.3s ease",
+    '&:hover': {
+      backgroundColor: "#3182CE", // Darker blue on hover
+    },
   },
 };
 

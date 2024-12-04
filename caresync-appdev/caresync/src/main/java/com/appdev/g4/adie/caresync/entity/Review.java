@@ -22,11 +22,11 @@ public class Review {
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
-    private int rating; // e.g., 1-5 stars
+    private int rating; 
     private String comment;
     private String dateOfReview;
 
-    // Getters and Setters
+    
     public Long getReviewId() {
         return reviewId;
     }

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 
 const Settings = () => {
   const [settings, setSettings] = useState({
-    username: "Jane Smith",
-    email: "janesmith@example.com",
+    username: "",
+    email: "",
     notifications: false,
     timeZone: "PST",
-    phoneNumber: "", // Added phone number field
+    phoneNumber: "", 
     language: "English", // Added preferred language field
     emergencyContact: "", // Added emergency contact field
     medicalPreferences: "", // Added medical preferences field
