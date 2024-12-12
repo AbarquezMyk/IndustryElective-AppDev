@@ -33,7 +33,7 @@ public class Calendar {
     private DayOfWeek dayOfWeek;
 
     @ManyToOne
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(name = "doctor_id", nullable = true)
     @JsonBackReference // Prevent circular references
     private Doctor doctor;
 

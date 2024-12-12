@@ -35,23 +35,27 @@ public class CalendarService {
     public Calendar updateCalendarEntry(Long id, Calendar calendarDetails) {
         Calendar calendar = calendarRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Calendar entry not found with id " + id));
-
+    
         calendar.setTitle(calendarDetails.getTitle());
         calendar.setStartTime(calendarDetails.getStartTime());
         calendar.setEndTime(calendarDetails.getEndTime());
         calendar.setDayOfWeek(calendarDetails.getDayOfWeek());
         calendar.setDoctor(calendarDetails.getDoctor());
-
+    
         return calendarRepository.save(calendar);
     }
+    
 
     // Delete a calendar entry
     public void deleteCalendarEntry(Long id) {
-        if (!calendarRepository.existsById(id)) {
-            throw new RuntimeException("Calendar entry not found with id " + id);
-        }
-        calendarRepository.deleteById(id);
+        Calendar calendar = calendarRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Calendar entry not found with id " + id));
+        
+        calendar.setDoctor(null); // Clear the doctor reference
+        calendarRepository.save(calendar); // Save the updated calendar entry
+        calendarRepository.deleteById(id); // Delete the entry
     }
+    
 
     // Get all calendar entries for a specific doctor
     public List<Calendar> getCalendarEntriesByDoctorId(Long doctorId) {
