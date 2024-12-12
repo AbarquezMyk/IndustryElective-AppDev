@@ -10,6 +10,7 @@ const AppointmentCalendar = ({ doctorId }) => {
   const [appointments, setAppointments] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false); // New state for delete confirmation
   const [selectedDate, setSelectedDate] = useState(null);
   const [newAppointment, setNewAppointment] = useState({
     title: '',
@@ -19,16 +20,15 @@ const AppointmentCalendar = ({ doctorId }) => {
   });
   const [selectedAppointment, setSelectedAppointment] = useState(null);
 
- 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
         const response = await axios.get(`/api/calendar/appointments/${doctorId}`);
         const formattedAppointments = response.data.map((appt) => ({
-          title: appt.patientName || 'Appointment',
+          title: appt.title,
           start: new Date(appt.startTime),
           end: new Date(appt.endTime),
-          id: appt.id, 
+          id: appt.id,
         }));
         setAppointments(formattedAppointments);
       } catch (error) {
@@ -62,55 +62,49 @@ const AppointmentCalendar = ({ doctorId }) => {
         startTime: newAppointment.startTime,
         endTime: newAppointment.endTime,
         dayOfWeek: moment(selectedDate).format('dddd').toUpperCase(),
+        doctorId: newAppointment.doctorId || doctorId,
       };
-  
-      if (newAppointment.doctorId) {
-        appointmentData.doctorId = newAppointment.doctorId;
-      }
-  
+
       let response;
-      
-      
       if (newAppointment.id) {
-        
+        // Update existing appointment
         response = await axios.put(`/api/calendar/schedule/${newAppointment.id}`, appointmentData);
-        
-        // Update the appointment in the local state
-        setAppointments((prev) => prev.map((appt) =>
-          appt.id === newAppointment.id
-            ? { ...appt, title: newAppointment.title, start: new Date(newAppointment.startTime), end: new Date(newAppointment.endTime) }
-            : appt
-        ));
+
+        setAppointments((prev) =>
+          prev.map((appt) =>
+            appt.id === newAppointment.id
+              ? { ...appt, title: newAppointment.title, start: new Date(newAppointment.startTime), end: new Date(newAppointment.endTime) }
+              : appt
+          )
+        );
       } else {
-        
+        // Add new appointment
         response = await axios.post('/api/calendar/schedule', appointmentData);
-  
-        
+
         const newEvent = {
           title: newAppointment.title,
           start: new Date(newAppointment.startTime),
           end: new Date(newAppointment.endTime),
-          id: response.data.id, 
+          id: response.data.id,
         };
-        
+
         setAppointments((prev) => [...prev, newEvent]);
       }
-  
-      
+
       setIsAddModalOpen(false);
       setNewAppointment({
         title: '',
         startTime: '',
         endTime: '',
         doctorId: doctorId || null,
+        id: '', // Reset the id field
       });
-  
     } catch (error) {
       console.error('Error adding/updating appointment:', error);
       alert('Failed to add/update appointment: ' + (error.response?.data?.message || error.message || 'Unknown error'));
     }
   };
-  
+
   const handleEditAppointment = (appointment) => {
     setNewAppointment({
       id: appointment.id, // This identifies the appointment being edited
@@ -122,8 +116,6 @@ const AppointmentCalendar = ({ doctorId }) => {
     setIsAddModalOpen(true); // Open the modal for editing
     setIsDetailModalOpen(false); // Close the details modal if it was open
   };
-  
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -138,16 +130,14 @@ const AppointmentCalendar = ({ doctorId }) => {
     setSelectedAppointment(null);
   };
 
- 
-
-  const handleDeleteAppointment = async (appointmentId) => {
+  const handleDeleteAppointment = async () => {
     try {
-      
-      await axios.delete(`/api/calendar/schedule/${appointmentId}`);
+      await axios.delete(`/api/calendar/schedule/${selectedAppointment.id}`);
       setAppointments((prev) =>
-        prev.filter((appointment) => appointment.id !== appointmentId)
+        prev.filter((appointment) => appointment.id !== selectedAppointment.id)
       );
       setIsDetailModalOpen(false);
+      setIsDeleteConfirmModalOpen(false); // Close the confirmation modal
       alert('Appointment deleted successfully');
     } catch (error) {
       console.error('Error deleting appointment:', error);
@@ -157,8 +147,15 @@ const AppointmentCalendar = ({ doctorId }) => {
       );
     }
   };
-  
 
+  const openDeleteConfirmModal = () => {
+    setIsDetailModalOpen(false); 
+    setIsDeleteConfirmModalOpen(true); 
+  };
+
+  const closeDeleteConfirmModal = () => {
+    setIsDeleteConfirmModalOpen(false);
+  };
 
   return (
     <div
@@ -318,91 +315,162 @@ const AppointmentCalendar = ({ doctorId }) => {
       )}
 
       {/* Appointment Details Modal */}
-{isDetailModalOpen && selectedAppointment && (
-  <div
-    style={{
-      position: 'fixed',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      backgroundColor: 'white',
-      padding: '25px',
-      borderRadius: '8px',
-      boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-      zIndex: 1000,
-      width: '350px',
-    }}
-  >
-    <h2
-      style={{
-        marginBottom: '20px',
-        textAlign: 'center',
-        fontSize: '20px',
-      }}
-    >
-      Appointment Details
-    </h2>
-    <div style={{ marginBottom: '15px' }}>
-      <strong>Title:</strong> {selectedAppointment.title}
-    </div>
-    <div style={{ marginBottom: '15px' }}>
-      <strong>Start Time:</strong> {selectedAppointment.start.toString()}
-    </div>
-    <div style={{ marginBottom: '15px' }}>
-      <strong>End Time:</strong> {selectedAppointment.end.toString()}
-    </div>
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginTop: '20px',
-      }}
-    >
-      <button
-        onClick={() => handleEditAppointment(selectedAppointment)}
+      {isDetailModalOpen && selectedAppointment && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            padding: '25px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+            zIndex: 1000,
+            width: '350px',
+          }}
+        >
+          <h2
+            style={{
+              marginBottom: '20px',
+              textAlign: 'center',
+              fontSize: '20px',
+            }}
+          >
+            Appointment Details
+          </h2>
+
+          <div style={{ marginBottom: '15px' }}>
+            <strong>Title: </strong>
+            {selectedAppointment.title}
+          </div>
+          <div style={{ marginBottom: '15px' }}>
+            <strong>Start Time: </strong>
+            {moment(selectedAppointment.start).format('YYYY-MM-DD HH:mm')}
+          </div>
+          <div style={{ marginBottom: '15px' }}>
+            <strong>End Time: </strong>
+            {moment(selectedAppointment.end).format('YYYY-MM-DD HH:mm')}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginTop: '20px',
+            }}
+          >
+            <button
+              onClick={handleEditAppointment.bind(null, selectedAppointment)}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+              }}
+            >
+              Edit
+            </button>
+
+            <button
+            onClick={openDeleteConfirmModal}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#f44336',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: '600',
+            }}
+          >
+            Delete
+          </button>
+          <button
+        onClick={() => setIsDetailModalOpen(false)} // Close the modal
         style={{
           padding: '10px 20px',
-          backgroundColor: '#2196F3',
-          color: 'white',
+          backgroundColor: '#ccc',
+          color: 'black',
           border: 'none',
           borderRadius: '6px',
           cursor: 'pointer',
           fontWeight: '600',
         }}
       >
-        Edit
+        Cancel
       </button>
-      <button
-        onClick={() => handleDeleteAppointment(selectedAppointment.id)}
-        style={{
-          padding: '10px 20px',
-          backgroundColor: '#f44336',
-          color: 'white',
-          border: 'none',
-          borderRadius: '6px',
-          cursor: 'pointer',
-          fontWeight: '600',
-        }}
-      >
-        Delete
-      </button>
-      <button
-        onClick={closeModal}
-        style={{
-          padding: '10px 20px',
-          backgroundColor: '#9E9E9E',
-          color: 'white',
-          border: 'none',
-          borderRadius: '6px',
-          cursor: 'pointer',
-          fontWeight: '600',
-        }}
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteConfirmModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            padding: '25px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+            zIndex: 1000,
+            width: '350px',
+          }}
+        >
+          <h2
+            style={{
+              marginBottom: '20px',
+              textAlign: 'center',
+              fontSize: '20px',
+            }}
+          >
+            Are you sure you want to delete this appointment?
+          </h2>
+
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginTop: '20px',
+            }}
+          >
+            <button
+              onClick={handleDeleteAppointment}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#f44336',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+              }}
+            >
+              Yes, Delete
+            </button>
+
+            <button
+              onClick={closeDeleteConfirmModal}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#ccc',
+                color: 'black',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
